@@ -52,6 +52,16 @@ namespace IAPR_API
         [WebGet(UriTemplate = "/audit?page={page}&pageSize={pageSize}&entity={entity}&correlationId={correlationId}",
                 ResponseFormat = WebMessageFormat.Json)]
         Stream GetAuditLog(int page, int pageSize, string entity, string correlationId);
+
+        [OperationContract]
+        [WebGet(UriTemplate = "/dashboard/summary",
+                ResponseFormat = WebMessageFormat.Json)]
+        Stream GetDashboardSummary();
+
+        [OperationContract]
+        [WebGet(UriTemplate = "/dashboard/charts",
+                ResponseFormat = WebMessageFormat.Json)]
+        Stream GetDashboardCharts();
     }
 
     [ServiceBehavior(InstanceContextMode = InstanceContextMode.PerCall)]
@@ -242,6 +252,113 @@ namespace IAPR_API
                     .ToList();
 
                 return WriteJson(new PagedResult<object>(items.Cast<object>(), total, page, pageSize));
+            }
+        }
+
+        // ------------------------------------------------------------------
+        // GET /dashboard/summary
+        // ------------------------------------------------------------------
+        public Stream GetDashboardSummary()
+        {
+            var token = RequireBearer("compliance:read");
+            if (token == null) return Unauthorized();
+
+            try
+            {
+                var provider = new IAPR_Data.Providers.Daschboard_Provider();
+                System.Data.DataSet ds;
+
+                // Determine which dashboard to fetch based on tenant/role (simplified for now)
+                if (token.TenantId.HasValue)
+                {
+                    // If tenant is an insurer, fetch insurer dashboard, else financer
+                    // For logic parity with legacy, we'll try to fetch based on Partner_Id if we can resolve it
+                    // For now, default to Admin or Financer based on presence of TenantId
+                    ds = provider.Get_Financer_Landing_DashboardTable(token.TenantId.Value);
+                }
+                else
+                {
+                    ds = provider.Get_Admin_Landing_DashboardTable();
+                }
+
+                if (ds == null || ds.Tables.Count == 0)
+                    return WriteJson(ApiResponse<DashboardSummaryDto>.Ok(new DashboardSummaryDto()));
+
+                var summary = new DashboardSummaryDto();
+
+                // Mapping logic (based on spGet_Admin_Landing_Dashboard_Totals and legacy code)
+                // Table[0]: Unpaid Premium Assets, Table[1]: No Insurance, Table[2]: All Assets, Table[3]: Insured, Table[4]: Adequate, Table[5]: Under
+                if (ds.Tables.Count >= 6)
+                {
+                    summary.PremiumUnpaidAssets = Convert.ToInt32(ds.Tables[0].Rows[0]["iNumber_Of_Assets"]);
+                    summary.PremiumUnpaidValue  = Convert.ToDecimal(ds.Tables[0].Rows[0]["dcUninsured_Finance_Value"]);
+
+                    summary.NoInsuranceDetailsAssets = Convert.ToInt32(ds.Tables[1].Rows[0]["iNumber_Of_Assets"]);
+                    summary.NoInsuranceDetailsValue  = Convert.ToDecimal(ds.Tables[1].Rows[0]["dcUninsured_Finance_Value"]);
+
+                    summary.TotalAssets = Convert.ToInt32(ds.Tables[2].Rows[0]["iNumber_Of_Assets"]);
+                    summary.TotalValue  = Convert.ToDecimal(ds.Tables[2].Rows[0]["dcFinance_Value"]);
+
+                    summary.UninsuredAssets = summary.PremiumUnpaidAssets + summary.NoInsuranceDetailsAssets;
+                    summary.UninsuredValue  = summary.PremiumUnpaidValue + summary.NoInsuranceDetailsValue;
+                    summary.UninsuredPercentage = summary.TotalAssets > 0 ? (double)summary.UninsuredAssets / summary.TotalAssets * 100 : 0;
+
+                    summary.AdequatelyInsuredAssets = Convert.ToInt32(ds.Tables[4].Rows[0]["iNumber_Of_Assets"]);
+                    summary.AdequatelyInsuredValue  = Convert.ToDecimal(ds.Tables[4].Rows[0]["dcFinance_Value"]);
+
+                    summary.UnderInsuredAssets = Convert.ToInt32(ds.Tables[5].Rows[0]["iNumber_Of_Assets"]);
+                    summary.UnderInsuredValue  = Convert.ToDecimal(ds.Tables[5].Rows[0]["dcFinance_Value"]);
+                }
+
+                return WriteJson(ApiResponse<DashboardSummaryDto>.Ok(summary));
+            }
+        // ------------------------------------------------------------------
+        // GET /dashboard/charts
+        // ------------------------------------------------------------------
+        public Stream GetDashboardCharts()
+        {
+            var token = RequireBearer("compliance:read");
+            if (token == null) return Unauthorized();
+
+            try
+            {
+                var provider = new IAPR_Data.Providers.Daschboard_Provider();
+                System.Data.DataSet ds;
+
+                if (token.TenantId.HasValue)
+                    ds = provider.Get_Financer_Landing_DashboardCharts(token.TenantId.Value);
+                else
+                    ds = provider.Get_Admin_Landing_DashboardCharts();
+
+                var results = new List<ChartSeriesDto>();
+
+                if (ds != null && ds.Tables.Count > 0)
+                {
+                    // Map Table[0]: Insurance Status
+                    var statusSeries = new ChartSeriesDto { Title = "Insurance Status", XAxisName = "Status", YAxisName = "Count" };
+                    foreach (System.Data.DataRow row in ds.Tables[0].Rows)
+                    {
+                        statusSeries.Data.Add(new ChartDataPointDto { Label = row[0].ToString(), Value = row[1].ToString() });
+                    }
+                    results.Add(statusSeries);
+
+                    // Map Table[1]: Age Analysis (if exists)
+                    if (ds.Tables.Count > 1)
+                    {
+                        var ageSeries = new ChartSeriesDto { Title = "Age Analysis", XAxisName = "Days", YAxisName = "Asset Count" };
+                        foreach (System.Data.DataRow row in ds.Tables[1].Rows)
+                        {
+                            ageSeries.Data.Add(new ChartDataPointDto { Label = row["DayCount"].ToString(), Value = row["AssetCount"].ToString() });
+                        }
+                        results.Add(ageSeries);
+                    }
+                }
+
+                return WriteJson(ApiResponse<List<ChartSeriesDto>>.Ok(results));
+            }
+            catch (Exception ex)
+            {
+                return WriteJson(ApiResponse<object>.Fail($"Error fetching dashboard charts: {ex.Message}"));
             }
         }
 

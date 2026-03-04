@@ -40,9 +40,9 @@ Based on the provided documents (`Asset Protection Register - product write-up`,
 
 ### Phase 5: API & Frontend Modernization
 
-- [/] Build structured RESTful JSON APIs for all modules with standard pagination envelopes.
-- [ ] Implement OAuth2 Client Credentials for secure system-to-system integrations (Banks and Insurers).
-- [ ] Migrate the legacy WebForms UI (`IAPR_Web`) to ASP.NET Core MVC (Razor + jQuery partials) or a modern SPA framework, utilizing Razor Class Libraries (RCL) for shared components.
+- [x] Build structured RESTful JSON APIs for all modules with standard pagination envelopes.
+- [x] Implement OAuth2 Client Credentials for secure system-to-system integrations (Banks and Insurers).
+- [/] Migrate the legacy WebForms UI (`IAPR_Web`) to ASP.NET Core MVC (Razor + jQuery partials) or a modern SPA framework.
 
 ---
 
