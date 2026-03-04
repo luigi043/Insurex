@@ -7,6 +7,10 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace InsureX.Api.Controllers;
 
+/// <summary>
+/// Controller for managing compliance checks and rules.
+/// Features endpoints to execute compliance validation logic.
+/// </summary>
 [ApiController]
 [Route("api/v1/compliance")]
 public class ComplianceController : ControllerBase
