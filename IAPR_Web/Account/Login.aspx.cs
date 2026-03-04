@@ -35,6 +35,16 @@ namespace IAPR_Web.Account
                 objUser = uP.ValidateUser(txtUserName.Text, txtPassword.Text);
                 if (objUser != null)
                 {
+                    // Issue OWIN Auth Cookie
+                    var identity = new System.Security.Claims.ClaimsIdentity(new[] {
+                        new System.Security.Claims.Claim(System.Security.Claims.ClaimTypes.NameIdentifier, objUser.iUser_Id.ToString()),
+                        new System.Security.Claims.Claim("http://schemas.microsoft.com/accesscontrolservice/2010/07/claims/identityprovider", "ASP.NET Identity", "http://www.w3.org/2001/XMLSchema#string"),
+                        new System.Security.Claims.Claim(System.Security.Claims.ClaimTypes.Name, objUser.vcUsername),
+                    }, DefaultAuthenticationTypes.ApplicationCookie);
+
+                    HttpContext.Current.GetOwinContext().Authentication.SignIn(
+                        new Microsoft.Owin.Security.AuthenticationProperties { IsPersistent = true }, identity);
+
                     if (objUser.iUser_Status_Id == 2)
                     {
                         Response.Redirect("/account/changepassword.aspx", false);

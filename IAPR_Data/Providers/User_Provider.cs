@@ -11,6 +11,8 @@ using System.Web;
 using System.Data;
 using System.Data.SqlClient;
 using Microsoft.ApplicationBlocks.Data;
+using Microsoft.AspNet.Identity;
+using Microsoft.AspNet.Identity.EntityFramework;
 using C = IAPR_Data.Classes;
 using U = IAPR_Data.Utils;
 namespace IAPR_Data.Providers
@@ -82,45 +84,32 @@ namespace IAPR_Data.Providers
 
         private void AuthenticateUser(string userName, string password, out C.Common.CurrentUser p_User)
         {
-            C.Common.CurrentUser objDBUser = new C.Common.CurrentUser();
-            string userStatus = string.Empty;
-
-            SqlParameter[] arParams = new SqlParameter[2];
-            arParams[0] = new SqlParameter("@vcUserName", U.CryptorEngine.ValidationEncrypt(userName.ToLower(), true));
-            arParams[1] = new SqlParameter("@vcPassword", U.CryptorEngine.ValidationEncrypt(password, true));
-
-            DataSet ds = SqlHelper.ExecuteDataset(sqlConn, CommandType.StoredProcedure, "spGet_AuthenticateUser", arParams);
-
-            if (ds.Tables[0].Rows.Count > 0)
+            p_User = null;
+            using (var dbContext = new C.ApplicationDbContext())
             {
-                foreach (DataRow oRow in ds.Tables[0].Rows)
+                var userStore = new UserStore<C.ApplicationUser>(dbContext);
+                using (var userManager = new UserManager<C.ApplicationUser>(userStore))
                 {
-                    if (oRow["iUser_Id"] != DBNull.Value) objDBUser.iUser_Id = Convert.ToInt32(oRow["iUser_Id"].ToString());
-                    if (oRow["iUser_Type_Id"] != DBNull.Value) objDBUser.iUser_Type_Id = Convert.ToInt32(oRow["iUser_Type_Id"].ToString());
-                    if (oRow["vcUsername"] != DBNull.Value) objDBUser.vcUsername = U.CryptorEngine.ValidationDecrypt(oRow["vcUsername"].ToString(), true);
-                    if (oRow["iUser_Status_Id"] != DBNull.Value) objDBUser.iUser_Status_Id = Convert.ToInt32(oRow["iUser_Status_Id"].ToString());
-                    if (oRow["vcUser_Status_Description"] != DBNull.Value) objDBUser.vcUser_Status_Description = oRow["vcUser_Status_Description"].ToString();
-                    if (oRow["vcName"] != DBNull.Value) objDBUser.vcName = U.CryptorEngine.GenericDecrypt(oRow["vcName"].ToString(), true);
-                    if (oRow["vcSurname"] != DBNull.Value) objDBUser.vcSurname = U.CryptorEngine.GenericDecrypt(oRow["vcSurname"].ToString(), true);
-                    if (oRow["iPartner_Type_Id"] != DBNull.Value) objDBUser.iPartner_Type_Id = Convert.ToInt32(oRow["iPartner_Type_Id"].ToString());
-                    if (oRow["iPartner_Id"] != DBNull.Value) objDBUser.iPartner_Id = Convert.ToInt32(oRow["iPartner_Id"].ToString());
-                    if (oRow["vcPartner_Type_Description"] != DBNull.Value) objDBUser.vcPartner_Type_Description = oRow["vcPartner_Type_Description"].ToString();
-                    if (oRow["vcPosition_Title"] != DBNull.Value) objDBUser.vcPosition_Title = U.CryptorEngine.GenericDecrypt(oRow["vcPosition_Title"].ToString(), true);
-
-                    if (oRow["bUserReceiveNotifications"] != DBNull.Value) objDBUser.bUserReceiveNotifications = Convert.ToBoolean(oRow["bUserReceiveNotifications"].ToString());
-
+                    var user = userManager.Find(userName, password);
+                    if (user != null)
+                    {
+                        p_User = new C.Common.CurrentUser
+                        {
+                            iUser_Id = user.LegacyUserId,
+                            iUser_Type_Id = user.iUser_Type_Id,
+                            vcUsername = user.UserName,
+                            iUser_Status_Id = user.iUser_Status_Id,
+                            vcUser_Status_Description = user.vcUser_Status_Description,
+                            vcName = user.vcName,
+                            vcSurname = user.vcSurname,
+                            iPartner_Type_Id = user.iPartner_Type_Id ?? 0,
+                            iPartner_Id = user.iPartner_Id ?? 0,
+                            vcPosition_Title = user.vcPosition_Title,
+                            bUserReceiveNotifications = user.bUserReceiveNotifications
+                        };
+                    }
                 }
             }
-            else
-            {
-                objDBUser = null;
-            }
-
-
-
-            p_User = objDBUser;
-
-
         }
 
         public C.Common.CurrentUser AppendUserDetails(C.Common.CurrentUser objDBUser)
@@ -156,17 +145,21 @@ namespace IAPR_Data.Providers
 
         public bool ChangePassword(int iUser_Id, string vcUsername, string vcPassword)
         {
-            bool changed = false;
-
-            SqlParameter[] arParams = new SqlParameter[2];
-            arParams[0] = new SqlParameter("@iUser_Id", iUser_Id);
-            arParams[1] = new SqlParameter("@vcPassword", U.CryptorEngine.ValidationEncrypt(vcPassword, true));
-
-            SqlHelper.ExecuteNonQuery(sqlConn, CommandType.StoredProcedure, "spUpd_Change_Password_Status", arParams);
-            ValidateUser(vcUsername, vcPassword);
-            changed = true;
-
-            return changed;
+            using (var dbContext = new C.ApplicationDbContext())
+            {
+                var userStore = new UserStore<C.ApplicationUser>(dbContext);
+                using (var userManager = new UserManager<C.ApplicationUser>(userStore))
+                {
+                    var user = userManager.FindByName(vcUsername);
+                    if (user != null)
+                    {
+                        userManager.RemovePassword(user.Id);
+                        var result = userManager.AddPassword(user.Id, vcPassword);
+                        return result.Succeeded;
+                    }
+                }
+            }
+            return false;
         }
 
         //public C.Common.CurrentUser GetCurrentUser()
