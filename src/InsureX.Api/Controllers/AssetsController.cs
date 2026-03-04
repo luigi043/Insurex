@@ -7,6 +7,10 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace InsureX.Api.Controllers;
 
+/// <summary>
+/// Controller for managing assets (e.g., vehicles, properties) in the system.
+/// Supports CRUD operations and querying of asset details.
+/// </summary>
 [ApiController]
 [Route("api/v1/assets")]
 public class AssetsController : ControllerBase
