@@ -103,6 +103,8 @@
     <Compile Include="Classes\IdentityModels.cs" />
     <Compile Include="Classes\MultiTenantModels.cs" />
     <Compile Include="Classes\TenantContext.cs" />
+    <Compile Include="Classes\Webhook\WebhookModels.cs" />
+    <Compile Include="Classes\Webhook\HmacValidator.cs" />
     <Compile Include="Classes\Common\CurrentUser.cs" />
     <Compile Include="Classes\Common\Dashboards.cs" />
     <Compile Include="Classes\Partners\Financer.cs" />

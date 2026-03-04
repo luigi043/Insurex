@@ -6,6 +6,7 @@ using Microsoft.AspNet.Identity.EntityFramework;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Data.SqlClient;
+using IAPR_Data.Classes.Webhook;
 
 namespace IAPR_Data.Classes
 {
@@ -48,6 +49,7 @@ namespace IAPR_Data.Classes
     {
         public DbSet<Tenant> Tenants { get; set; }
         public DbSet<Organization> Organizations { get; set; }
+        public DbSet<WebhookEvent> WebhookEvents { get; set; }
 
         public ApplicationDbContext()
             : base("connIAPRData")

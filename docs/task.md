@@ -22,7 +22,7 @@ Based on the provided documents (`Asset Protection Register - product write-up`,
 - [x] Implement SQL Server Row-Level Security (RLS) for strict database isolation.
 
 ### Phase 3: Event-Driven Compliance Engine
-- [ ] Build secure webhook ingestion endpoints for insurers (HMAC signature validation, replay protection, idempotency).
+- [x] Build secure webhook ingestion endpoints for insurers (HMAC signature validation, replay protection, idempotency).
 - [ ] Integrate a message queue (Azure Service Bus or RabbitMQ) for decoupled event processing.
 - [ ] Develop the Compliance Engine service to deterministically evaluate rules and emit compliance outcomes (`ComplianceState`).
 - [ ] Implement the Outbox pattern to ensure atomic database writes and reliable event publishing.
