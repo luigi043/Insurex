@@ -1,4 +1,5 @@
-import axios, { AxiosInstance, AxiosError } from 'axios';
+import axios from 'axios';
+import type { AxiosInstance, AxiosError } from 'axios';
 import { useAuthStore } from '../../stores/authStore';
 
 // Error response interface (matching backend ApiResponse)

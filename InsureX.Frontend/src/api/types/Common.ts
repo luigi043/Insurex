@@ -22,3 +22,9 @@ export interface TokenPayload {
     exp: number;
     iat: number;
 }
+
+export interface BaseEntity {
+    id: string | number;
+    createdUtc?: string;
+    modifiedUtc?: string;
+}
