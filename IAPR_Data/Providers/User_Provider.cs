@@ -58,7 +58,7 @@ namespace IAPR_Data.Providers
 
             }
 
-            HttpContext.Current.Session["CurrentUser"] = f_User;
+            // No longer using session state for CurrentUser. The OWIN claims cookie will hold the state.
             return f_User;
 
         }
@@ -66,14 +66,37 @@ namespace IAPR_Data.Providers
         {
             try
             {
-                if (HttpContext.Current != null && HttpContext.Current.Session["CurrentUser"] != null)
+                var claimsIdentity = HttpContext.Current?.User?.Identity as System.Security.Claims.ClaimsIdentity;
+                if (claimsIdentity != null && claimsIdentity.IsAuthenticated)
                 {
-                    return (C.Common.CurrentUser)HttpContext.Current.Session["CurrentUser"];
+                    var user = new C.Common.CurrentUser();
+                    
+                    var idClaim = claimsIdentity.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
+                    if (int.TryParse(idClaim, out int userId)) { user.iUser_Id = userId; }
+                    
+                    user.vcUsername = claimsIdentity.FindFirst(System.Security.Claims.ClaimTypes.Name)?.Value;
+                    
+                    var userTypeClaim = claimsIdentity.FindFirst("iUser_Type_Id")?.Value;
+                    if (int.TryParse(userTypeClaim, out int userTypeId)) { user.iUser_Type_Id = userTypeId; }
+                    
+                    user.vcName = claimsIdentity.FindFirst("vcName")?.Value;
+                    user.vcSurname = claimsIdentity.FindFirst("vcSurname")?.Value;
+                    
+                    var partnerClaim = claimsIdentity.FindFirst("iPartner_Id")?.Value;
+                    if (int.TryParse(partnerClaim, out int partnerId)) { user.iPartner_Id = partnerId; }
+                    
+                    var partnerTypeClaim = claimsIdentity.FindFirst("iPartner_Type_Id")?.Value;
+                    if (int.TryParse(partnerTypeClaim, out int partnerTypeId)) { user.iPartner_Type_Id = partnerTypeId; }
+                    
+                    var userStatusClaim = claimsIdentity.FindFirst("iUser_Status_Id")?.Value;
+                    if (int.TryParse(userStatusClaim, out int userStatusId)) { user.iUser_Status_Id = userStatusId; }
+
+                    if (user.iUser_Id > 0)
+                    {
+                        return user;
+                    }
                 }
-                else
-                {
-                    return null;
-                }
+                return null;
             }
             catch (Exception ex)
             {

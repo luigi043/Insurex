@@ -110,7 +110,7 @@ namespace IAPR_Web
         }
         protected void lnkLogOut_Click(object sender, EventArgs e)
         {
-            Session["CurrentUser"] = null;
+            Context.GetOwinContext().Authentication.SignOut();
             Response.Redirect("login.aspx");
         }
     }

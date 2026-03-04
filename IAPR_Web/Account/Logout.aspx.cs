@@ -11,7 +11,7 @@ namespace IAPR_Web.Account
     {
         protected void Page_Load(object sender, EventArgs e)
         {
-            HttpContext.Current.Session["CurrentUser"] = null;
+            HttpContext.Current.GetOwinContext().Authentication.SignOut();
 
             Response.Redirect("/account/login.aspx", true);
         }

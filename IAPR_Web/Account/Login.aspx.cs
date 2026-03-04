@@ -35,11 +35,25 @@ namespace IAPR_Web.Account
                 objUser = uP.ValidateUser(txtUserName.Text, txtPassword.Text);
                 if (objUser != null)
                 {
-                    // Issue OWIN Auth Cookie
+                    string role = "User";
+                    switch (objUser.iUser_Type_Id)
+                    {
+                        case 1: case 2: role = "Admin"; break;
+                        case 3: case 4: role = "BankUser"; break;
+                        case 5: case 6: role = "InsurerUser"; break;
+                    }
+
                     var identity = new System.Security.Claims.ClaimsIdentity(new[] {
                         new System.Security.Claims.Claim(System.Security.Claims.ClaimTypes.NameIdentifier, objUser.iUser_Id.ToString()),
                         new System.Security.Claims.Claim("http://schemas.microsoft.com/accesscontrolservice/2010/07/claims/identityprovider", "ASP.NET Identity", "http://www.w3.org/2001/XMLSchema#string"),
                         new System.Security.Claims.Claim(System.Security.Claims.ClaimTypes.Name, objUser.vcUsername),
+                        new System.Security.Claims.Claim(System.Security.Claims.ClaimTypes.Role, role),
+                        new System.Security.Claims.Claim("iUser_Type_Id", objUser.iUser_Type_Id.ToString()),
+                        new System.Security.Claims.Claim("vcName", objUser.vcName ?? ""),
+                        new System.Security.Claims.Claim("vcSurname", objUser.vcSurname ?? ""),
+                        new System.Security.Claims.Claim("iPartner_Id", objUser.iPartner_Id.ToString()),
+                        new System.Security.Claims.Claim("iPartner_Type_Id", objUser.iPartner_Type_Id.ToString()),
+                        new System.Security.Claims.Claim("iUser_Status_Id", objUser.iUser_Status_Id.ToString())
                     }, DefaultAuthenticationTypes.ApplicationCookie);
 
                     HttpContext.Current.GetOwinContext().Authentication.SignIn(

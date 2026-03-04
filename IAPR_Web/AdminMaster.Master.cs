@@ -55,19 +55,6 @@ namespace IAPR_Web
             {
                 Response.Redirect("/account/login.aspx");
             }
-            if (Session["CurrentUser"] == null)
-            {
-                //C.Common.CurrentUser objUser = new C.Common.CurrentUser();
-                //Pro.User_Provider uP = new Pro.User_Provider();
-
-                objUser = uP.ValidateUser("mphothekisho1@gmail.com14", "password12");
-                if (objUser != null)
-                {
-
-                    Session["CurrentUser"] = objUser;
-                }
-            }
-
 
             Page.PreLoad += master_Page_PreLoad;
         }
