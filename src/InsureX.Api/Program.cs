@@ -31,6 +31,8 @@ builder.Services.AddDbContext<InsureXDbContext>((sp, opt) =>
     var cs = builder.Configuration.GetConnectionString("DefaultConnection")!;
     opt.UseSqlServer(cs);
 });
+builder.Services.AddScoped<IInsureXDbContext>(sp => sp.GetRequiredService<InsureXDbContext>());
+
 
 // ── Application services ──────────────────────────────────────────────────────
 builder.Services.AddScoped<AssetService>();
