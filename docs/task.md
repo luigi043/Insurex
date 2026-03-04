@@ -12,7 +12,7 @@ Based on the provided documents (`Asset Protection Register - product write-up`,
 ### Phase 1: Authentication & Data Protection
 - [x] Replace the custom session-based authentication with ASP.NET Core Identity (PBKDF2/Argon2 hashed passwords).
 - [x] Implement centralized Role-Based Access Control (RBAC) (Admin, BankUser, InsurerUser).
-- [/] Implement secure AES-GCM encryption for sensitive application data.
+- [x] Implement secure AES-GCM encryption for sensitive application data.
 
 ### Phase 2: Multi-Tenant Architecture
 - [ ] Introduce a `Tenant` and `Organization` entity model.

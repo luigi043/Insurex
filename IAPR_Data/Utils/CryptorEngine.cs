@@ -7,136 +7,130 @@ using System.Security.Cryptography;
 using System.Configuration;
 using System.Web.Script.Serialization;
 using U = IAPR_Data.Utils;
+using Org.BouncyCastle.Crypto.Engines;
+using Org.BouncyCastle.Crypto.Modes;
+using Org.BouncyCastle.Crypto.Parameters;
 namespace IAPR_Data.Utils
 {
     public class CryptorEngine
     {
+        // Helper Method for AES-GCM Encryption
+        private static string GcmEncrypt(string toEncrypt, string configurationKeyName, bool useHashing)
+        {
+            byte[] plainTextBytes = UTF8Encoding.UTF8.GetBytes(toEncrypt);
+            string keyString = ConfigurationManager.AppSettings[configurationKeyName]?.ToString();
+            
+            if (string.IsNullOrEmpty(keyString)) 
+                throw new InvalidOperationException($"Encryption key '{configurationKeyName}' missing from AppSettings.");
+
+            byte[] keyBytes;
+            if (useHashing)
+            {
+                using (SHA256 sha256 = SHA256.Create())
+                {
+                    keyBytes = sha256.ComputeHash(UTF8Encoding.UTF8.GetBytes(keyString));
+                }
+            }
+            else
+            {
+                // Pad or truncate to 32 bytes (256-bit)
+                keyBytes = new byte[32];
+                byte[] rawKeyBytes = UTF8Encoding.UTF8.GetBytes(keyString);
+                Array.Copy(rawKeyBytes, keyBytes, Math.Min(rawKeyBytes.Length, 32));
+            }
+
+            // Generate 12-byte Nonce (IV) for GCM
+            byte[] nonce = new byte[12];
+            using (var rng = new RNGCryptoServiceProvider())
+            {
+                rng.GetBytes(nonce);
+            }
+
+            GcmBlockCipher gcm = new GcmBlockCipher(new AesEngine());
+            AeadParameters parameters = new AeadParameters(new KeyParameter(keyBytes), 128, nonce);
+            gcm.Init(true, parameters);
+
+            byte[] cipherTextBytes = new byte[gcm.GetOutputSize(plainTextBytes.Length)];
+            int len = gcm.ProcessBytes(plainTextBytes, 0, plainTextBytes.Length, cipherTextBytes, 0);
+            gcm.DoFinal(cipherTextBytes, len);
+
+            // Payload format: [12-byte Nonce] + [Ciphertext + AuthTag]
+            byte[] payload = new byte[nonce.Length + cipherTextBytes.Length];
+            Array.Copy(nonce, 0, payload, 0, nonce.Length);
+            Array.Copy(cipherTextBytes, 0, payload, nonce.Length, cipherTextBytes.Length);
+
+            return Convert.ToBase64String(payload);
+        }
+
+        // Helper Method for AES-GCM Decryption
+        private static string GcmDecrypt(string cipherString, string configurationKeyName, bool useHashing)
+        {
+            byte[] payload = Convert.FromBase64String(cipherString);
+            string keyString = ConfigurationManager.AppSettings[configurationKeyName]?.ToString();
+
+            if (string.IsNullOrEmpty(keyString)) 
+                throw new InvalidOperationException($"Encryption key '{configurationKeyName}' missing from AppSettings.");
+
+            // Less than 12 bytes nonce + 16 bytes auth tag = invalid
+            if (payload.Length < 28)
+                throw new CryptographicException("Invalid ciphertext payload size for AES-GCM.");
+
+            byte[] keyBytes;
+            if (useHashing)
+            {
+                using (SHA256 sha256 = SHA256.Create())
+                {
+                    keyBytes = sha256.ComputeHash(UTF8Encoding.UTF8.GetBytes(keyString));
+                }
+            }
+            else
+            {
+                keyBytes = new byte[32];
+                byte[] rawKeyBytes = UTF8Encoding.UTF8.GetBytes(keyString);
+                Array.Copy(rawKeyBytes, keyBytes, Math.Min(rawKeyBytes.Length, 32));
+            }
+
+            byte[] nonce = new byte[12];
+            Array.Copy(payload, 0, nonce, 0, 12);
+
+            byte[] cipherTextBytes = new byte[payload.Length - 12];
+            Array.Copy(payload, 12, cipherTextBytes, 0, cipherTextBytes.Length);
+
+            GcmBlockCipher gcm = new GcmBlockCipher(new AesEngine());
+            AeadParameters parameters = new AeadParameters(new KeyParameter(keyBytes), 128, nonce);
+            gcm.Init(false, parameters);
+
+            byte[] plainTextBytes = new byte[gcm.GetOutputSize(cipherTextBytes.Length)];
+            try
+            {
+                int len = gcm.ProcessBytes(cipherTextBytes, 0, cipherTextBytes.Length, plainTextBytes, 0);
+                gcm.DoFinal(plainTextBytes, len);
+                return UTF8Encoding.UTF8.GetString(plainTextBytes);
+            }
+            catch (Org.BouncyCastle.Crypto.InvalidCipherTextException ex)
+            {
+                throw new CryptographicException("AES-GCM Authentication Tag Validation Failed. Data may have been tampered with or the wrong key was used.", ex);
+            }
+        }
+
         public static string ValidationEncrypt(string toEncrypt, bool useHashing)
         {
-            byte[] keyArray;
-            byte[] toEncryptArray = UTF8Encoding.UTF8.GetBytes(toEncrypt);
-
-            System.Configuration.AppSettingsReader settingsReader = new AppSettingsReader();
-            // Get the key from config file
-            string key = ConfigurationManager.AppSettings["ValCryptoKey"].ToString(); //";//(string)settingsReader.GetValue("SecurityKey", typeof(String));
-            //System.Windows.Forms.MessageBox.Show(key);
-            if (useHashing)
-            {
-                MD5CryptoServiceProvider hashmd5 = new MD5CryptoServiceProvider();
-                keyArray = hashmd5.ComputeHash(UTF8Encoding.UTF8.GetBytes(key));
-                hashmd5.Clear();
-            }
-            else
-                keyArray = UTF8Encoding.UTF8.GetBytes(key);
-
-            TripleDESCryptoServiceProvider tdes = new TripleDESCryptoServiceProvider();
-            tdes.Key = keyArray;
-            tdes.Mode = CipherMode.ECB;
-            tdes.Padding = PaddingMode.PKCS7;
-
-            ICryptoTransform cTransform = tdes.CreateEncryptor();
-            byte[] resultArray = cTransform.TransformFinalBlock(toEncryptArray, 0, toEncryptArray.Length);
-            tdes.Clear();
-            return Convert.ToBase64String(resultArray, 0, resultArray.Length);
+            return GcmEncrypt(toEncrypt, "ValCryptoKey", useHashing);
         }
-        /// <summary>
-        /// DeCrypt a string using dual encryption method. Return a DeCrypted clear string
-        /// </summary>
-        /// <param name="cipherString">encrypted string</param>
-        /// <param name="useHashing">Did you use hashing to encrypt this data? pass true is yes</param>
-        /// <returns></returns>
+
         public static string ValidationDecrypt(string cipherString, bool useHashing)
         {
-            byte[] keyArray;
-            byte[] toEncryptArray = Convert.FromBase64String(cipherString);
-
-            System.Configuration.AppSettingsReader settingsReader = new AppSettingsReader();
-            //Get your key from config file to open the lock!
-            string key = ConfigurationManager.AppSettings["ValCryptoKey"].ToString(); //"lendInsX";//(string)settingsReader.GetValue("SecurityKey", typeof(String));
-
-            if (useHashing)
-            {
-                MD5CryptoServiceProvider hashmd5 = new MD5CryptoServiceProvider();
-                keyArray = hashmd5.ComputeHash(UTF8Encoding.UTF8.GetBytes(key));
-                hashmd5.Clear();
-            }
-            else
-                keyArray = UTF8Encoding.UTF8.GetBytes(key);
-
-            TripleDESCryptoServiceProvider tdes = new TripleDESCryptoServiceProvider();
-            tdes.Key = keyArray;
-            tdes.Mode = CipherMode.ECB;
-            tdes.Padding = PaddingMode.PKCS7;
-
-            ICryptoTransform cTransform = tdes.CreateDecryptor();
-            byte[] resultArray = cTransform.TransformFinalBlock(toEncryptArray, 0, toEncryptArray.Length);
-
-            tdes.Clear();
-            return UTF8Encoding.UTF8.GetString(resultArray);
+            return GcmDecrypt(cipherString, "ValCryptoKey", useHashing);
         }
 
         public static string GenericEncrypt(string toEncrypt, bool useHashing)
         {
-            byte[] keyArray;
-            byte[] toEncryptArray = UTF8Encoding.UTF8.GetBytes(toEncrypt);
-
-            System.Configuration.AppSettingsReader settingsReader = new AppSettingsReader();
-            // Get the key from config file
-            string key = ConfigurationManager.AppSettings["GenCryptokey"].ToString(); //(string)settingsReader.GetValue("GenCryptokey", typeof(String));
-            //System.Windows.Forms.MessageBox.Show(key);
-            if (useHashing)
-            {
-                MD5CryptoServiceProvider hashmd5 = new MD5CryptoServiceProvider();
-                keyArray = hashmd5.ComputeHash(UTF8Encoding.UTF8.GetBytes(key));
-                hashmd5.Clear();
-            }
-            else
-                keyArray = UTF8Encoding.UTF8.GetBytes(key);
-
-            TripleDESCryptoServiceProvider tdes = new TripleDESCryptoServiceProvider();
-            tdes.Key = keyArray;
-            tdes.Mode = CipherMode.ECB;
-            tdes.Padding = PaddingMode.PKCS7;
-
-            ICryptoTransform cTransform = tdes.CreateEncryptor();
-            byte[] resultArray = cTransform.TransformFinalBlock(toEncryptArray, 0, toEncryptArray.Length);
-            tdes.Clear();
-            return Convert.ToBase64String(resultArray, 0, resultArray.Length);
+            return GcmEncrypt(toEncrypt, "GenCryptokey", useHashing);
         }
-        /// <summary>
-        /// DeCrypt a string using dual encryption method. Return a DeCrypted clear string
-        /// </summary>
-        /// <param name="cipherString">encrypted string</param>
-        /// <param name="useHashing">Did you use hashing to encrypt this data? pass true is yes</param>
-        /// <returns></returns>
+
         public static string GenericDecrypt(string cipherString, bool useHashing)
         {
-            byte[] keyArray;
-            byte[] toEncryptArray = Convert.FromBase64String(cipherString);
-
-            System.Configuration.AppSettingsReader settingsReader = new AppSettingsReader();
-            //Get your key from config file to open the lock!
-            string key = ConfigurationManager.AppSettings["GenCryptokey"].ToString();// (string)settingsReader.GetValue("GenCryptokey", typeof(String));
-
-            if (useHashing)
-            {
-                MD5CryptoServiceProvider hashmd5 = new MD5CryptoServiceProvider();
-                keyArray = hashmd5.ComputeHash(UTF8Encoding.UTF8.GetBytes(key));
-                hashmd5.Clear();
-            }
-            else
-                keyArray = UTF8Encoding.UTF8.GetBytes(key);
-
-            TripleDESCryptoServiceProvider tdes = new TripleDESCryptoServiceProvider();
-            tdes.Key = keyArray;
-            tdes.Mode = CipherMode.ECB;
-            tdes.Padding = PaddingMode.PKCS7;
-
-            ICryptoTransform cTransform = tdes.CreateDecryptor();
-            byte[] resultArray = cTransform.TransformFinalBlock(toEncryptArray, 0, toEncryptArray.Length);
-
-            tdes.Clear();
-            return UTF8Encoding.UTF8.GetString(resultArray);
+            return GcmDecrypt(cipherString, "GenCryptokey", useHashing);
         }
 
         public static string GenericEncrypt_V2(string toEncrypt, bool useHashing)
