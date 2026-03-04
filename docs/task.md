@@ -17,8 +17,8 @@ Based on the provided documents (`Asset Protection Register - product write-up`,
 ### Phase 2: Multi-Tenant Architecture
 - [x] Introduce a `Tenant` and `Organization` entity model.
 - [x] Add `TenantId` to all relevant domain entities (Assets, Policies, Cases).
-- [/] Implement `TenantContext` middleware to resolve the current tenant from the request.
-- [ ] Enforce tenant isolation using EF Core Global Query Filters.
+- [x] Implement `TenantContext` middleware to resolve the current tenant from the request.
+- [/] Enforce tenant isolation using EF Core Global Query Filters.
 - [ ] Implement SQL Server Row-Level Security (RLS) for strict database isolation.
 
 ### Phase 3: Event-Driven Compliance Engine

@@ -43,6 +43,19 @@ namespace IAPR_Web.Account
                         case 5: case 6: role = "InsurerUser"; break;
                     }
 
+                    // Look up TenantId and OrganizationId from the Identity database
+                    int? tenantId = null;
+                    int? orgId = null;
+                    using (var dbCtx = new C.ApplicationDbContext())
+                    {
+                        var appUser = dbCtx.Users.FirstOrDefault(u => u.UserName == objUser.vcUsername);
+                        if (appUser != null)
+                        {
+                            tenantId = appUser.TenantId;
+                            orgId = appUser.OrganizationId;
+                        }
+                    }
+
                     var identity = new System.Security.Claims.ClaimsIdentity(new[] {
                         new System.Security.Claims.Claim(System.Security.Claims.ClaimTypes.NameIdentifier, objUser.iUser_Id.ToString()),
                         new System.Security.Claims.Claim("http://schemas.microsoft.com/accesscontrolservice/2010/07/claims/identityprovider", "ASP.NET Identity", "http://www.w3.org/2001/XMLSchema#string"),
@@ -53,7 +66,9 @@ namespace IAPR_Web.Account
                         new System.Security.Claims.Claim("vcSurname", objUser.vcSurname ?? ""),
                         new System.Security.Claims.Claim("iPartner_Id", objUser.iPartner_Id.ToString()),
                         new System.Security.Claims.Claim("iPartner_Type_Id", objUser.iPartner_Type_Id.ToString()),
-                        new System.Security.Claims.Claim("iUser_Status_Id", objUser.iUser_Status_Id.ToString())
+                        new System.Security.Claims.Claim("iUser_Status_Id", objUser.iUser_Status_Id.ToString()),
+                        new System.Security.Claims.Claim("TenantId", tenantId?.ToString() ?? ""),
+                        new System.Security.Claims.Claim("OrganizationId", orgId?.ToString() ?? "")
                     }, DefaultAuthenticationTypes.ApplicationCookie);
 
                     HttpContext.Current.GetOwinContext().Authentication.SignIn(
