@@ -10,6 +10,7 @@ using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
 using IAPR_Data.Classes;
 using System.Data.Entity;
+using IAPR_Data.Services;
 
 namespace IAPR_Web
 {
@@ -20,6 +21,9 @@ namespace IAPR_Web
             // Code that runs on application startup
             RouteConfig.RegisterRoutes(RouteTable.Routes);
             BundleConfig.RegisterBundles(BundleTable.Bundles);
+
+            // Start the background webhook event queue
+            WebhookEventQueue.Instance.Start();
 
             // Explicitly force database recreation if the model has changed
             Database.SetInitializer(new DropCreateDatabaseIfModelChanges<ApplicationDbContext>());
@@ -107,6 +111,12 @@ namespace IAPR_Web
                         "RLS setup skipped: " + rlsEx.Message);
                 }
             }
+        }
+
+        void Application_End(object sender, EventArgs e)
+        {
+            // Gracefully drain and stop the background queue worker
+            WebhookEventQueue.Instance.Stop();
         }
     }
 }

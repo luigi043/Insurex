@@ -23,7 +23,7 @@ Based on the provided documents (`Asset Protection Register - product write-up`,
 
 ### Phase 3: Event-Driven Compliance Engine
 - [x] Build secure webhook ingestion endpoints for insurers (HMAC signature validation, replay protection, idempotency).
-- [ ] Integrate a message queue (Azure Service Bus or RabbitMQ) for decoupled event processing.
+- [x] Integrate a message queue (Azure Service Bus or RabbitMQ) for decoupled event processing.
 - [ ] Develop the Compliance Engine service to deterministically evaluate rules and emit compliance outcomes (`ComplianceState`).
 - [ ] Implement the Outbox pattern to ensure atomic database writes and reliable event publishing.
 

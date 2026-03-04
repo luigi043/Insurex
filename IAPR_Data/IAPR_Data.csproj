@@ -105,6 +105,7 @@
     <Compile Include="Classes\TenantContext.cs" />
     <Compile Include="Classes\Webhook\WebhookModels.cs" />
     <Compile Include="Classes\Webhook\HmacValidator.cs" />
+    <Compile Include="Services\WebhookEventQueue.cs" />
     <Compile Include="Classes\Common\CurrentUser.cs" />
     <Compile Include="Classes\Common\Dashboards.cs" />
     <Compile Include="Classes\Partners\Financer.cs" />
