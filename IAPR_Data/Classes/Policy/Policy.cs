@@ -10,6 +10,7 @@ namespace IAPR_Data.Classes.Policy
     {
 
         public int iPolicy_Id { get; set; }
+        public int? TenantId { get; set; }
         public int iInsurance_Company_Id { get; set; }
         public string vcPolicy_Number { get; set; }
         

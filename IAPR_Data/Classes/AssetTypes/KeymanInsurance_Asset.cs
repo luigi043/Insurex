@@ -10,6 +10,7 @@ namespace IAPR_Data.Classes.AssetTypes
     {
         public int iKeymanInsurance_Asset_Id { get; set; }
         public int iPolicy_Id { get; set; }
+        public int? TenantId { get; set; }
         public int iAsset_Cover_Type_Id { get; set; }
         public string vcAsset_Cover_Type_Description { get; set; }
         public int iFinancer_Id { get; set; }
