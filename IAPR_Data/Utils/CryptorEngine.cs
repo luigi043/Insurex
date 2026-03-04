@@ -141,13 +141,15 @@ namespace IAPR_Data.Utils
 
         public static string GenericEncrypt_V2(string toEncrypt, bool useHashing)
         {
-
-            return AES_Encrypt(toEncrypt, "KaNdRgUkXp2s5v8y/B?E(H+MbQeShVmY");
-
+            string key = ConfigurationManager.AppSettings["AesCryptoKey"]?.ToString();
+            if (string.IsNullOrEmpty(key)) throw new InvalidOperationException("Encryption key missing.");
+            return AES_Encrypt(toEncrypt, key);
         }
         public static string GenericDecrypt_V2(string cipherString, bool useHashing)
         {
-            return AES_Decrypt(cipherString, "KaNdRgUkXp2s5v8y/B?E(H+MbQeShVmY");
+            string key = ConfigurationManager.AppSettings["AesCryptoKey"]?.ToString();
+            if (string.IsNullOrEmpty(key)) throw new InvalidOperationException("Encryption key missing.");
+            return AES_Decrypt(cipherString, key);
         }
 
         private static readonly Encoding encoding = Encoding.UTF8;

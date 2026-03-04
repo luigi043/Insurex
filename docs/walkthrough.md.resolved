@@ -1,0 +1,18 @@
+# Fixing Backend and API Build Errors
+
+## Overview
+Based on your request to "fix the back-end and api", I investigated the build errors in the `InsureX` solution, specifically focusing on the data layer (`IAPR_Data`) and the REST API (`IAPR_API`).
+
+## Changes Made
+1. **Restored NuGet Packages**:
+   - The [.sln](file:///c:/Users/cluiz/projectx/Insurex/Insured_Assest_Protection_Register.sln) file was missing its [packages.config](file:///c:/Users/cluiz/projectx/Insurex/IAPR_Data/packages.config) restorations, so we downloaded `nuget.exe` and restored the `packages` folder.
+   
+2. **Fixed `IAPR_Data` References**:
+   - `Newtonsoft.Json`: Updated the [.csproj](file:///c:/Users/cluiz/projectx/Insurex/IAPR_API/IAPRAPI.csproj) `HintPath` from missing `bin\Debug\Newtonsoft.Json.dll` to correctly reference `..\packages\Newtonsoft.Json.13.0.1\lib\net45\Newtonsoft.Json.dll`.
+   - `Microsoft.ApplicationBlocks.Data`: The reference was hardcoded to a missing manual copy in `bin\Debug\`. We installed the package via NuGet into the `packages` directory and updated the `HintPath` in the [.csproj](file:///c:/Users/cluiz/projectx/Insurex/IAPR_API/IAPRAPI.csproj) file to point to it correctly.
+
+## Verification
+- We ran MSBuild against the `IAPR_API.csproj` layout and confirmed that `IAPR_API` and `IAPR_Data` both compile **successfully** with 0 errors.
+
+> [!NOTE]
+> The solution contains an older web frontend (`IAPR_Web.csproj`) which is currently missing older controls like `AjaxControlToolkit` and `FusionCharts`. Since the focus was on the Backend/API, those will be deferred to when working on the frontend specifically.

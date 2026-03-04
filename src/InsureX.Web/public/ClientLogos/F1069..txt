@@ -1,9 +1,0 @@
-Super Admin:  admin@invoiceregister.com
-
-Credit Provider 
-	Client Admin: mphothekisho@gmail.com
-	Client Branch User: mphothekisho@hotmail.com
-	
-Debtor
-	Admin: mpho@placementplus.co.za
-	

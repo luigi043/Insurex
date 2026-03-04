@@ -45,7 +45,7 @@
   <ItemGroup>
     <Reference Include="AjaxControlToolkit, Version=20.1.0.0, Culture=neutral, PublicKeyToken=28f01b0e84b6d53e, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\..\Users\MphoThekisho\Documents\ASP.NET AJAX Control Toolkit\Bin\AjaxControlToolkit.dll</HintPath>
+      <HintPath>..\packages\AjaxControlToolkit.20.1.0\lib\net40\AjaxControlToolkit.dll</HintPath>
     </Reference>
     <Reference Include="BouncyCastle.Crypto, Version=1.8.9.0, Culture=neutral, PublicKeyToken=0e99375e54769942">
       <HintPath>..\packages\BouncyCastle.1.8.9\lib\BouncyCastle.Crypto.dll</HintPath>
@@ -55,43 +55,43 @@
     </Reference>
     <Reference Include="FusionCharts, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>bin\FusionCharts.dll</HintPath>
+      <HintPath>..\packages\FusionCharts.AspNetWrapper.1.0.0\lib\net80\FusionCharts.dll</HintPath>
     </Reference>
     <Reference Include="FusionCharts.DataEngine, Version=1.0.1.0, Culture=neutral, PublicKeyToken=e6b8110d59760a80, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>bin\FusionCharts.DataEngine.dll</HintPath>
+      <HintPath>..\packages\FusionCharts.Visualization.1.0.9\lib\net45\FusionCharts.DataEngine.dll</HintPath>
     </Reference>
     <Reference Include="FusionCharts.SharpVectors.Converters, Version=1.0.0.0, Culture=neutral, PublicKeyToken=b532964b8548be77, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>bin\FusionCharts.SharpVectors.Converters.dll</HintPath>
+      <HintPath>..\packages\FusionCharts.Visualization.1.0.9\lib\net45\FusionCharts.SharpVectors.Converters.dll</HintPath>
     </Reference>
     <Reference Include="FusionCharts.SharpVectors.Core, Version=0.3.1.29789, Culture=neutral, PublicKeyToken=7407205e337c98ef, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>bin\FusionCharts.SharpVectors.Core.dll</HintPath>
+      <HintPath>..\packages\FusionCharts.Visualization.1.0.9\lib\net45\FusionCharts.SharpVectors.Core.dll</HintPath>
     </Reference>
     <Reference Include="FusionCharts.SharpVectors.Css, Version=0.3.1.29790, Culture=neutral, PublicKeyToken=7a46e3f532fdb787, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>bin\FusionCharts.SharpVectors.Css.dll</HintPath>
+      <HintPath>..\packages\FusionCharts.Visualization.1.0.9\lib\net45\FusionCharts.SharpVectors.Css.dll</HintPath>
     </Reference>
     <Reference Include="FusionCharts.SharpVectors.Dom, Version=0.3.1.29789, Culture=neutral, PublicKeyToken=517340b6277b1a7a, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>bin\FusionCharts.SharpVectors.Dom.dll</HintPath>
+      <HintPath>..\packages\FusionCharts.Visualization.1.0.9\lib\net45\FusionCharts.SharpVectors.Dom.dll</HintPath>
     </Reference>
     <Reference Include="FusionCharts.SharpVectors.Model, Version=0.3.1.29790, Culture=neutral, PublicKeyToken=2236cfc76b505845, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>bin\FusionCharts.SharpVectors.Model.dll</HintPath>
+      <HintPath>..\packages\FusionCharts.Visualization.1.0.9\lib\net45\FusionCharts.SharpVectors.Model.dll</HintPath>
     </Reference>
     <Reference Include="FusionCharts.SharpVectors.Rendering.Wpf, Version=1.0.0.0, Culture=neutral, PublicKeyToken=d0902381100df30e, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>bin\FusionCharts.SharpVectors.Rendering.Wpf.dll</HintPath>
+      <HintPath>..\packages\FusionCharts.Visualization.1.0.9\lib\net45\FusionCharts.SharpVectors.Rendering.Wpf.dll</HintPath>
     </Reference>
     <Reference Include="FusionCharts.SharpVectors.Runtime, Version=1.0.0.0, Culture=neutral, PublicKeyToken=d16e717f0a981fb9, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>bin\FusionCharts.SharpVectors.Runtime.dll</HintPath>
+      <HintPath>..\packages\FusionCharts.Visualization.1.0.9\lib\net45\FusionCharts.SharpVectors.Runtime.dll</HintPath>
     </Reference>
     <Reference Include="FusionCharts.Visualization, Version=1.0.1.0, Culture=neutral, PublicKeyToken=e6b8110d59760a80, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>bin\FusionCharts.Visualization.dll</HintPath>
+      <HintPath>..\packages\FusionCharts.Visualization.1.0.9\lib\net45\FusionCharts.Visualization.dll</HintPath>
     </Reference>
     <Reference Include="FusionExport, Version=1.2.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\FusionExport.2.0.0\lib\net40\FusionExport.dll</HintPath>

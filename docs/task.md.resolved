@@ -1,0 +1,48 @@
+# Task Checklist
+
+## Platform Modernization & Missing Features (Roadmap)
+Based on the provided documents (`Asset Protection Register - product write-up`, `InsureX Platform - System Description`, and `InsureX - ChatGPT Code review`), the following features and architectural components are missing from the current implementation:
+
+### Phase 0: Emergency Security Remediation
+- [x] Move hardcoded credentials (SMTP, DB, Payment Gateway) to Azure Key Vault or Environment Variables.
+- [x] Add a [.gitignore](file:///c:/Users/cluiz/projectx/Insurex/.gitignore) file and remove `bin/`, `obj/`, and `.vs/` directories from source control.
+- [x] Remove hardcoded AES keys from [CryptorEngine.cs](file:///c:/Users/cluiz/projectx/Insurex/IAPR_Data/Utils/CryptorEngine.cs).
+- [x] Enforce HTTPS and secure cookie settings.
+
+### Phase 1: Authentication & Data Protection
+- [ ] Replace the custom session-based authentication with ASP.NET Core Identity (PBKDF2/Argon2 hashed passwords).
+- [ ] Implement centralized Role-Based Access Control (RBAC) (Admin, BankUser, InsurerUser).
+- [ ] Implement secure AES-GCM encryption for sensitive application data.
+
+### Phase 2: Multi-Tenant Architecture
+- [ ] Introduce a `Tenant` and `Organization` entity model.
+- [ ] Add `TenantId` to all relevant domain entities (Assets, Policies, Cases).
+- [ ] Implement `TenantContext` middleware to resolve the current tenant from the request.
+- [ ] Enforce tenant isolation using EF Core Global Query Filters.
+- [ ] Implement SQL Server Row-Level Security (RLS) for strict database isolation.
+
+### Phase 3: Event-Driven Compliance Engine
+- [ ] Build secure webhook ingestion endpoints for insurers (HMAC signature validation, replay protection, idempotency).
+- [ ] Integrate a message queue (Azure Service Bus or RabbitMQ) for decoupled event processing.
+- [ ] Develop the Compliance Engine service to deterministically evaluate rules and emit compliance outcomes (`ComplianceState`).
+- [ ] Implement the Outbox pattern to ensure atomic database writes and reliable event publishing.
+
+### Phase 4: Workflow Orchestration & Audit Trails
+- [ ] Create an immutable Audit Log / Evidence Ledger (capturing who, what, when, old/new values, and `CorrelationId`).
+- [ ] Implement Case Management and Workflow Orchestration (tasks, SLA timers, escalations).
+- [ ] Refactor the [Notification_Provider](file:///c:/Users/cluiz/projectx/Insurex/IAPR_Data/Providers/Notification_Provider.cs#19-814) to send targeted, templated emails/SMS securely with a robust retry policy (addressing the current bulk BCC/CC leaks).
+
+### Phase 5: API & Frontend Modernization
+- [ ] Build structured RESTful JSON APIs for all modules with standard pagination envelopes.
+- [ ] Implement OAuth2 Client Credentials for secure system-to-system integrations (Banks and Insurers).
+- [ ] Migrate the legacy WebForms UI (`IAPR_Web`) to ASP.NET Core MVC (Razor + jQuery partials) or a modern SPA framework, utilizing Razor Class Libraries (RCL) for shared components.
+
+---
+## Completed Tasks
+- [x] Fix IAPR_Web Build Errors
+  - [x] Restore NuGet packages for IAPR_Web
+  - [x] Install missing AjaxControlToolkit dependency via NuGet
+  - [x] Fix FusionCharts and other missing reference paths
+  - [x] Verify IAPR_Web compiles successfully
+- [x] Start the Project
+  - [x] Run the web application using IIS Express or dotnet run
