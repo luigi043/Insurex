@@ -1,0 +1,28 @@
+version: "3.8"
+
+services:
+  db:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    container_name: insurex-db
+    environment:
+      - ACCEPT_EULA=Y
+      - MSSQL_SA_PASSWORD=YourStrong!Passw0rd
+    ports:
+      - "1433:1433"
+    volumes:
+      - mssql-data:/var/opt/mssql
+
+  frontend:
+    build:
+      context: ./InsureX.Frontend
+      dockerfile: Dockerfile
+    container_name: insurex-frontend
+    ports:
+      - "80:80"
+    depends_on:
+      - db
+    environment:
+      - VITE_API_URL=http://localhost:12857/api/compliance # Pointing to local dev host for now
+
+volumes:
+  mssql-data:

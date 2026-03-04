@@ -114,4 +114,25 @@ namespace IAPR_Data.Classes
         public DateTime EvaluatedAt { get; set; }
         public string CorrelationId { get; set; }
     }
+
+    public class UserDto
+    {
+        public string Id { get; set; }
+        public string UserName { get; set; }
+        public string Email { get; set; }
+        public string FullName { get; set; }
+        public int? TenantId { get; set; }
+        public string Role { get; set; }
+        public bool IsActive { get; set; }
+    }
+
+    public class TenantDto
+    {
+        public int Id { get; set; }
+        public string Name { get; set; }
+        public string Identifier { get; set; }
+        public string Type { get; set; } // Financer | Insurer | Broker | Admin
+        public DateTime CreatedAt { get; set; }
+        public bool IsActive { get; set; }
+    }
 }

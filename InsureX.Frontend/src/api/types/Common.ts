@@ -8,6 +8,13 @@ export interface PaginatedResponse<T> {
     hasPreviousPage: boolean;
 }
 
+export interface PaginationParams {
+    page?: number;
+    pageSize?: number;
+    sortBy?: string;
+    sortDir?: 'asc' | 'desc';
+}
+
 export interface ApiResponse<T> {
     success: boolean;
     message: string;

@@ -6,6 +6,9 @@ import AssetsPage from './components/pages/AssetsPage';
 import AssetDetailPage from './components/pages/AssetDetailPage';
 import CasesPage from './components/pages/CasesPage';
 import CompliancePage from './components/pages/CompliancePage';
+import AuditPage from './components/pages/AuditPage';
+import UsersPage from './components/pages/UsersPage';
+import TenantsPage from './components/pages/TenantsPage';
 import LoginPage from './components/pages/LoginPage';
 
 const App: React.FC = () => {
@@ -22,6 +25,9 @@ const App: React.FC = () => {
           <Route path="assets/:id" element={<AssetDetailPage />} />
           <Route path="compliance" element={<CompliancePage />} />
           <Route path="cases" element={<CasesPage />} />
+          <Route path="audit" element={<AuditPage />} />
+          <Route path="users" element={<UsersPage />} />
+          <Route path="organizations" element={<TenantsPage />} />
         </Route>
 
         {/* Fallback */}

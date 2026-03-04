@@ -72,6 +72,16 @@ namespace IAPR_API
         [WebGet(UriTemplate = "/assets/{id}",
                 ResponseFormat = WebMessageFormat.Json)]
         Stream GetAsset(string id);
+
+        [OperationContract]
+        [WebGet(UriTemplate = "/admin/users?page={page}&pageSize={pageSize}",
+                ResponseFormat = WebMessageFormat.Json)]
+        Stream GetUsers(int page, int pageSize);
+
+        [OperationContract]
+        [WebGet(UriTemplate = "/admin/tenants?page={page}&pageSize={pageSize}",
+                ResponseFormat = WebMessageFormat.Json)]
+        Stream GetTenants(int page, int pageSize);
     }
 
     [ServiceBehavior(InstanceContextMode = InstanceContextMode.PerCall)]
@@ -493,6 +503,60 @@ namespace IAPR_API
                 };
 
                 return WriteJson(ApiResponse<AssetDetailDto>.Ok(detail));
+            }
+        }
+
+        // ------------------------------------------------------------------
+        // GET /admin/users
+        // ------------------------------------------------------------------
+        public Stream GetUsers(int page, int pageSize)
+        {
+            var token = RequireBearer("admin:read");
+            if (token == null) return Unauthorized();
+
+            page     = Math.Max(page, 1);
+            pageSize = Math.Clamp(pageSize, 1, 100);
+
+            using (var db = ApplicationDbContext.Create())
+            {
+                // In a real system, this would query AspNetUsers and link to Tenants
+                // Mocking for now as we transition.
+                var users = new List<UserDto>
+                {
+                    new UserDto { Id = "1", UserName = "admin@insurex.com", Email = "admin@insurex.com", FullName = "System Admin", Role = "Administrator", IsActive = true },
+                    new UserDto { Id = "2", UserName = "banker@testbank.com", Email = "banker@testbank.com", FullName = "James Banker", TenantId = 1, Role = "Manager", IsActive = true }
+                };
+
+                return WriteJson(new PagedResult<UserDto>(users, users.Count, page, pageSize));
+            }
+        }
+
+        // ------------------------------------------------------------------
+        // GET /admin/tenants
+        // ------------------------------------------------------------------
+        public Stream GetTenants(int page, int pageSize)
+        {
+            var token = RequireBearer("admin:read");
+            if (token == null) return Unauthorized();
+
+            page     = Math.Max(page, 1);
+            pageSize = Math.Clamp(pageSize, 1, 100);
+
+            using (var db = ApplicationDbContext.Create())
+            {
+                var tenants = db.Tenants.OrderBy(t => t.Id).Skip((page - 1) * pageSize).Take(pageSize).ToList();
+                var results = tenants.Select(t => new TenantDto
+                {
+                    Id = t.Id,
+                    Name = t.Name,
+                    Identifier = t.Identifier,
+                    Type = "Financer", // Simplified mapping
+                    CreatedAt = DateTime.UtcNow.AddYears(-1),
+                    IsActive = t.IsActive
+                }).ToList();
+
+                var total = db.Tenants.Count();
+                return WriteJson(new PagedResult<TenantDto>(results, total, page, pageSize));
             }
         }
 
