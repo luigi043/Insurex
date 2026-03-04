@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Linq;
 
 namespace IAPR_Data.Classes
 {
@@ -55,6 +56,28 @@ namespace IAPR_Data.Classes
         public static ApplicationDbContext Create()
         {
             return new ApplicationDbContext();
+        }
+
+        /// <summary>
+        /// Returns a LINQ query scoped to the current user's Tenant.
+        /// Uses TenantContext to resolve the active TenantId from OWIN claims.
+        /// </summary>
+        /// <param name="tenantId">Optional override; if null, uses TenantContext.Current</param>
+        public IQueryable<TEntity> ForTenant<TEntity>(int? tenantId = null)
+            where TEntity : class
+        {
+            int? resolvedTenantId = tenantId ?? TenantContext.Current;
+            var dbSet = Set<TEntity>();
+
+            if (resolvedTenantId == null)
+                return dbSet; // No tenant restriction for system-level queries
+
+            // Apply TenantId filter via reflection-based convention
+            var tenantProp = typeof(TEntity).GetProperty("TenantId");
+            if (tenantProp == null)
+                return dbSet; // Entity does not participate in multi-tenancy
+
+            return dbSet.Where(e => (int?)tenantProp.GetValue(e, null) == resolvedTenantId);
         }
     }
 }
