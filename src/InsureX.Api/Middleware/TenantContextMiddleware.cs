@@ -19,16 +19,33 @@ public class TenantContextMiddleware
 
     public async Task InvokeAsync(HttpContext ctx, TenantContext tenantContext)
     {
-        Guid tenantId = DevTenant;
+        Guid? tenantId = null;
 
-        if (ctx.Request.Headers.TryGetValue("X-Tenant-Id", out var raw)
+        // 1. Try resolving from authenticated user claims
+        if (ctx.User.Identity?.IsAuthenticated == true)
+        {
+            var tenantClaim = ctx.User.FindFirst("tenant_id")?.Value;
+            if (Guid.TryParse(tenantClaim, out var parsedClaim))
+            {
+                tenantId = parsedClaim;
+            }
+        }
+
+        // 2. Try resolving from custom header
+        if (tenantId == null && ctx.Request.Headers.TryGetValue("X-Tenant-Id", out var raw)
             && Guid.TryParse(raw.FirstOrDefault(), out var fromHeader))
         {
             tenantId = fromHeader;
         }
-        // TODO: extract from JWT claim when auth is implemented
 
-        tenantContext.Set(tenantId);
+        // 3. Fallback for local development
+        if (tenantId == null)
+        {
+            // In a strict production environment, we might return 400 Bad Request here.
+            tenantId = DevTenant;
+        }
+
+        tenantContext.Set(tenantId.Value);
         await _next(ctx);
     }
 }
