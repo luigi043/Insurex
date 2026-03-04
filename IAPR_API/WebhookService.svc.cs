@@ -8,6 +8,7 @@ using System.Text;
 using System.Web;
 using IAPR_Data.Classes;
 using IAPR_Data.Classes.Webhook;
+using IAPR_Data.Services;
 using Newtonsoft.Json;
 
 namespace IAPR_API
@@ -125,6 +126,17 @@ namespace IAPR_API
 
                     db.WebhookEvents.Add(webhookEvent);
                     db.SaveChanges();
+
+                    // Dispatch to the in-process queue for async ComplianceEngine processing
+                    WebhookEventQueue.Instance.Enqueue(new WebhookEventMessage
+                    {
+                        EventId   = eventId,
+                        Source    = source,
+                        EventType = eventType,
+                        Payload   = payload,
+                        TenantId  = TenantContext.Current,
+                        ReceivedAt = DateTime.UtcNow
+                    });
                 }
 
                 ctx.OutgoingResponse.StatusCode = HttpStatusCode.Accepted;

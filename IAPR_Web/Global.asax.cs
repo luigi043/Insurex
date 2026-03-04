@@ -22,8 +22,11 @@ namespace IAPR_Web
             RouteConfig.RegisterRoutes(RouteTable.Routes);
             BundleConfig.RegisterBundles(BundleTable.Bundles);
 
-            // Start the background webhook event queue
-            WebhookEventQueue.Instance.Start();
+            // Start the Compliance Engine — it registers itself with the WebhookEventQueue and starts the queue worker.
+            ComplianceEngine.Instance.Start();
+
+            // Start the Outbox pattern publisher — polls the DB for unpublished compliance outcome messages.
+            OutboxPublisher.Instance.Start();
 
             // Explicitly force database recreation if the model has changed
             Database.SetInitializer(new DropCreateDatabaseIfModelChanges<ApplicationDbContext>());
@@ -115,8 +118,10 @@ namespace IAPR_Web
 
         void Application_End(object sender, EventArgs e)
         {
-            // Gracefully drain and stop the background queue worker
+            // Gracefully drain and stop the background workers
             WebhookEventQueue.Instance.Stop();
+            OutboxPublisher.Instance.Stop();
+
         }
     }
 }
