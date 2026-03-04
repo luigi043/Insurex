@@ -28,6 +28,9 @@ namespace IAPR_Web
             // Start the Outbox pattern publisher — polls the DB for unpublished compliance outcome messages.
             OutboxPublisher.Instance.Start();
 
+            // Start the Case Manager — runs SLA escalation sweep every 5 minutes.
+            CaseManager.Instance.Start();
+
             // Explicitly force database recreation if the model has changed
             Database.SetInitializer(new DropCreateDatabaseIfModelChanges<ApplicationDbContext>());
 
@@ -121,7 +124,7 @@ namespace IAPR_Web
             // Gracefully drain and stop the background workers
             WebhookEventQueue.Instance.Stop();
             OutboxPublisher.Instance.Stop();
-
+            CaseManager.Instance.Stop();
         }
     }
 }

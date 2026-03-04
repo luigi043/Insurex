@@ -14,6 +14,7 @@ using Microsoft.ApplicationBlocks.Data;
 using System.Net;
 using System.Net.Mail;
 using U = IAPR_Data.Utils;
+using IAPR_Data.Services;
 namespace IAPR_Data.Providers
 {
     public class Notification_Provider
@@ -606,136 +607,13 @@ namespace IAPR_Data.Providers
         }
         public void DeliverMailToUser(string receipientAddress, string eMailSubject, string eMailbody)
         {
-            MailMessage message = new MailMessage();
-            SmtpClient smtpClient = new SmtpClient(ConfigurationManager.AppSettings["SMTPServer"].ToString());
-            smtpClient.Port = Convert.ToInt32(ConfigurationManager.AppSettings["SMTPPort"]);
-            NetworkCredential networkCredential = new NetworkCredential(ConfigurationManager.AppSettings["SMTPServerAccount"].ToString(), ConfigurationManager.AppSettings["SMTPServerPassword"].ToString());
-            smtpClient.Credentials = (ICredentialsByHost)networkCredential;
-            try
-            {
-                message.To.Add(receipientAddress);
-                message.From = new MailAddress(ConfigurationManager.AppSettings["Support_Email_Address"].ToString());
-                message.Subject = eMailSubject;
-                message.IsBodyHtml = true;
-                StringBuilder stringBuilder = new StringBuilder();
-                message.Body = eMailbody.ToString();
-                message.IsBodyHtml = true;
-                message.DeliveryNotificationOptions = DeliveryNotificationOptions.OnFailure;
-                message.Priority = MailPriority.High;
-                smtpClient.Send(message);
-            }
-            catch (SmtpException ex)
-            {
-                if (ex.StatusCode == SmtpStatusCode.InsufficientStorage)
-                {
-                    smtpClient.Send(message);
-                }
-                else
-                {
-                    U.ErrorLogger eL = new U.ErrorLogger();
-                    eL.LogErrorInDB(ex, "", "");
-
-                }
-            }
-            finally
-            {
-                message.Dispose();
-            }
-            //MailMessage msg = new MailMessage();
-            //SmtpClient smtp = new SmtpClient(ConfigurationManager.AppSettings["SMTPServer"].ToString());
-
-            //smtp.Port = Convert.ToInt32(ConfigurationManager.AppSettings["SMTPPort"]);
-            //System.Net.NetworkCredential credentials = new System.Net.NetworkCredential(ConfigurationManager.AppSettings["SMTPServerAccount"].ToString(), ConfigurationManager.AppSettings["SMTPServerPassword"].ToString());
-
-            //smtp.Credentials = credentials;
-            //smtp.DeliveryMethod = SmtpDeliveryMethod.Network;
-            //try
-            //{  //Send Mail
-            //    msg.To.Add(receipientAddress);
-            //    // msg.Sender.DisplayName("Ticcets.com");
-            //    msg.From = new MailAddress("support@ticcets.com", "Ticcets.com");
-            //    msg.Subject = eMailSubject;
-            //    msg.IsBodyHtml = true;
-            //    StringBuilder sbBody = new StringBuilder();
-
-            //    msg.Body = eMailbody.ToString();
-            //    msg.IsBodyHtml = true;
-            //    msg.DeliveryNotificationOptions = DeliveryNotificationOptions.OnFailure;
-            //    msg.Priority = MailPriority.High;
-
-            //    smtp.Send(msg);
-            //}
-            ////catch (Exception ex)
-            ////{
-            ////    Logger.LogFileWrite(ConfigurationManager.AppSettings["SMTPServer"].ToString() + ", " + ex.Message + " : " + ConfigurationManager.AppSettings["SMTPServerAccount"].ToString() + ", " + ex.StackTrace + ", " + ex.InnerException);
-
-            ////}
-            //catch (SmtpException exSMTP)
-            //{
-            //    if (exSMTP.StatusCode == SmtpStatusCode.InsufficientStorage)
-            //    {
-            //        //Send again to ensure this email gets sent 
-            //        smtp.Send(msg);
-            //    }
-            //    else
-            //    {
-            //        //Handle other SMTP errors here. 
-            //        Logger.LogFileWrite(ConfigurationManager.AppSettings["SMTPServer"].ToString() + ", " + exSMTP.Message + " : " + ConfigurationManager.AppSettings["SMTPServerAccount"].ToString() + ", " + exSMTP.StackTrace + ", " + exSMTP.InnerException);
-            //    }
-
-            //    MessageWrapper.SendErrorEmail(exSMTP, "Error - Mailer - DeliverMailToUser");
-            //}
-            //finally
-            //{
-            //    msg.Dispose();
-            //}
+            // Delegate to the secure NotificationService singleton (shared SmtpClient + retry logic)
+            NotificationService.Instance.Send(receipientAddress, eMailSubject, eMailbody);
         }
         public void DeliverMailToSupport(string senderName, string senderAddress, string eMailSubject, string eMailbody)
         {
-            MailMessage msg = new MailMessage();
-            SmtpClient smtp = new SmtpClient(ConfigurationManager.AppSettings["SMTPServer"].ToString());
-
-            smtp.Port = Convert.ToInt32(ConfigurationManager.AppSettings["SMTPPort"]);
-            System.Net.NetworkCredential credentials = new System.Net.NetworkCredential(ConfigurationManager.AppSettings["SMTPServerAccount"].ToString(), ConfigurationManager.AppSettings["SMTPServerPassword"].ToString());
-            smtp.Credentials = credentials;
-            try
-            {  //Send Mail
-                msg.To.Add(ConfigurationManager.AppSettings["Support_Email_Address"].ToString());
-
-                msg.From = new MailAddress(senderAddress, senderName);
-                msg.Subject = eMailSubject;
-                msg.IsBodyHtml = true;
-                StringBuilder sbBody = new StringBuilder();
-
-                msg.Body = eMailbody.ToString();
-                msg.IsBodyHtml = true;
-                msg.DeliveryNotificationOptions = DeliveryNotificationOptions.OnFailure;
-                msg.Priority = MailPriority.High;
-
-                smtp.Send(msg);
-            }
-            //catch (Exception ex)
-            //{
-            //    Logger.LogFileWrite(ConfigurationManager.AppSettings["SMTPServer"].ToString() + ", " + ex.Message + " : " + ConfigurationManager.AppSettings["SMTPServerAccount"].ToString() + ", " + ex.StackTrace + ", " + ex.InnerException);
-
-            //}
-            catch (SmtpException exSMTP)
-            {
-                if (exSMTP.StatusCode == SmtpStatusCode.InsufficientStorage)
-                {
-                    //Send again to ensure this email gets sent 
-                    smtp.Send(msg);
-                }
-                else
-                {
-                    U.ErrorLogger eL = new U.ErrorLogger();
-                    eL.LogErrorInDB(exSMTP, "", "");
-                }
-            }
-            finally
-            {
-                msg.Dispose();
-            }
+            // Delegate to the secure NotificationService singleton
+            NotificationService.Instance.SendToSupport(eMailSubject, eMailbody);
         }
 
         public bool SendCartJson(string receipientAddress, string json)

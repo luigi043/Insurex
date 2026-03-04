@@ -13,7 +13,8 @@ namespace IAPR_Data.Services
     /// Design principles:
     /// - Deterministic: same input always produces same <see cref="ComplianceOutcome"/>.
     /// - Atomic: each evaluation writes <see cref="ComplianceState"/> + <see cref="OutboxMessage"/>
-    ///   in a single DB transaction (Outbox pattern).
+    ///   + <see cref="AuditLogEntry"/> (and a <see cref="Case"/> for non-compliant outcomes)
+    ///   in a single DB transaction (Outbox pattern + Audit trail).
     /// - Idempotent: duplicate EventIds are detected and skipped.
     /// - Pluggable: rule evaluation is delegated to <see cref="EvaluateRules"/> which can be
     ///   extended with new event types without touching the orchestration logic.
@@ -111,6 +112,24 @@ namespace IAPR_Data.Services
                     {
                         db.ComplianceStates.Add(state);
                         db.OutboxMessages.Add(outboxMsg);
+
+                        // --- Phase 4: Audit log entry for this evaluation ---
+                        AuditLogger.Log(db,
+                            entityName:    "ComplianceState",
+                            entityId:      message.EventId,
+                            action:        "Evaluated",
+                            newValues:     new { state.Outcome, state.Reason, state.EvaluatedAt },
+                            actorName:     "ComplianceEngine",
+                            tenantId:      message.TenantId,
+                            correlationId: state.CorrelationId,
+                            notes:         $"Event type: {message.EventType} | Source: {message.Source}");
+
+                        // --- Phase 4: Open a compliance case for adverse outcomes ---
+                        if (outcome == ComplianceOutcome.NonCompliant ||
+                            outcome == ComplianceOutcome.PendingReview)
+                        {
+                            CaseManager.Instance.OpenCase(db, state);
+                        }
 
                         // Mark the source webhook event as Processed
                         var webhookEvent = db.WebhookEvents

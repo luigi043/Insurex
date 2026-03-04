@@ -52,6 +52,9 @@ namespace IAPR_Data.Classes
         public DbSet<WebhookEvent> WebhookEvents { get; set; }
         public DbSet<ComplianceState> ComplianceStates { get; set; }
         public DbSet<OutboxMessage> OutboxMessages { get; set; }
+        public DbSet<AuditLogEntry> AuditLog { get; set; }
+        public DbSet<Case> Cases { get; set; }
+        public DbSet<CaseNote> CaseNotes { get; set; }
 
         public ApplicationDbContext()
             : base("connIAPRData")

@@ -107,9 +107,14 @@
     <Compile Include="Classes\Webhook\HmacValidator.cs" />
     <Compile Include="Classes\ComplianceState.cs" />
     <Compile Include="Classes\OutboxMessage.cs" />
+    <Compile Include="Classes\AuditLogEntry.cs" />
+    <Compile Include="Classes\Case.cs" />
     <Compile Include="Services\WebhookEventQueue.cs" />
     <Compile Include="Services\ComplianceEngine.cs" />
     <Compile Include="Services\OutboxPublisher.cs" />
+    <Compile Include="Services\AuditLogger.cs" />
+    <Compile Include="Services\CaseManager.cs" />
+    <Compile Include="Services\NotificationService.cs" />
     <Compile Include="Classes\Common\CurrentUser.cs" />
     <Compile Include="Classes\Common\Dashboards.cs" />
     <Compile Include="Classes\Partners\Financer.cs" />
