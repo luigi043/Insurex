@@ -1,0 +1,329 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema",
+  "$id": "http://example.com/example.json",
+  "type": "object",
+  "title": "The root schema",
+  "description": "The root schema comprises the entire JSON document.",
+  "default": {},
+  
+  "properties": {
+    "trasactionId": {
+      "$id": "#/properties/trasactionId",
+      "type": "string",
+      "title": "The trasactionId schema",
+      "description": "An explanation about the purpose of this instance.",
+      "required": true
+
+    },
+
+    "sourceIdentifier": {
+      "$id": "#/properties/sourceIdentifier",
+      "type": "string",
+      "title": "The sourceIdentifier schema",
+      "description": "An explanation about the purpose of this instance.",
+      "required": true
+    },
+    "vehicleAssets": {
+      "$id": "#/properties/vehicleAssets",
+      "type": "array",
+      "title": "The vehicleAssets schema",
+      "description": "An explanation about the purpose of this instance.",
+      "default": [],
+      "required": true,
+      "additionalItems": false,
+      "items": {
+        "$id": "#/properties/vehicleAssets/items",
+        "anyOf": [
+          {
+            "$id": "#/properties/vehicleAssets/items",
+            "type": "object",
+            "title": "The first anyOf schema",
+            "description": "An explanation about the purpose of this instance.",
+            "default": {},
+            "properties": {
+              "policyNumber": {
+                "$id": "#/properties/vehicleAssets/items/properties/policyNumber",
+                "type": "string",
+                "title": "The policyNumber schema",
+                "description": "An explanation about the purpose of this instance.",
+                "default": "",
+                "required": true
+              },
+              "vinNumber": {
+                "$id": "#/properties/vehicleAssets/items/properties/vinNumber",
+                "type": "string",
+                "title": "The vinNumber schema",
+                "description": "An explanation about the purpose of this instance.",
+                "default": "",
+                "required": true
+              }
+            },
+            "additionalProperties": false
+          }
+        ]
+      }
+    },
+    "propertyAssets": {
+      "$id": "#/properties/propertyAssets",
+      "type": "array",
+      "title": "The propertyAssets schema",
+      "description": "An explanation about the purpose of this instance.",
+      "default": [],
+      "required": false,
+      "additionalItems": false,
+      "items": {
+        "$id": "#/properties/propertyAssets/items",
+        "anyOf": [
+          {
+            "$id": "#/properties/propertyAssets/items",
+            "type": "object",
+            "title": "The first anyOf schema",
+            "description": "An explanation about the purpose of this instance.",
+            "default": {},
+            "properties": {
+              "policyNumber": {
+                "$id": "#/properties/propertyAssets/items/properties/policyNumber",
+                "type": "string",
+                "title": "The policyNumber schema",
+                "description": "An explanation about the purpose of this instance.",
+                "default": "",
+                "required": true
+              },
+              "standNumber_ERFPortion": {
+                "$id": "#/properties/propertyAssets/items/properties/standNumber_ERFPortion",
+                "type": "string",
+                "title": "The standNumber_ERFPortion schema",
+                "description": "An explanation about the purpose of this instance.",
+                "default": ""
+              },
+              "sectionalTitleNumber": {
+                "$id": "#/properties/propertyAssets/items/properties/sectionalTitleNumber",
+                "type": "string",
+                "title": "The sectionalTitleNumber schema",
+                "description": "An explanation about the purpose of this instance.",
+                "default": ""
+              },
+              "sectionalTitleName": {
+                "$id": "#/properties/propertyAssets/items/properties/sectionalTitleName",
+                "type": "string",
+                "title": "The sectionalTitleName schema",
+                "description": "An explanation about the purpose of this instance.",
+                "default": ""
+              }
+            },
+            "additionalProperties": false
+          }
+        ]
+      }
+    },
+    "watercraftAssets": {
+      "$id": "#/properties/watercraftAssets",
+      "type": "array",
+      "title": "The watercraftAssets schema",
+      "description": "An explanation about the purpose of this instance.",
+      "default": [],
+      "required": false,
+      "additionalItems": false,
+      "items": {
+        "$id": "#/properties/watercraftAssets/items",
+        "anyOf": [
+          {
+            "$id": "#/properties/watercraftAssets/items",
+            "type": "object",
+            "title": "The first anyOf schema",
+            "description": "An explanation about the purpose of this instance.",
+            "default": {},
+            "properties": {
+              "policyNumber": {
+                "$id": "#/properties/watercraftAssets/items/properties/policyNumber",
+                "type": "string",
+                "title": "The policyNumber schema",
+                "description": "An explanation about the purpose of this instance.",
+                "default": "",
+                "required": true
+              },
+              "identificationNumber": {
+                "$id": "#/properties/watercraftAssets/items/properties/identificationNumber",
+                "type": "string",
+                "title": "The identificationNumber schema",
+                "description": "An explanation about the purpose of this instance.",
+                "default": "",
+                "required": true
+              }
+            },
+            "additionalProperties": false
+          }
+        ]
+      }
+    },
+    "aviationtAssets": {
+      "$id": "#/properties/aviationtAssets",
+      "type": "array",
+      "title": "The aviationtAssets schema",
+      "description": "An explanation about the purpose of this instance.",
+      "default": [],
+      "required": false,
+      "additionalItems": false,
+      "items": {
+        "$id": "#/properties/aviationtAssets/items",
+        "anyOf": [
+          {
+            "$id": "#/properties/aviationtAssets/items",
+            "type": "object",
+            "title": "The first anyOf schema",
+            "description": "An explanation about the purpose of this instance.",
+            "default": {},
+            "properties": {
+              "policyNumber": {
+                "$id": "#/properties/aviationtAssets/items/properties/policyNumber",
+                "type": "string",
+                "title": "The policyNumber schema",
+                "description": "An explanation about the purpose of this instance.",
+                "default": "",
+                "required": true
+              },
+              "tailNumber": {
+                "$id": "#/properties/aviationtAssets/items/properties/tailNumber",
+                "type": "string",
+                "title": "The tailNumber schema",
+                "description": "An explanation about the purpose of this instance.",
+                "default": "",
+                "required": true
+              }
+            },
+            "additionalProperties": false
+          }
+        ]
+      }
+    },
+    "machineryAssets": {
+      "$id": "#/properties/machineryAssets",
+      "type": "array",
+      "title": "The machineryAssets schema",
+      "description": "An explanation about the purpose of this instance.",
+      "default": [],
+      "required": false,
+      "additionalItems": false,
+      "items": {
+        "$id": "#/properties/machineryAssets/items",
+        "anyOf": [
+          {
+            "$id": "#/properties/machineryAssets/items",
+            "type": "object",
+            "title": "The first anyOf schema",
+            "description": "An explanation about the purpose of this instance.",
+            "default": {},
+            "properties": {
+              "policyNumber": {
+                "$id": "#/properties/machineryAssets/items/properties/policyNumber",
+                "type": "string",
+                "title": "The policyNumber schema",
+                "description": "An explanation about the purpose of this instance.",
+                "default": "",
+                "required": true
+              },
+              "serialNumber": {
+                "$id": "#/properties/machineryAssets/items/properties/serialNumber",
+                "type": "string",
+                "title": "The serialNumber schema",
+                "description": "An explanation about the purpose of this instance.",
+                "default": "",
+                "required": true
+              }
+            },
+            "additionalProperties": false
+          }
+        ]
+      }
+    },
+    "plantEquipmentAssets": {
+      "$id": "#/properties/plantEquipmentAssets",
+      "type": "array",
+      "title": "The plantEquipmentAssets schema",
+      "description": "An explanation about the purpose of this instance.",
+      "default": [],
+      "required": false,
+      "additionalItems": false,
+      "items": {
+        "$id": "#/properties/plantEquipmentAssets/items",
+        "anyOf": [
+          {
+            "$id": "#/properties/plantEquipmentAssets/items",
+            "type": "object",
+            "title": "The first anyOf schema",
+            "description": "An explanation about the purpose of this instance.",
+            "default": {},
+            "properties": {
+              "policyNumber": {
+                "$id": "#/properties/plantEquipmentAssets/items/properties/policyNumber",
+                "type": "string",
+                "title": "The policyNumber schema",
+                "description": "An explanation about the purpose of this instance.",
+                "default": "",
+                "required": true
+              },
+              "identificationNumber": {
+                "$id": "#/properties/plantEquipmentAssets/items/properties/identificationNumber",
+                "type": "string",
+                "title": "The identificationNumber schema",
+                "description": "An explanation about the purpose of this instance.",
+                "default": "",
+                "required": true
+              },
+              "serialNumber": {
+                "$id": "#/properties/plantEquipmentAssets/items/properties/serialNumber",
+                "type": "string",
+                "title": "The serialNumber schema",
+                "description": "An explanation about the purpose of this instance."
+
+
+              }
+            },
+            "additionalProperties": false
+          }
+        ]
+      }
+    },
+    "electronicEquipmentAssets": {
+      "$id": "#/properties/electronicEquipmentAssets",
+      "type": "array",
+      "title": "The electronicEquipmentAssets schema",
+      "description": "An explanation about the purpose of this instance.",
+      "default": [],
+      "required": false,
+      "additionalItems": false,
+      "items": {
+        "$id": "#/properties/electronicEquipmentAssets/items",
+        "anyOf": [
+          {
+            "$id": "#/properties/electronicEquipmentAssets/items",
+            "type": "object",
+            "title": "The first anyOf schema",
+            "description": "An explanation about the purpose of this instance.",
+            "default": {},
+            "properties": {
+              "policyNumber": {
+                "$id": "#/properties/electronicEquipmentAssets/items/properties/policyNumber",
+                "type": "string",
+                "title": "The policyNumber schema",
+                "description": "An explanation about the purpose of this instance.",
+                "default": "",
+                "required": true
+              },
+              "serialNumber": {
+                "$id": "#/properties/electronicEquipmentAssets/items/properties/serialNumber",
+                "type": "string",
+                "title": "The serialNumber schema",
+                "description": "An explanation about the purpose of this instance.",
+                "default": "",
+                "required": true
+              }
+            },
+            "additionalProperties": false
+          }
+        ]
+      }
+    }
+  },
+  "additionalProperties": false
+}

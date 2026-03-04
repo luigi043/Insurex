@@ -1,0 +1,188 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>
+    </ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{C1C79F46-5B2D-4878-844E-5BCB10A67009}</ProjectGuid>
+    <ProjectTypeGuids>{349c5851-65df-11da-9384-00065b846f21};{fae04ec0-301f-11d3-bf4b-00c04f79efbc}</ProjectTypeGuids>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>IAPR_API</RootNamespace>
+    <AssemblyName>IAPR_API</AssemblyName>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
+    <UseIISExpress>true</UseIISExpress>
+    <IISExpressSSLPort />
+    <IISExpressAnonymousAuthentication />
+    <IISExpressWindowsAuthentication />
+    <IISExpressUseClassicPipelineMode />
+    <WcfConfigValidationEnabled>True</WcfConfigValidationEnabled>
+    <Use64BitIISExpress />
+    <UseGlobalApplicationHostFile />
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.13.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json.Schema, Version=3.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.Schema.3.0.14\lib\net45\Newtonsoft.Json.Schema.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.ServiceModel" />
+    <Reference Include="System.ServiceModel.Web" />
+    <Reference Include="System.Web.DynamicData" />
+    <Reference Include="System.Web.Entity" />
+    <Reference Include="System.Web.ApplicationServices" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Web.Extensions" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Web.Services" />
+    <Reference Include="System.EnterpriseServices" />
+    <Reference Include="System.Xml.Linq" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="asset-management\assetFinanceDetails.svc" />
+    <Content Include="asset-management\updateAssetCover.svc" />
+    <Content Include="asset-management\updateAssetFinanceValue.svc" />
+    <Content Include="asset-management\updateAssetInsuredValue.svc" />
+    <Content Include="asset-management\addAsset.svc" />
+    <Content Include="policy-management\policyStatus.svc" />
+    <Content Include="policy-management\policyNonpayment.svc" />
+    <Content Include="asset-management\removeAsset.svc" />
+    <Content Include="REST_IAPR_Service.svc" />
+    <Content Include="Service1.svc" />
+    <Content Include="Web.config">
+      <SubType>Designer</SubType>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="asset-management\assetFinanceDetails.svc.cs">
+      <DependentUpon>assetFinanceDetails.svc</DependentUpon>
+    </Compile>
+    <Compile Include="asset-management\IassetFinanceDetails.cs" />
+    <Compile Include="asset-management\IupdateAssetCover.cs" />
+    <Compile Include="asset-management\IupdateAssetFinanceValue.cs" />
+    <Compile Include="asset-management\IupdateAssetInsuredValue.cs" />
+    <Compile Include="asset-management\updateAssetCover.svc.cs">
+      <DependentUpon>updateAssetCover.svc</DependentUpon>
+    </Compile>
+    <Compile Include="asset-management\updateAssetFinanceValue.svc.cs">
+      <DependentUpon>updateAssetFinanceValue.svc</DependentUpon>
+    </Compile>
+    <Compile Include="asset-management\updateAssetInsuredValue.svc.cs">
+      <DependentUpon>updateAssetInsuredValue.svc</DependentUpon>
+    </Compile>
+    <Compile Include="Auth\RestAuthorizationManager.cs" />
+    <Compile Include="IREST_IAPR_Service.cs" />
+    <Compile Include="IService1.cs" />
+    <Compile Include="asset-management\addAsset.svc.cs">
+      <DependentUpon>addAsset.svc</DependentUpon>
+    </Compile>
+    <Compile Include="asset-management\IaddAsset.cs" />
+    <Compile Include="policy-management\policyStatus.svc.cs">
+      <DependentUpon>policyStatus.svc</DependentUpon>
+    </Compile>
+    <Compile Include="policy-management\IpolicyStatus.cs" />
+    <Compile Include="policy-management\IpolicyNonpayment.cs" />
+    <Compile Include="asset-management\IremoveAsset.cs" />
+    <Compile Include="policy-management\policyNonpayment.svc.cs">
+      <DependentUpon>policyNonpayment.svc</DependentUpon>
+    </Compile>
+    <Compile Include="asset-management\removeAsset.svc.cs">
+      <DependentUpon>removeAsset.svc</DependentUpon>
+    </Compile>
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="REST_IAPR_Service.svc.cs">
+      <DependentUpon>REST_IAPR_Service.svc</DependentUpon>
+    </Compile>
+    <Compile Include="Service1.svc.cs">
+      <DependentUpon>Service1.svc</DependentUpon>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="JsonSchemas\Policy_Status_Schema.json" />
+    <Content Include="JsonSchemas\UpdateAssetFinanceValue_Schema.json" />
+    <Content Include="JsonSchemas\UpdateAssetInsuredValue_Schema.json" />
+    <Content Include="JsonSchemas\UpdateAssetCover_Schema.json" />
+    <Content Include="JsonSchemas\RemoveAsset_Schema.json" />
+    <Content Include="JsonSchemas\Non_Payment_Schema.json" />
+    <Content Include="JsonSchemas\New_Asset_Vehicle_Schema.json" />
+    <None Include="packages.config" />
+    <None Include="Properties\PublishProfiles\FolderProfile.pubxml" />
+    <None Include="Web.Debug.config">
+      <DependentUpon>Web.config</DependentUpon>
+    </None>
+    <None Include="Web.Release.config">
+      <DependentUpon>Web.config</DependentUpon>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Contracts\" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\IAPR_Data\IAPR_Data.csproj">
+      <Project>{e85781c2-8ade-4376-b3ce-343336b455dc}</Project>
+      <Name>IAPR_Data</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <PropertyGroup>
+    <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
+    <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
+  </PropertyGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <Import Project="$(VSToolsPath)\WebApplications\Microsoft.WebApplication.targets" Condition="'$(VSToolsPath)' != ''" />
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" Condition="false" />
+  <ProjectExtensions>
+    <VisualStudio>
+      <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}">
+        <WebProjectProperties>
+          <UseIIS>True</UseIIS>
+          <AutoAssignPort>True</AutoAssignPort>
+          <DevelopmentServerPort>12857</DevelopmentServerPort>
+          <DevelopmentServerVPath>/</DevelopmentServerVPath>
+          <IISUrl>http://localhost:12857/</IISUrl>
+          <NTLMAuthentication>False</NTLMAuthentication>
+          <UseCustomServer>False</UseCustomServer>
+          <CustomServerUrl>
+          </CustomServerUrl>
+          <SaveServerSettingsInUserFile>False</SaveServerSettingsInUserFile>
+        </WebProjectProperties>
+      </FlavorProperties>
+    </VisualStudio>
+  </ProjectExtensions>
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

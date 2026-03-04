@@ -1,0 +1,1 @@
+﻿<%@ ServiceHost Language="C#" Debug="true" Service="IAPR_API.REST_IAPR_Service" CodeBehind="REST_IAPR_Service.svc.cs" %>

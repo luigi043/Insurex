@@ -1,0 +1,94 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema",
+  "$id": "http://example.com/example.json",
+  "type": "object",
+  "title": "The root schema",
+  "description": "The root schema comprises the entire JSON document.",
+  "default": {},
+  "examples": [
+    {
+      "trasactionId": "999993",
+      "sourceIdentifier": "1234",
+      "assetDetails": [
+        {
+          "assetType": "Vehicle",
+          "financeAgreementNumber": "FINA99996576-1",
+          "financeValue": 999777.99
+        },
+        {
+          "assetType": "Vehicle",
+          "financeAgreementNumber": "FINB23655656-2",
+          "financeValue": 999777.99
+        }
+      ]
+    }
+  ],
+
+  "properties": {
+    "trasactionId": {
+      "$id": "#/properties/trasactionId",
+      "type": "string",
+      "title": "The trasactionId schema",
+      "description": "An explanation about the purpose of this instance.",
+      "required": true
+    },
+
+    "sourceIdentifier": {
+      "$id": "#/properties/sourceIdentifier",
+      "type": "string",
+      "title": "The sourceIdentifier schema",
+      "description": "An explanation about the purpose of this instance.",
+      "required": true
+    },
+    "assetDetails": {
+      "$id": "#/properties/assetDetails",
+      "type": "array",
+      "title": "The assetDetails schema",
+      "description": "An explanation about the purpose of this instance.",
+      "default": [],
+      "required": true,
+      "additionalItems": false,
+      "items": {
+        "$id": "#/properties/assetDetails/items",
+        "anyOf": [
+          {
+            "$id": "#/properties/assetDetails/items",
+            "type": "object",
+            "title": "The first anyOf schema",
+            "description": "An explanation about the purpose of this instance.",
+            "default": {},
+            "properties": {
+              "assetType": {
+                "$id": "#/properties/assetDetails/items/properties/assetType",
+                "type": "string",
+                "title": "The assetType schema",
+                "description": "An explanation about the purpose of this instance.",
+                "default": "",
+                "required": true,
+                },
+              "financeAgreementNumber": {
+                "$id": "#/properties/assetDetails/items/properties/financeAgreementNumber",
+                "type": "string",
+                "title": "The financeAgreementNumber schema",
+                "description": "An explanation about the purpose of this instance.",
+                "default": "",
+                "required": true,
+                
+              },
+              "financeValue": {
+                "$id": "#/properties/assetDetails/items/properties/financeValue",
+                "type": "integer",
+                "title": "The financeValue schema",
+                "description": "An explanation about the purpose of this instance.",
+                "default": 0,
+                "required": true,
+               }
+            },
+            "additionalProperties": false
+          }
+        ]
+      }
+    }
+  },
+  "additionalProperties": false
+}

@@ -1,0 +1,104 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema",
+  "$id": "http://example.com/example.json",
+  "type": "object",
+  "title": "The root schema",
+  "description": "The root schema comprises the entire JSON document.",
+  "default": {},
+
+  "properties": {
+    "trasactionId": {
+      "$id": "#/properties/trasactionId",
+      "type": "string",
+      "title": "The trasactionId schema",
+      "description": "An explanation about the purpose of this instance.",
+      "required": true
+    },
+
+    "sourceIdentifier": {
+      "$id": "#/properties/sourceIdentifier",
+      "type": "string",
+      "title": "The sourceIdentifier schema",
+      "description": "An explanation about the purpose of this instance.",
+      "required": true
+    },
+    "policyDetails": {
+      "$id": "#/properties/policyDetails",
+      "type": "array",
+      "title": "The policyDetails schema",
+      "description": "An explanation about the purpose of this instance.",
+      "default": [],
+      "required": true,
+      "additionalItems": false,
+      "items": {
+        "$id": "#/properties/policyDetails/items",
+        "anyOf": [
+          {
+            "$id": "#/properties/policyDetails/items",
+            "type": "object",
+            "title": "The first anyOf schema",
+            "description": "An explanation about the purpose of this instance.",
+            "default": {},
+            "examples": [
+              {
+                "policyNumber": "POLOLM123456",
+                "affectedPeriod": "February",
+                "affectedYear": 2020
+              }
+            ],
+            "properties": {
+              "policyNumber": {
+                "$id": "#/properties/policyDetails/items/properties/policyNumber",
+                "type": "string",
+                "title": "The policyNumber schema",
+                "description": "An explanation about the purpose of this instance.",
+                "default": "",
+               
+                "examples": [
+                  "POLOLM123456"
+                ]
+              },
+              "affectedPeriod": {
+                "$id": "#/properties/policyDetails/items/properties/affectedPeriod",
+                "type": "string",
+                "title": "The affectedPeriod schema",
+                "description": "An explanation about the purpose of this instance.",
+                "default": "",
+               
+                "enum": [ "January", "February", "April" ],
+                "examples": [
+                  "February"
+                ]
+              },
+              "affectedYear": {
+                "$id": "#/properties/policyDetails/items/properties/affectedYear",
+                "type": "integer",
+                "title": "The affectedYear schema",
+                "description": "An explanation about the purpose of this instance.",
+                "default": 0,
+               
+                "examples": [
+                  2020
+                ]
+              },
+              "dateOfNonPayment": {
+                "$id": "#/properties/policyDetails/items/properties/affectedYear",
+                "type": "string",
+                "title": "The affectedYear schema",
+                "description": "An explanation about the purpose of this instance.",
+                "default": 0,
+                
+                "examples": [
+                  2020
+                ]
+              }
+            },
+            "required": [ "policyNumber", "affectedPeriod", "affectedYear" "dateOfNonPayment" ],
+            "additionalProperties": false
+          }
+        ]
+      }
+    }
+  },
+  "additionalProperties": false
+}

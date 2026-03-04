@@ -1,0 +1,1677 @@
+﻿===== FILE: c:\Users\cluiz\projectx\Insurex\Asset Protection Register - product write-up.docx =====
+Insured Asset Protection Register/Exchange
+Purpose:
+The purpose of the register is to provide finance companies a way to help them mitigate the risk associated with financed asset not being insured through actions of the debtor. The risk is that the asset is destroyed or stolen while there is no insurance covering the asset.
+Parties:
+The finance company (usually a bank)
+The debtor (the client of the bank)
+The insurance company providing the cover
+Benefits:
+To the finance company, their asset can be replaced in the event of total destruction or theft, or money is available to settle the debt.
+To the debtor, money is available to settle the outstanding debt or the asset is replaced.
+To the insurance company, the register will assist business retention by reducing policy cancellations.
+The register/exchange:
+The register seeks to provide a mechanism/means of ensuring that financed assets remain fully insured for the duration of the finance period. There are two main classes of assets that need to be monitored, the Motor vehicles and Non-Motor vehicles classes. 
+Motor vehicles: This class includes all types of vehicles, cars, trucks, mechanical horses, buses, trailers etc. and can be adapted to include other vehicles like boats, yachts, aircraft and ships. For the purpose of getting the project off the ground, we will focus on road going vehicles.
+Non-motor vehicles: This class includes all assets not covered under the Motor vehicle class, such as commercial and domestic buildings, furniture, tools, equipment, stock, etc.
+The current situation:
+Motor vehicle class is used as an illustration.
+A client buys a car after obtaining finance from a finance company such as a bank. The bank advances the loan on the basis that fully comprehensive insurance shall be maintained throughout the period of finance, which ranges from 1 to 72 months. The client is required to provide proof to the bank that the asset is insured. The proof is in the form of a letter from the insuring company to that effect. The insurance company notes on the insurance policy the interest of the bank in the insured asset. Should the policy get cancelled before the loan period is up, the insurance company undertakes to inform the bank accordingly, but there is no obligation to do so.
+
+Debtors are continuously "shopping" for cheaper insurance cover and may also change insurers from time to time. On changing insurers, most debtors do not notify the finance company of the details of the new insurer. With a change in insurer and the non-payment of premiums this exposes the finance company to risk. 
+The financial risk:
+It is a practice of many clients to cancel the insurance on the asset without taking out a new replacement policy. This exposes the bank to a financial risk because, if the asset is destroyed or stolen whilst uninsured, the client does not want to continue to service the loan.
+Asset Protection Register/exchange (APR):
+A register of all the financed assets of participating banks for which insurance is a prerequisite. 
+At inception of the loan, the identifying details of the asset (a motor car) are recorded on the register. These details include the Vehicle Identification Number (VIN) and the registration number of the car, together with the inception date and the period of the loan, the identity of the insuring company and their policy number.
+Activities on the policy that pose a risk to insurance:
+The following events will trigger an alert to the APR, which in turn will alert the finance company.
+Non-payment of the premium
+Cancellation of the policy
+Removal of the asset from the policy
+Change of address
+Change of registration number
+Reduction in the amount of insurance cover
+It is obvious from the above that the co-operation of the insurance company is crucial to the proper functioning of the APR. Also, APR must be as un-intrusive, from the point of view of the insurance company, as possible to encourage participation.
+Conclusion:
+The above is merely an initial thought about APR, no doubt there will be many improvements before the system is functional. Whatever the final form the system takes, there is a need for it, and its benefits extend beyond the mere protection of the financed assets.  
+
+
+===== FILE: c:\Users\cluiz\projectx\Insurex\InsureX Platform - System Description.docx =====
+InsureX Platform - System Description
+Summary Statement (for GitHub / reviewers)
+InsureX is a multi-tenant B2B SaaS platform that integrates with insurers to continuously monitor insurance compliance on bank-financed assets, detect non-compliance events in near real time, and orchestrate engagement workflows to restore compliance. It provides dashboards, audit trails, and reporting to financial institutions and insurers, functioning as a critical control layer between lending and insurance ecosystems.
+
+1. Purpose of the Platform
+InsureX is a B2B SaaS platform designed to address a systemic risk gap between financial institutions (banks and asset financiers) and insurance companies where assets financed by banks are contractually required to remain insured, but where:
+Banks do not have visibility of ongoing insurance compliance
+Insurers do not have structural tools to prevent policy lapse
+Customers frequently default on insurance obligations once financing is approved
+Insurance lapses are often only discovered after a loss has occurred
+The platform's purpose is to provide:
+A trusted, automated control layer that continuously monitors insurance compliance on financed assets and triggers timely intervention when non-compliance occurs.
+It is not an insurance product.It is a risk management, monitoring, and engagement orchestration platform.
+
+2. Business Problem Being Solved
+For Financial Institutions:
+Insurance is verified at origination but not continuously monitored
+Policy lapses convert insured collateral into uninsured credit exposure
+This creates unexpected losses, governance gaps, and regulatory risk
+For Insurers:
+Customers lapse policies once loan is secured
+Retention interventions occur too late
+High churn undermines customer lifetime value (LTV)
+Acquisition costs are repeatedly wasted
+InsureX solves this by acting as a real-time monitoring and engagement hub between:
+Insurers
+Banks
+Customers
+
+3. Core Functional Objective
+Ensure that every financed asset remains continuously insured, and that any lapse, reduction in cover, or risk change is detected and acted upon immediately.
+This is achieved through:
+Data integrations with insurers
+Event detection logic
+Engagement orchestration (notifications, follow-ups)
+Audit logging
+Reporting and dashboards for institutional clients
+
+4. High-Level System Architecture (Conceptual)
+The platform sits between three parties:
+Insurer systems    InsureX platform    Bank dashboards
+                       
+                  Customer engagement (SMS / email / call)
+Data flows:
+Insurers provide policy status data (via API, file feed, or batch updates)
+InsureX evaluates data against business rules
+When non-compliance is detected, InsureX:
+Flags an event
+Triggers engagement workflows
+Notifies the relevant institution
+All activity is logged for reporting and audit
+
+5. Key Functional Components
+5.1 Data Ingestion Layer
+The platform must support ingesting data from insurers in multiple formats:
+API integrations (preferred)
+Secure file upload (CSV, JSON, XML)
+Scheduled batch feeds
+Typical data fields:
+Policy number
+Client identifier
+Asset identifier
+Cover status
+Premium payment status
+Policy effective date
+Cancellation date (if any)
+Sum insured
+Risk address
+
+5.2 Rules Engine (Event Detection)
+The system evaluates incoming data against predefined business rules such as:
+Policy payment overdue beyond X days
+Policy cancelled
+Cover reduced below minimum required
+Risk address changed
+Asset removed from cover
+When a rule breach is detected, the system generates a:
+Non-Compliance Event
+Each event must have:
+Unique event ID
+Timestamp
+Event type
+Severity level
+Associated client / asset
+Associated institution(s)
+
+5.3 Workflow & Engagement Engine
+Once an event is created, the platform orchestrates engagement actions such as:
+Automated SMS notification
+Automated email notification
+Task creation for call-centre follow-up
+Escalation if unresolved after X days
+This component must:
+Track each engagement attempt
+Record timestamps and outcomes
+Support multiple attempts
+Allow configuration per institution
+The system should support both:
+Fully automated engagement
+Human-assisted engagement via an operator dashboard
+
+5.4 Institution Dashboards
+Separate dashboard views should exist for:
+Financial institutions (banks / financiers)
+Insurers
+Internal InsureX operations team
+Dashboards should provide:
+Portfolio overview
+Active non-compliance events
+Resolution status
+Average time to resolution
+Historical trends
+Audit logs
+
+5.5 Audit & Compliance Layer
+Every action in the system should be logged, including:
+Data received
+Events generated
+Notifications sent
+Manual interventions
+Status changes
+This enables:
+Regulatory defensibility
+Client audit reviews
+Dispute resolution
+SLA monitoring
+
+6. Commercial Logic Embedded in the Platform
+The platform supports a commercial model where:
+Clients pay a fixed platform subscription
+Additional fees are triggered per non-compliance event handled
+Therefore, the system must be able to:
+Count events by institution
+Distinguish event types
+Track resolution outcomes
+Produce billing-ready reports
+
+7. Security & Data Handling Expectations
+Given the nature of the data, the platform must:
+Enforce strong authentication and role-based access control
+Segregate data between institutions (multi-tenant isolation)
+Encrypt data in transit and at rest
+Maintain audit logs
+Support POPIA-aligned data protection practices (South Africa)
+
+8. What the Platform Explicitly Does NOT Do
+To avoid misinterpretation:
+The platform does not:
+Underwrite insurance
+Price insurance products
+Provide financial advice
+Replace broker functions
+Force customers into specific insurers
+Make credit decisions
+It is a monitoring, orchestration, and control platform, not a financial product.
+
+9. Typical Use Case Flow
+Bank finances a vehicle for a customer
+Customer provides insurer details
+Insurer feeds policy status data to InsureX
+Customer misses a premium payment
+Insurer feed reflects policy in arrears
+InsureX detects non-compliance
+InsureX sends SMS/email to customer
+Customer pays outstanding premium
+Insurer feed updates to compliant
+InsureX marks event as resolved
+Bank dashboard reflects restored compliance
+
+10. Intended Outcomes
+If the platform is functioning correctly, it should result in:
+For banks:
+Fewer uninsured losses
+Better collateral integrity
+Improved governance and audit outcomes
+For insurers:
+Lower churn
+Higher policy retention
+Improved customer lifetime value
+For customers:
+Reduced accidental lapses
+Better awareness of obligations
+Fewer catastrophic uninsured losses
+
+
+
+
+===== FILE: c:\Users\cluiz\projectx\Insurex\InsureX - ChatGPT Code review - 14 Jan 26.docx =====
+Executive summary (what's most important)
+Critical (must fix before any production use)
+Hardcoded secrets & credentials committed into config (SMTP passwords, payment gateway credentials, DB credentials).
+Insurex/IAPR_Web/Web.config (SMTP + gateway secrets)
+Insurex/IAPR_API/Web.config (DB password in a connection string + SMTP password)
+Also published artifacts under bin/ and obj/ contain secrets too.
+Authentication is custom, session-based, and weakly implemented:
+IAPR_Web/Web.config has <authentication mode="None" /> (i.e., not using Forms Auth).
+Login flow stores a user object in HttpContext.Current.Session["CurrentUser"] with no evidence of:
+session fixation protection
+centralized authorization checks
+secure cookie flags enforced (Secure, HttpOnly, SameSite)
+Password handling is reversible encryption, not hashing.
+Cryptography is insecure and in places hardcoded
+IAPR_Data/Utils/CryptorEngine.cs uses TripleDES in ECB mode with MD5-derived keys (insecure).
+It also includes an AES key hardcoded in source (GenericEncrypt_V2 / GenericDecrypt_V2).
+AES decrypt does not verify MAC  tampering risk.
+No multi-tenancy model
+I searched the codebase for "tenant" usage and found none.
+This is effectively a single logical instance with "partner type / partner id" style segmentation, not tenant isolation.
+Material gaps vs your stated InsureX platform requirements
+"Near real-time insurer integration": IAPR_API WCF endpoints appear mostly stubbed (DoWork() returning constant), not a real integration API.
+Event-driven compliance detection: no queue/worker pattern; mostly synchronous WebForms + stored procedure access.
+Workflow orchestration / audit trails: some workflow-like emails exist, but no robust event log/state machine + immutable audit trail architecture.
+
+Security review (with code references)
+1) Secrets in repo (very high risk)
+Files:
+Insurex/IAPR_Web/Web.config
+SMTP credentials: SMTPServerPassword
+Payment gateway credentials: PaymentGatewayuserId, PaymentGatewayPassword, entity IDs
+Insurex/IAPR_API/Web.config
+DB credentials in TiccetsAPI.Properties.Settings.connTiccetWeb (User ID=...;Password=...)
+SMTP credentials and more gateway credentials
+Why this is dangerous
+Anyone with repo access can impersonate your SMTP account, payment gateway account, and/or DB user.
+Even if you remove secrets from Web.config, they also exist in built outputs (bin, obj).
+Fix
+Immediately rotate all exposed credentials.
+Remove bin/, obj/, .vs/, and published config artifacts from the repository and add them to .gitignore.
+Move secrets to environment-based configuration (Azure Key Vault / AWS Secrets Manager / GCP Secret Manager or at minimum encrypted config per environment).
+
+2) Authentication and authorization weaknesses
+Login flow:
+Insurex/IAPR_Web/Account/Login.aspx.cs
+calls User_Provider.ValidateUser(), then redirects based on iUser_Type_Id.
+Session-based identity:
+Insurex/IAPR_Data/Providers/User_Provider.cs
+sets HttpContext.Current.Session["CurrentUser"] = f_User;
+Risks
+There is no visible centralized authorization enforcement ("every request must check CurrentUser + permissions").
+With <authentication mode="None" />, you're not getting standard ASP.NET auth protections.
+Session fixation and cookie security are not obviously handled (and WebForms apps often miss this).
+Fix
+Use ASP.NET Identity properly (you already reference it) or upgrade to a modern auth approach:
+token-based auth for APIs
+Forms auth/cookies for web UI with secure settings (Secure/HttpOnly/SameSite)
+Add a global authorization mechanism:
+base page / HTTP module that enforces auth
+role/permission checks per route
+
+3) Password handling & cryptography are not acceptable for a bank/insurer control layer
+Reversible "password encryption":
+IAPR_Data/Providers/User_Provider.cs
+encrypts username/password with CryptorEngine.ValidationEncrypt(...) before passing to spGet_AuthenticateUser
+implies the DB stores encrypted passwords that can be compared/reversed, not hashed.
+Crypto implementation issues:
+IAPR_Data/Utils/CryptorEngine.cs
+TripleDES + ECB + MD5-derived key: obsolete/insecure
+AES key hardcoded: catastrophic key management
+decrypt does not validate MAC: integrity not guaranteed
+Fix
+Passwords must be salted + hashed using a modern algorithm:
+Argon2id / bcrypt / PBKDF2 (ASP.NET Identity supports PBKDF2 by default).
+For application encryption needs:
+use AES-GCM or AES-CBC + HMAC with verification
+store keys outside code/config (Key Vault/HSM)
+
+4) API layer is not production-grade and appears incomplete
+IAPR_API/REST_IAPR_Service.svc.cs and Service1.svc.cs are effectively placeholders.
+If insurer integrations are meant to post events, this API layer needs:
+auth (mTLS or signed webhooks or OAuth2 client credentials)
+idempotency keys
+replay protection
+structured validation (you have JsonSchemas but I didn't see strong enforcement paths)
+
+Code quality / bugs / reliability issues
+1) Mail sending implementation issues
+IAPR_Data/Providers/Notification_Provider.cs
+Problems:
+SendMailNotification(List<string> receipientAddress, ...):
+Builds a single MailMessage and loops message.To.Add(email) for each recipient.
+That's fine for "bulk" but creates privacy issues (everyone sees everyone) unless you intend it.
+Better approach: send individually or use BCC appropriately.
+Exception handling:
+On InsufficientStorage, it retries smtpClient.Send(message) immediately (likely to fail again).
+Logs errors with mismatched context: LogErrorInDB(ex, "Notification_Provider", "Save_New_Vehicle_Asset") (wrong method name  confusing diagnostics).
+Resource handling:
+SmtpClient not disposed (minor but best practice).
+Fix:
+Send per recipient (or BCC) and add robust retry policy (backoff).
+Fix logging context and include correlation IDs (policyId, transactionId).
+
+2) Database connection handling pattern is fragile
+Most providers follow:
+class-level SqlConnection sqlConn = new SqlConnection(...)
+methods do sqlConn.Open(), da.Fill(), sqlConn.Close() with minimal finally
+Risks:
+Connection leaks if exceptions occur between open and close.
+Thread-safety issues if provider instances are reused.
+Hard to test and maintain.
+Fix:
+Use using (var conn = new SqlConnection(...)) per operation.
+Use using (var cmd = new SqlCommand(...)) and ensure close/dispose always happens.
+Consider a repository pattern or EF Core (if you modernize).
+
+3) Repo hygiene / build artifacts included
+The zip includes:
+.vs/
+many bin/ and obj/
+published web.config copies (which also contain secrets)
+Fix:
+Remove build output from source control.
+Add proper .gitignore and CI pipeline builds.
+
+Architecture fit vs your InsureX "multi-tenant SaaS control layer" vision
+Right now, this codebase is closer to:
+WebForms portal + stored-proc backed "partner segmentation"
+email notifications
+dashboards / reporting via stored procedures
+minimal/unfinished service integration surface
+To become what you described (multi-tenant SaaS, near real-time monitoring, orchestration), you'll need structural changes, not just bug fixes.
+What's missing for "true multi-tenant B2B SaaS"
+A Tenant entity and tenant-aware auth context.
+Tenant isolation enforcement in all queries (and ideally DB-level controls like Row-Level Security).
+Per-tenant config for insurer connectors, webhook secrets, notification templates, SLA rules.
+What's missing for "near real-time compliance event detection"
+An event ingestion pipeline:
+webhook endpoints / polling connectors
+durable queue (Azure Service Bus / RabbitMQ / SQS)
+worker services that apply state transitions deterministically
+Idempotency + replay protection + DLQ handling.
+What's missing for "orchestrated workflows + audit trails"
+A formal state machine for compliance status:
+Compliant  NonCompliant (reason codes)  RemediationInProgress  Restored etc.
+An immutable event log / audit log:
+every change: who/what/when/why, old/new values, correlation id.
+Workflow actions with permission checks and traceability.
+
+Recommended improvement plan (practical, staged)
+Phase 0 - Emergency security remediation (immediate)
+Rotate all exposed credentials (SMTP, gateway, DB).
+Remove secrets from configs and artifacts; purge them from git history if applicable.
+Remove bin/, obj/, .vs/ from repo + add .gitignore.
+Add secure cookie settings + HTTPS enforcement.
+Phase 1 - Stabilize auth + data protection (2-4 weeks)
+Replace reversible password encryption with ASP.NET Identity hashing.
+Centralize authorization checks (bank/insurer/admin roles).
+Replace CryptorEngine with a vetted library approach:
+AES-GCM with keys in a secure store.
+Phase 2 - Define the multi-tenant model (4-8 weeks)
+Add Tenant + Organization model, map users to tenants and roles.
+Enforce tenant scoping everywhere (middleware + data access guards).
+Introduce per-tenant configuration (insurer integration keys, workflows, notification policies).
+Phase 3 - Build the real "InsureX control layer" (8-16+ weeks)
+Implement an event-driven compliance engine:
+ingestion endpoints + connectors
+queue + workers
+idempotency + retries + DLQ
+Build the workflow orchestration service and audit/event ledger.
+Add observability: structured logs, correlation IDs, metrics, alerting.
+
+Quick reality check on what you uploaded
+If your current InsureX product is meant to be a modern SaaS, this repository looks like an earlier-generation WebForms system and a partially built service layer. It can still be a useful base for business logic, schemas, and reporting patterns, but you'll need modernization for bank-grade security, multi-tenancy, and event-driven compliance monitoring.
+
+
+
+Below is a target reference architecture for InsureX that matches your stated product: multi-tenant B2B SaaS, insurer integrations, near-real-time compliance monitoring, and workflow orchestration with audit trails and reporting.
+
+1) Architectural style
+Event-driven + domain-centric microservices (or modular monolith to start)
+If your team is small: start as a modular monolith with clear bounded contexts + a queue, then split services later.
+If you're already running multiple teams: go straight to services.
+Core principle: All compliance state changes are the result of durable events + deterministic rules.
+
+2) High-level components
+A. Access & Experience layer
+Web App (Bank Portal + Insurer Portal + Admin Console)
+Tenant-aware UI
+Role/permission-based navigation
+Dashboards: compliance KPIs, exceptions, remediation pipelines
+Public API Gateway
+Single entry for all external calls (banks, insurers, webhooks)
+AuthN/AuthZ, throttling, WAF, request validation
+
+B. Core platform services (bounded contexts)
+Identity & Tenant Service
+Tenants, organisations, users, roles, permissions
+SSO (OIDC/SAML) option for banks/insurers
+API keys / OAuth2 client credentials for machine integrations
+Asset & Finance Registry Service
+Financed assets (VIN/serial/IMEI), borrower/customer ref, facility refs
+Asset lifecycle: onboarded  active  settled  closed
+Import pipelines (bulk uploads from banks)
+Policy & Coverage Service
+Policies, cover periods, endorsements, insurer references
+Coverage validation rules (insured value, coverage type, lapse windows)
+Keeps "coverage facts" separate from "compliance decisions"
+Compliance Engine Service (Critical)
+Consumes events + evaluates rules  produces compliance outcomes
+Maintains a Compliance State projection per asset
+Emits "NonComplianceDetected", "ComplianceRestored", "SLAExpired", etc.
+Workflow Orchestration Service
+Case/incident management (non-compliance cases)
+Tasks, escalations, assignments, SLAs, reminders
+Integrates with bank/insurer ticketing (optional)
+Audit & Evidence Ledger (Immutable)
+Append-only audit log of:
+events received
+decisions made
+actions taken
+who/what/when/why + correlation IDs
+Supports regulator / internal audit needs
+Notification Service
+Email/SMS/WhatsApp/in-app notifications
+Templating per tenant + per workflow step
+Rate limiting + delivery tracking
+Reporting & Analytics Service
+Serves dashboard queries without hammering OLTP
+Uses read models + warehouse (optional)
+Exports: CSV, scheduled reports, API feeds
+
+C. Integration & Eventing layer
+Insurer Connector Framework
+Adapter pattern (one connector per insurer)
+Supports:
+Webhooks (push)
+Polling (pull)
+File drops (SFTP)
+"Proof-of-cover" document ingestion
+Normalizes all inputs into a canonical event schema
+Event Bus / Queue
+Azure Service Bus / RabbitMQ / Kafka (choose one)
+Topics/queues:
+policy.events.raw
+policy.events.normalized
+compliance.decisions
+workflow.commands
+notifications
+Outbox Pattern
+Ensures DB updates and event publishing are atomic
+Prevents "state changed but event not published" failures
+
+3) Canonical event flow (near real-time)
+Ingestion  Normalization  Decision  Workflow  Evidence
+Insurer event comes in
+Webhook/API/file/poll
+Validate signature + idempotency key
+Store raw payload (evidence) + metadata
+Normalize
+Map insurer-specific payload  canonical schema:
+PolicyStatusChanged
+PremiumPaymentFailed
+CoverageUpdated
+PolicyCancelled
+Publish normalized event
+Compliance Engine evaluates
+Looks up relevant asset + tenant rules
+Computes new compliance status
+Writes:
+event to ledger
+updates compliance projection (current status)
+Emits decision events
+Workflow orchestration
+Creates/updates case:
+tasks for borrower engagement
+insurer follow-up
+bank escalation
+SLA timers start/reset
+Notifications
+Sends messages based on workflow stage + policy
+Everything is traceable via CorrelationId + EventId.
+
+4) Multi-tenancy model (must be explicit)
+Tenant isolation options
+Preferred (strong):
+Separate DB per tenant (high isolation, higher ops)
+Or schema per tenant
+Most common (balanced):
+Shared DB + TenantId on every table
+Enforced by:
+application middleware + ORM filters
+Row-Level Security (Postgres) or equivalent (SQL Server can do RLS)
+Tenant boundary enforcement
+Tenant ID derived from:
+auth token claims (OIDC)
+API key mapping
+subdomain mapping (optional)
+Never from user-provided query/body.
+
+5) Core data model (minimum viable)
+Identity / tenancy
+Tenant
+Organisation (Bank / Insurer / Broker / Admin)
+User
+Role, Permission, UserRole
+IntegrationCredential (per tenant + per insurer connector)
+Registry
+Asset
+asset identifiers, type, bank facility ref, borrower ref
+Borrower (or external reference + minimal PII)
+Policy
+insurer policy number, product type, status
+CoveragePeriod
+start/end, insured value, perils covered
+PolicyAssetLink (many-to-many if needed)
+Compliance
+ComplianceRuleSet (per tenant)
+ComplianceState (projection per asset)
+compliant / non-compliant / pending / unknown
+reason codes + timestamps
+ComplianceDecision (append-only)
+Workflow
+Case (NonComplianceCase)
+Task
+SLA
+CaseEvent (append-only)
+Audit / evidence
+EventEnvelope (raw + normalized metadata)
+EvidenceBlobRef (payload storage pointer)
+AuditTrail (immutable records)
+
+6) Rule engine approach
+Start simple:
+Rule evaluation as code + config tables
+Example rules:
+policy active within last X hours
+premium paid status must be "paid"
+insured value must be ≥ financed value * factor
+lapse grace period Y days before escalation
+Later upgrade:
+Rules DSL (JSON rules) or a rule engine (only if complexity demands)
+Key requirement:
+Deterministic decision-making + versioned rule sets (auditability).
+
+7) API surface (clean separation)
+External (Insurers/Banks)
+Ingestion:
+POST /v1/integrations/{insurer}/events
+POST /v1/integrations/{insurer}/webhook
+Bank feeds:
+POST /v1/assets/import
+GET /v1/assets/{id}/compliance
+GET /v1/reports/compliance-summary
+Insurer responses:
+POST /v1/policies/{id}/confirm
+POST /v1/cases/{id}/insurer-update
+Internal (service-to-service)
+Commands & events through queue
+Minimal synchronous chatter
+Mandatory cross-cutting:
+Idempotency keys
+Correlation IDs
+Pagination + filtering
+Tenant enforcement on every call
+
+8) Security blueprint (bank/insurer grade)
+OIDC for users, OAuth2 client credentials for systems
+mTLS or signed webhooks for insurer push
+WAF + rate limiting at gateway
+Secrets in Vault
+Encrypt PII (field-level where required)
+Full audit logging
+Strict least-privilege DB accounts
+Vulnerability scanning + SAST/DAST
+
+9) Reliability & operations
+Outbox + retries + DLQ
+Exactly-once effect (idempotency + dedupe)
+Observability:
+structured logs
+metrics: processing lag, failure rate, SLA breaches
+tracing with correlation IDs
+Blue/green deployments + automated migrations
+Tenant-level throttles (protect shared infra)
+
+10) Deployment reference (example)
+Web app: App Service / Kubernetes ingress
+API gateway: APIM / Kong / NGINX + WAF
+Services: containers on Kubernetes (or App Service)
+DB: SQL Server / Postgres
+Queue: Service Bus / RabbitMQ
+Cache: Redis (tenant-aware keys)
+Blob store: S3 / Azure Blob for evidence payloads
+Monitoring: Application Insights / Prometheus + Grafana
+
+11) Practical migration path from your current WebForms monolith
+Extract Identity/Tenant + API Gateway first
+Implement Event Bus + Outbox in the existing system
+Build Compliance Engine as a separate service consuming normalized events
+Build Workflow Service next
+Move dashboards to Reporting read models
+Finally, replace WebForms UI with modern frontend or ASP.NET Core UI
+
+here's a target reference architecture for InsureX that explicitly uses:
+ASP.NET Core 8 MVC
+Controller-Service-Repository
+Razor Views + Partial Views
+jQuery (DOM + AJAX)
+Bootstrap
+Razor Class Libraries (RCL)
+REST API consumption + HttpClient patterns
+API security + pagination
+I'll describe it as a modular monolith (fastest to ship) with a clean separation so you can split services later.
+
+1) Solution layout (ASP.NET Core 8 + RCL + clean layering)
+Top-level solution (recommended)
+InsureX.sln
+  /src
+    InsureX.Web                (ASP.NET Core 8 MVC - Razor views)
+    InsureX.Api                (ASP.NET Core 8 Web API - external + internal APIs)
+    InsureX.Application        (Services, DTOs, business rules)
+    InsureX.Domain             (Entities, enums, domain events, interfaces)
+    InsureX.Infrastructure     (EF Core, repositories, integrations, email, storage)
+    /Modules
+      InsureX.Modules.Tenanting.Rcl        (RCL: layout, nav, tag helpers, shared UI)
+      InsureX.Modules.Compliance.Rcl       (RCL: compliance UI + view components)
+      InsureX.Modules.Workflow.Rcl         (RCL: case mgmt UI)
+      InsureX.Modules.Reporting.Rcl        (RCL: dashboards + filters)
+  /tests
+    InsureX.UnitTests
+    InsureX.IntegrationTests
+
+Why this works:
+Web (MVC) stays focused on presentation.
+API is "control layer" for integrations and AJAX endpoints.
+Application/Domain/Infrastructure enforce separation and testability.
+RCLs let you ship UI modules independently and reuse across portals.
+
+2) MVC patterns (Controller  Service  Repository)
+Responsibilities
+Controllers
+Input binding + validation
+Authorization attributes
+Call services
+Return View/PartialView/Json
+Services (Application layer)
+Orchestrate use cases (workflow, compliance checks, policy verification)
+Enforce tenant scoping (from current user context)
+Transactions
+Convert domain objects  DTOs
+Repositories (Infrastructure layer)
+EF Core queries + persistence
+No business logic
+Always tenant-filtered
+
+3) Multi-tenancy (must be enforced centrally)
+Tenant resolution
+Use a TenantContext middleware:
+Tenant derived from:
+Auth token claim (preferred)
+or subdomain ({tenant}.insurex.com)
+or API key mapping (for integrations)
+Tenant enforcement
+Every EF Core entity that is tenant-scoped implements:
+ITenantScoped { Guid TenantId { get; } }
+EF Core global query filter:
+applies TenantId == TenantContext.TenantId automatically
+This prevents cross-tenant leakage even if a developer forgets a WHERE TenantId.
+
+4) Web UI (Razor + partials + Bootstrap + jQuery)
+Web project structure
+InsureX.Web
+  /Controllers
+  /Views
+    /Shared
+      _Layout.cshtml
+      _Nav.cshtml
+      _ValidationScriptsPartial.cshtml
+    /Assets
+      Index.cshtml
+      _AssetTable.cshtml          (Partial)
+      _AssetFilter.cshtml         (Partial)
+    /Cases
+      Index.cshtml
+      _CaseTable.cshtml           (Partial)
+  /wwwroot
+    /lib (bootstrap, jquery)
+    /js (insurex.assets.js, insurex.cases.js)
+
+Pattern for AJAX + partial updates (jQuery)
+Main page renders container + filter UI
+Filter submits via AJAX to controller endpoint returning a partial view
+Partial view updates table area
+Example flow
+/Assets/Index returns Index.cshtml
+AJAX calls /Assets/Search  returns _AssetTable.cshtml
+jQuery swaps HTML into #assetTableContainer
+This gives you a responsive SPA-like feel without SPA complexity.
+
+5) Razor Class Libraries (RCL) integration
+What goes in RCL
+Use RCLs for reusable UI and cross-tenant portal consistency:
+Shared layout, navigation, alerts, modals
+ViewComponents / TagHelpers
+Standard filters + pagination UI
+Compliance status badges
+Audit trail timeline component
+Example:
+InsureX.Modules.Tenanting.Rcl provides:
+tenant-aware navigation
+role-aware menu rendering
+standard "Switch tenant context" UI (admin only)
+RCL benefit: you can package and version UI modules, and even reuse them across multiple portals (Bank vs Insurer) with different shells.
+
+6) API layer (RESTful + secure + paginated)
+API shape
+InsureX.Api hosts:
+External integrations: insurer webhooks, bank imports
+Internal endpoints used by the MVC app (for AJAX)
+Admin endpoints
+Security model
+User endpoints
+Cookie auth (MVC) with OIDC (optional)
+Claims include TenantId and roles
+System endpoints
+OAuth2 Client Credentials (recommended) OR API keys
+Webhooks require:
+signature validation (HMAC)
+timestamp / nonce (replay protection)
+idempotency key
+
+7) Pagination + data sizing (non-negotiable)
+Standard paging contract
+Return a consistent envelope:
+{
+  "items": [],
+  "page": 1,
+  "pageSize": 25,
+  "totalItems": 2340,
+  "totalPages": 94,
+  "hasNext": true
+}
+
+Rules
+Default pageSize = 25
+Max pageSize = 100 (or 200 for exports)
+Heavy exports must be asynchronous (report job + downloadable file)
+For MVC + partials
+Controllers can accept:
+page, pageSize, sort, filtersReturn _TablePartial plus a pagination partial.
+
+8) RESTful API consumption (HttpClient patterns)
+Use typed clients (recommended)
+In InsureX.Infrastructure:
+IInsurerConnectorClient
+IBankCoreClient
+IPolicyVerificationClient
+Use HttpClientFactory with:
+base address per tenant/connector
+retry policy (Polly)
+circuit breaker
+timeouts
+correlation IDs
+Patterns required
+Idempotent POST where possible (idempotency key header)
+Proper serialization (System.Text.Json)
+Request/response logging (without leaking PII)
+Backoff + DLQ strategy if using queues later
+
+9) Suggested module boundaries (still MVC + repo pattern)
+Even as a monolith, keep these modules separate:
+Tenanting & Identity
+Assets & Finance
+Policies & Coverage
+Compliance
+Workflow / Case Management
+Audit & Reporting
+Integrations
+Each module has:
+Controllers (Web)
+API Controllers (Api)
+Services (Application)
+Repositories (Infrastructure)
+RCL UI (optional)
+
+10) Concrete endpoint map (example)
+MVC Controllers (Views)
+GET /Assets  View
+POST /Assets/Search  PartialView _AssetTable
+GET /Cases  View
+POST /Cases/Search  PartialView _CaseTable
+API Controllers (JSON)
+POST /api/v1/integrations/{insurer}/webhook (signed)
+POST /api/v1/assets/import (bank feed)
+GET /api/v1/assets (paged)
+GET /api/v1/assets/{id}/compliance
+GET /api/v1/cases (paged)
+POST /api/v1/cases/{id}/actions/escalate
+
+11) Minimal "InsureX-ready" cross-cutting requirements
+Mandatory middleware
+TenantContext
+CorrelationId
+Exception-to-problem-details mapping
+Request size limits (protect against payload abuse)
+Rate limiting (especially webhooks)
+Response compression
+Audit trail (append-only)
+Every state-changing action emits an audit record:
+who/what/when
+tenant + org
+entity + entityId
+old/new status
+correlationId/eventId
+
+12) Implementation blueprint (what I'd build first)
+Sprint 1-2 (foundation)
+TenantContext + global query filters
+Auth (cookie + roles) + admin roles
+Asset registry + policy registry CRUD
+Standard paging response objects
+Sprint 3-4 (control layer)
+Compliance state projection table
+Basic rule evaluation in Application services
+Workflow cases + SLAs
+Audit trail
+Sprint 5+ (integrations)
+Insurer webhook ingestion with signature + idempotency
+Connector clients using typed HttpClient
+Near real-time event processing (can be "in-process background service" first)
+
+
+Perfect - SQL Server + Azure is a clean fit for an ASP.NET Core 8 MVC + API architecture. Here's the target reference architecture updated to be Azure-native, SQL Server-friendly, and aligned to your patterns (Controller-Service-Repository, Razor/partials, jQuery, Bootstrap, RCL, REST clients, API security + pagination).
+
+1) Azure target deployment (recommended baseline)
+Core platform
+Azure App Service (Windows or Linux)
+InsureX.Web (MVC + Razor)
+InsureX.Api (Web API)
+Start as 2 App Services (Web + API). Easy to scale independently.
+Azure SQL Database
+Single DB shared with TenantId + SQL Server Row-Level Security (RLS) optional but strongly recommended for bank-grade isolation.
+Azure Key Vault
+All secrets: DB connection, webhook secrets, insurer API keys, SMTP/SendGrid key.
+Azure Storage (Blob)
+Evidence payloads, insurer raw messages, exported reports.
+Azure Service Bus (for near real-time, resilient processing)
+Topics/queues for integration events and workflow commands.
+Azure Application Insights
+Logs + metrics + distributed tracing, correlation IDs.
+Optional (later):
+Azure API Management (APIM) in front of InsureX.Api for throttling, auth policies, developer portal.
+Azure Front Door + WAF for global routing + WAF.
+
+2) Solution structure (ASP.NET Core 8 MVC + API + RCL)
+InsureX.sln
+  /src
+    InsureX.Web                     (MVC, Razor Views, jQuery, Bootstrap)
+    InsureX.Api                     (REST API: integrations + internal JSON)
+    InsureX.Application             (Services, DTOs, rules)
+    InsureX.Domain                  (Entities, interfaces, domain events)
+    InsureX.Infrastructure          (EF Core, SQL Server, repos, connectors)
+    /Rcl
+      InsureX.Ui.Shell.Rcl          (Layout, nav, shared components)
+      InsureX.Ui.Compliance.Rcl     (Badges, tables, filters, widgets)
+      InsureX.Ui.Workflow.Rcl       (Case UI, SLAs, task panels)
+      InsureX.Ui.Reporting.Rcl      (Dashboards, exports)
+  /tests
+    InsureX.UnitTests
+    InsureX.IntegrationTests
+
+Why RCL on Azure works well: you version and reuse UI modules across Bank vs Insurer portals without duplicating views/components.
+
+3) SQL Server multi-tenancy design (Azure SQL)
+Recommended tenancy approach
+Shared Azure SQL DB + TenantId (balanced cost/ops + scalable)
+Enforce tenant isolation at 3 levels
+TenantContext middleware (sets current tenant from auth token/subdomain/API key)
+EF Core global query filters (TenantId scoping)
+SQL Server Row-Level Security (RLS) (strong guardrail)
+RLS pattern (SQL Server)
+Add TenantId UNIQUEIDENTIFIER NOT NULL to all tenant-scoped tables
+Create a security predicate function that checks SESSION_CONTEXT('TenantId')
+Apply security policy to tables
+At request start:
+open DB connection and set: EXEC sp_set_session_context @key='TenantId', @value=@TenantId;
+EF Core interceptor can do this automatically.
+This gives you bank-grade "even if a dev forgets a filter, SQL blocks cross-tenant reads."
+
+4) Controller-Service-Repository implementation (concrete roles)
+Controller (MVC / API)
+Validates input (ModelState)
+Authorizes
+Calls a service method
+Returns: View / PartialView / Json / ProblemDetails
+Service (Application)
+Orchestrates use cases
+Enforces tenancy using TenantContext
+Uses repositories + integration clients
+Uses transactions (Unit of Work)
+Emits domain events  outbox
+Repository (Infrastructure)
+EF Core queries only
+Uses tenant filters automatically
+No business logic
+
+5) Razor Views + Partials + jQuery + Bootstrap (portal UX)
+Pattern: pages are server-rendered, tables update via AJAX partials
+Index.cshtml: renders filters + empty container
+POST Search(...): returns _TablePartial.cshtml
+jQuery updates DOM
+This is performant, easy to build, and works nicely with authorization + SEO.
+Shared UI via RCL
+_Layout, _Nav, modal components, status badges, paging component, alerts.
+
+6) API security (Azure-aligned)
+User access (portals)
+Cookie authentication for MVC
+Optional: Azure AD / Entra ID OIDC for enterprise SSO
+Claims include:
+tenant_id
+org_id
+roles (BankUser/InsurerUser/Admin)
+System access (insurer/bank integrations)
+Choose one (ranked):
+OAuth2 client credentials (best)
+Each insurer/bank gets a client + secret/cert
+Issue tokens with tenant + org claims
+Signed webhooks (for push)
+HMAC signature header
+timestamp + nonce (replay protection)
+idempotency key
+APIM subscription keys (if you deploy APIM)
+Basic but effective gating + quotas
+Rate limiting
+Apply ASP.NET Core rate limiting policies at API layer
+Stronger: APIM policies per client + WAF
+
+7) Pagination + data sizing (mandatory standard)
+Standard paging request
+page default 1
+pageSize default 25
+max pageSize 100
+support sortBy and sortDir
+filters as query params or POST body for complex searches
+Standard paging response envelope
+{
+  "items": [ ... ],
+  "page": 1,
+  "pageSize": 25,
+  "totalItems": 2340,
+  "totalPages": 94,
+  "hasNext": true
+}
+
+For MVC partials
+Return partial + include:
+pager model
+total count
+page links
+Exports
+Never export huge datasets synchronously.
+Use a "Report Job":
+create job  background service generates CSV  store in Blob  user downloads.
+
+8) REST API consumption + HttpClient patterns (Azure-friendly)
+Typed HttpClients + Polly
+In InsureX.Infrastructure:
+InsurerConnectorClient (per insurer)
+BankFeedClient (per bank)
+Use:
+IHttpClientFactory
+Polly retry + circuit breaker
+timeouts (e.g., 10s default, per connector configurable)
+automatic correlation headers
+Idempotency & retries
+For outbound calls:
+include Idempotency-Key
+store request/response metadata (audit)
+For inbound webhooks:
+dedupe by (TenantId, SourceEventId) unique constraint
+
+9) Event processing (Azure Service Bus + outbox)
+For near real-time compliance monitoring, you want durable processing:
+Topics/queues
+Topic: integration.events.raw
+Topic: integration.events.normalized
+Topic: compliance.decisions
+Queue: workflow.commands
+Queue: notifications
+Outbox pattern (Azure SQL)
+OutboxMessages table
+Within transaction:
+save domain changes
+write outbox record
+Background dispatcher publishes to Service Bus
+This prevents "DB updated but event never published".
+
+
+10) InsureX canonical modules (aligned to your product)
+Tenanting & Identity
+Asset & Finance Registry
+Policy & Coverage
+Compliance Engine
+Workflow Orchestration
+Audit & Evidence
+Reporting
+Integrations
+Each module can have:
+MVC controllers + views (via RCL)
+API controllers (JSON)
+Services
+Repos
+DTOs
+
+11) Minimal Azure CI/CD (practical)
+GitHub Actions / Azure DevOps
+build + test
+run EF Core migrations
+deploy Web + API to App Service slots
+swap slots (blue/green)
+Environment config:
+App Service configuration values
+secrets referenced from Key Vault
+
+12) Recommended "first build" blueprint (what to implement first)
+Foundation (2-4 weeks)
+TenantContext + EF filters (+ optional RLS)
+Auth (cookie + roles; optional Entra SSO)
+Assets + Policies CRUD + basic dashboards
+Standard paging + partial refresh tables
+Audit log append-only
+Control layer (4-8 weeks)
+Compliance projection (ComplianceState per asset)
+Basic rules (config-driven)
+Case management workflows (SLA timers)
+Integrations (8-12+ weeks)
+Signed webhook ingestion + idempotency
+Normalization + evidence storage
+Service Bus pipeline + outbox
+Reporting exports (async)
+
+1) Azure target deployment (recommended baseline)
+Core platform
+Azure App Service (Windows or Linux)
+InsureX.Web (MVC + Razor)
+InsureX.Api (Web API)
+Start as 2 App Services (Web + API). Easy to scale independently.
+Azure SQL Database
+Single DB shared with TenantId + SQL Server Row-Level Security (RLS) optional but strongly recommended for bank-grade isolation.
+Azure Key Vault
+All secrets: DB connection, webhook secrets, insurer API keys, SMTP/SendGrid key.
+Azure Storage (Blob)
+Evidence payloads, insurer raw messages, exported reports.
+Azure Service Bus (for near real-time, resilient processing)
+Topics/queues for integration events and workflow commands.
+Azure Application Insights
+Logs + metrics + distributed tracing, correlation IDs.
+Optional (later):
+Azure API Management (APIM) in front of InsureX.Api for throttling, auth policies, developer portal.
+Azure Front Door + WAF for global routing + WAF.
+
+2) Solution structure (ASP.NET Core 8 MVC + API + RCL)
+InsureX.sln
+  /src
+    InsureX.Web                     (MVC, Razor Views, jQuery, Bootstrap)
+    InsureX.Api                     (REST API: integrations + internal JSON)
+    InsureX.Application             (Services, DTOs, rules)
+    InsureX.Domain                  (Entities, interfaces, domain events)
+    InsureX.Infrastructure          (EF Core, SQL Server, repos, connectors)
+    /Rcl
+      InsureX.Ui.Shell.Rcl          (Layout, nav, shared components)
+      InsureX.Ui.Compliance.Rcl     (Badges, tables, filters, widgets)
+      InsureX.Ui.Workflow.Rcl       (Case UI, SLAs, task panels)
+      InsureX.Ui.Reporting.Rcl      (Dashboards, exports)
+  /tests
+    InsureX.UnitTests
+    InsureX.IntegrationTests
+
+Why RCL on Azure works well: you version and reuse UI modules across Bank vs Insurer portals without duplicating views/components.
+
+
+3) SQL Server multi-tenancy design (Azure SQL)
+Recommended tenancy approach
+Shared Azure SQL DB + TenantId (balanced cost/ops + scalable)
+Enforce tenant isolation at 3 levels
+TenantContext middleware (sets current tenant from auth token/subdomain/API key)
+EF Core global query filters (TenantId scoping)
+SQL Server Row-Level Security (RLS) (strong guardrail)
+RLS pattern (SQL Server)
+Add TenantId UNIQUEIDENTIFIER NOT NULL to all tenant-scoped tables
+Create a security predicate function that checks SESSION_CONTEXT('TenantId')
+Apply security policy to tables
+At request start:
+open DB connection and set: EXEC sp_set_session_context @key='TenantId', @value=@TenantId;
+EF Core interceptor can do this automatically.
+This gives you bank-grade "even if a dev forgets a filter, SQL blocks cross-tenant reads."
+
+4) Controller-Service-Repository implementation (concrete roles)
+Controller (MVC / API)
+Validates input (ModelState)
+Authorizes
+Calls a service method
+Returns: View / PartialView / Json / ProblemDetails
+Service (Application)
+Orchestrates use cases
+Enforces tenancy using TenantContext
+Uses repositories + integration clients
+Uses transactions (Unit of Work)
+Emits domain events  outbox
+Repository (Infrastructure)
+EF Core queries only
+Uses tenant filters automatically
+No business logic
+
+5) Razor Views + Partials + jQuery + Bootstrap (portal UX)
+Pattern: pages are server-rendered, tables update via AJAX partials
+Index.cshtml: renders filters + empty container
+POST Search(...): returns _TablePartial.cshtml
+jQuery updates DOM
+This is performant, easy to build, and works nicely with authorization + SEO.
+Shared UI via RCL
+_Layout, _Nav, modal components, status badges, paging component, alerts.
+
+6) API security (Azure-aligned)
+User access (portals)
+Cookie authentication for MVC
+Optional: Azure AD / Entra ID OIDC for enterprise SSO
+Claims include:
+tenant_id
+org_id
+roles (BankUser/InsurerUser/Admin)
+System access (insurer/bank integrations)
+Choose one (ranked):
+OAuth2 client credentials (best)
+Each insurer/bank gets a client + secret/cert
+Issue tokens with tenant + org claims
+Signed webhooks (for push)
+HMAC signature header
+timestamp + nonce (replay protection)
+idempotency key
+APIM subscription keys (if you deploy APIM)
+Basic but effective gating + quotas
+Rate limiting
+Apply ASP.NET Core rate limiting policies at API layer
+Stronger: APIM policies per client + WAF
+
+7) Pagination + data sizing (mandatory standard)
+Standard paging request
+page default 1
+pageSize default 25
+max pageSize 100
+support sortBy and sortDir
+filters as query params or POST body for complex searches
+Standard paging response envelope
+{
+  "items": [ ... ],
+  "page": 1,
+  "pageSize": 25,
+  "totalItems": 2340,
+  "totalPages": 94,
+  "hasNext": true
+}
+For MVC partials
+Return partial + include:
+pager model
+total count
+page links
+Exports
+Never export huge datasets synchronously.
+Use a "Report Job":
+create job  background service generates CSV  store in Blob  user downloads.
+
+8) REST API consumption + HttpClient patterns (Azure-friendly)
+Typed HttpClients + Polly
+In InsureX.Infrastructure:
+InsurerConnectorClient (per insurer)
+BankFeedClient (per bank)
+Use:
+IHttpClientFactory
+Polly retry + circuit breaker
+timeouts (e.g., 10s default, per connector configurable)
+automatic correlation headers
+Idempotency & retries
+For outbound calls:
+include Idempotency-Key
+store request/response metadata (audit)
+For inbound webhooks:
+dedupe by (TenantId, SourceEventId) unique constraint
+
+9) Event processing (Azure Service Bus + outbox)
+For near real-time compliance monitoring, you want durable processing:
+Topics/queues
+Topic: integration.events.raw
+Topic: integration.events.normalized
+Topic: compliance.decisions
+Queue: workflow.commands
+Queue: notifications
+Outbox pattern (Azure SQL)
+OutboxMessages table
+Within transaction:
+save domain changes
+write outbox record
+Background dispatcher publishes to Service Bus
+This prevents "DB updated but event never published".
+
+10) InsureX canonical modules (aligned to your product)
+Tenanting & Identity
+Asset & Finance Registry
+Policy & Coverage
+Compliance Engine
+Workflow Orchestration
+Audit & Evidence
+Reporting
+Integrations
+Each module can have:
+MVC controllers + views (via RCL)
+API controllers (JSON)
+Services
+Repos
+DTOs
+
+11) Minimal Azure CI/CD (practical)
+GitHub Actions / Azure DevOps
+build + test
+run EF Core migrations
+deploy Web + API to App Service slots
+swap slots (blue/green)
+Environment config:
+App Service configuration values
+secrets referenced from Key Vault
+
+12) Recommended "first build" blueprint (what to implement first)
+Foundation (2-4 weeks)
+TenantContext + EF filters (+ optional RLS)
+Auth (cookie + roles; optional Entra SSO)
+Assets + Policies CRUD + basic dashboards
+Standard paging + partial refresh tables
+Audit log append-only
+Control layer (4-8 weeks)
+Compliance projection (ComplianceState per asset)
+Basic rules (config-driven)
+Case management workflows (SLA timers)
+Integrations (8-12+ weeks)
+Signed webhook ingestion + idempotency
+Normalization + evidence storage
+Service Bus pipeline + outbox
+Reporting exports (async)
+
+Below are concrete, implementation-ready suggestions in four parts:
+Azure deployment diagram (text form) + services
+Module-by-module API contract (endpoints, auth, pagination, headers)
+SQL Server multi-tenancy template with RLS + session_context
+MVC (Razor + partials + jQuery) patterns for paged tables + AJAX
+
+1) Azure deployment diagram + services (practical)
+Edge
+Azure Front Door + WAF (recommended)
+Routes:
+portal.insurex.com  Web App Service
+api.insurex.com  API App Service
+WAF rules + geo/IP restrictions + bot protection
+App Layer
+App Service: InsureX.Web (ASP.NET Core 8 MVC)
+Razor views/partials, jQuery, Bootstrap
+Cookie auth for portal users
+App Service: InsureX.Api (ASP.NET Core 8 Web API)
+Bank feeds, insurer webhooks, internal JSON endpoints for AJAX
+OAuth2 (client credentials) + signed webhook support
+Data + Integration
+Azure SQL Database
+Shared DB + TenantId (plus optional RLS)
+Outbox table for event publishing
+Azure Service Bus
+Topics/queues for events/commands
+Azure Storage (Blob)
+Raw insurer payload evidence + exports
+Azure Key Vault
+Secrets (DB, webhook keys, insurer API keys)
+Application Insights
+Logs + metrics + distributed tracing
+Background processing options
+Option A (simple): Hosted background services within InsureX.Api
+Option B (best practice): Azure Functions triggered by Service Bus
+Option C (most scalable): Separate Worker Service App Service
+
+2) Module-by-module API contract (REST + security + pagination)
+Common standards (apply to all API endpoints)
+Auth
+User endpoints: Cookie (portal) OR Bearer token (if using OIDC)
+System endpoints (banks/insurers): Bearer tokens via OAuth2 client credentials(APIM can sit in front later)
+Headers
+X-Correlation-Id (generated if missing; returned in response)
+X-Tenant-Id (only for system-to-system if tenant not embedded in token)
+Idempotency-Key (for POST that should be deduped)
+Webhooks:
+X-Webhook-Timestamp
+X-Webhook-Nonce
+X-Webhook-Signature (HMAC SHA-256)
+Pagination
+Query params: page=1&pageSize=25&sortBy=...&sortDir=asc
+Enforce: default pageSize=25, max=100.
+Response envelope
+{
+  "items": [],
+  "page": 1,
+  "pageSize": 25,
+  "totalItems": 2340,
+  "totalPages": 94,
+  "hasNext": true
+}
+
+Errors
+Use ProblemDetails (application/problem+json) consistently.
+
+2.1 Tenanting & Identity API (admin/internal)
+GET /api/v1/tenants (paged, admin only)
+POST /api/v1/tenants
+GET /api/v1/tenants/{tenantId}
+PUT /api/v1/tenants/{tenantId}
+GET /api/v1/users (paged)
+POST /api/v1/users
+PUT /api/v1/users/{userId}/roles
+Security: Admin only.
+
+2.2 Asset & Finance Registry API
+GET /api/v1/assets (paged, filterable)
+filters: status, assetType, bankOrgId, borrowerRef, vin, serial, fromDate, toDate
+GET /api/v1/assets/{assetId}
+POST /api/v1/assets (create)
+PUT /api/v1/assets/{assetId}
+POST /api/v1/assets/import (bank feed import)
+async preferred for large loads:
+returns import job id
+Security: Bank users (read/write scoped by org); insurers usually read-only.
+
+2.3 Policy & Coverage API
+GET /api/v1/policies (paged)
+GET /api/v1/policies/{policyId}
+POST /api/v1/policies
+PUT /api/v1/policies/{policyId}
+GET /api/v1/assets/{assetId}/policies (paged)
+Security: Bank users view; insurer users can update their policy records (scoped by insurer org).
+
+2.4 Compliance API (control layer)
+GET /api/v1/compliance/assets (paged list of compliance states)
+GET /api/v1/assets/{assetId}/compliance (current state + history summary)
+GET /api/v1/assets/{assetId}/compliance/decisions (paged ledger)
+POST /api/v1/compliance/rulesets (admin)
+PUT /api/v1/compliance/rulesets/{id} (admin)
+Security: Bank/insurer read; admin manages rules.
+
+2.5 Workflow / Case Management API
+GET /api/v1/cases (paged; filters by status, SLA, assignedTo, reason)
+GET /api/v1/cases/{caseId}
+POST /api/v1/cases/{caseId}/actions/assign
+POST /api/v1/cases/{caseId}/actions/escalate
+POST /api/v1/cases/{caseId}/actions/close
+GET /api/v1/cases/{caseId}/tasks (paged)
+POST /api/v1/cases/{caseId}/tasks
+Security: Bank users manage; insurer users participate; actions are permissioned.
+
+2.6 Audit & Evidence API
+GET /api/v1/audit (paged; filters by entity type/id, user, date)
+GET /api/v1/audit/{auditId}
+GET /api/v1/evidence/{evidenceId} (returns pre-signed blob URL or streams with auth)
+Security: Strict; include immutable event records.
+
+2.7 Integration APIs (Insurers / Banks)
+Insurer Webhook (push)
+POST /api/v1/integrations/insurers/{insurerCode}/webhook
+verifies signature + timestamp
+dedupe by SourceEventId + tenant
+writes raw payload to blob
+publishes normalized event
+Insurer Polling (pull)
+Internal scheduled job calls insurer APIs using typed HttpClient + Polly
+Bank feed
+POST /api/v1/integrations/banks/{bankCode}/assets
+POST /api/v1/integrations/banks/{bankCode}/loans
+POST /api/v1/integrations/banks/{bankCode}/policies (optional)
+Security: OAuth2 client credentials (preferred) or APIM subscription key + mTLS.
+
+3) SQL Server tenancy & RLS template (Azure SQL)
+3.1 Base table pattern (TenantId everywhere)
+For any tenant-scoped entity:
+TenantId UNIQUEIDENTIFIER NOT NULL
+indexes include TenantId as the first key:
+(TenantId, CreatedUtc)
+(TenantId, AssetId)
+(TenantId, Status)
+3.2 Setting TenantId per request (SESSION_CONTEXT)
+On each DB connection open, run:
+sp_set_session_context 'TenantId', @TenantId
+Implementation suggestion (EF Core)
+Use a DbConnectionInterceptor to set session context on open.
+TenantId comes from ITenantContext.
+3.3 RLS predicate function
+Create a predicate function:
+compares row TenantId to SESSION_CONTEXT('TenantId')
+Apply security policy to tenant tables:
+FILTER PREDICATE and optionally BLOCK PREDICATE (prevents writes to other tenants)
+What this gives you
+Even if a repo query forgets tenant filter, SQL Server blocks access.
+3.4 Integration/system clients (no user session)
+tokens include tenant claim OR API key maps to tenant
+middleware sets TenantId before hitting EF Core
+
+4) MVC patterns for Razor + partial views + jQuery + Bootstrap
+4.1 Paged list page pattern
+Assets/Index
+Index.cshtml:
+filter form
+<div id="assetTableContainer"></div>
+AssetsController
+Index() returns view
+Search(AssetSearchRequest request) returns _AssetTable partial
+Partial views
+_AssetTable.cshtml
+renders table + pagination partial _Pager.cshtml
+4.2 jQuery AJAX snippet pattern (standardize)
+On filter submit:
+$.ajax({ url: '/Assets/Search', type: 'POST', data: $('#filterForm').serialize() })
+replace container HTML with partial response
+On pagination click:
+pass page and re-call Search
+4.3 Security & anti-forgery
+Include antiforgery tokens in AJAX posts
+Controller actions [ValidateAntiForgeryToken] for portal-only endpoints
+4.4 UI components via RCL
+Create reusable partials/components in RCL:
+compliance badge
+risk severity pill
+standard "empty table state"
+pager component
+audit timeline component
+
+5) "Do this next" checklist (actionable)
+Immediate build decisions
+Deploy two App Services (Web + API)
+Provision:
+Azure SQL
+Service Bus
+Key Vault
+Blob Storage
+App Insights
+Development standards
+Enforce:
+paging everywhere
+ProblemDetails errors
+correlation IDs
+tenant resolution middleware
+typed HttpClients
+Security hardening
+OAuth2 client credentials for system integrations
+Signed webhooks for insurer push
+RLS in SQL Server (recommended)
+
+InsureX Engineering Reference Spec
+ASP.NET Core 8 | Azure | SQL Server | MVC + API | Multi-tenant B2B SaaS
+
+1. Architecture Overview
+Deployment (Azure-native)
+App Service: InsureX.Web (ASP.NET Core 8 MVC, Razor, jQuery, Bootstrap)
+App Service: InsureX.Api (ASP.NET Core 8 Web API)
+Azure SQL Database (shared DB + TenantId)
+Azure Service Bus (events + background processing)
+Azure Blob Storage (evidence + exports)
+Azure Key Vault (all secrets)
+Application Insights (logs, metrics, tracing)
+Architecture style
+Modular monolith (ready to split later)
+Controller  Service  Repository pattern
+Strong tenant isolation + auditability
+
+2. Solution Structure
+/src
+  InsureX.Web              (MVC, Razor views, partials, jQuery)
+  InsureX.Api              (REST API for integrations + AJAX)
+  InsureX.Application      (Business services, DTOs, rules)
+  InsureX.Domain           (Entities, enums, interfaces)
+  InsureX.Infrastructure   (EF Core, repos, SQL, integrations)
+  /Rcl
+    InsureX.Ui.Shell.Rcl
+    InsureX.Ui.Compliance.Rcl
+    InsureX.Ui.Workflow.Rcl
+    InsureX.Ui.Reporting.Rcl
+/tests
+3. Mandatory Patterns
+Controllers
+No business logic
+Validate input
+Call service
+Return View / PartialView / Json / ProblemDetails
+Services
+All business logic
+Enforce tenant + permissions
+Orchestrate workflows
+Use repositories + HttpClients
+Own transactions
+Repositories
+EF Core only
+No business logic
+Always tenant-scoped
+
+4. Multi-Tenancy Standard
+Every tenant-scoped table includes:
+TenantId UNIQUEIDENTIFIER NOT NULL
+Tenant resolved from:
+Auth claims (preferred)
+API key mapping (system clients)
+Enforcement layers:
+TenantContext middleware
+EF Core global query filters
+SQL Server RLS using SESSION_CONTEXT('TenantId') (recommended)
+Non-negotiable: No endpoint accepts tenant ID from client input.
+
+5. Security Standards
+Portal users
+Cookie authentication
+Roles: Admin, BankUser, InsurerUser
+Claims include TenantId, OrgId, Roles
+System integrations
+OAuth2 Client Credentials (preferred)
+OR signed webhooks (HMAC SHA-256)
+Required headers for webhooks:
+X-Webhook-Signature
+X-Webhook-Timestamp
+X-Webhook-Nonce
+Idempotency-Key
+Secrets
+Never in code or config
+Stored in Azure Key Vault only
+
+6. REST API Standards
+Base path
+/api/v1/...
+
+Headers (mandatory)
+X-Correlation-Id (generated if missing)
+Authorization: Bearer ...
+Idempotency-Key (for POST commands)
+Error format
+Always return ProblemDetails (application/problem+json)
+
+7. Pagination & Data Sizing (mandatory)
+All list endpoints must support:
+page (default 1)
+pageSize (default 25, max 100)
+sortBy, sortDir
+Filters as query params
+Standard response envelope
+{
+  "items": [],
+  "page": 1,
+  "pageSize": 25,
+  "totalItems": 1340,
+  "totalPages": 54,
+  "hasNext": true
+}
+Exports
+Never synchronous for large datasets
+Use async report jobs + Blob download
+
+8. Core Endpoint Groups
+Assets
+GET /api/v1/assets (paged)
+GET /api/v1/assets/{id}
+POST /api/v1/assets
+POST /api/v1/assets/import
+Policies
+GET /api/v1/policies (paged)
+GET /api/v1/assets/{id}/policies
+Compliance
+GET /api/v1/compliance/assets (paged)
+GET /api/v1/assets/{id}/compliance
+GET /api/v1/assets/{id}/compliance/decisions
+Cases / Workflow
+GET /api/v1/cases (paged)
+POST /api/v1/cases/{id}/actions/escalate
+POST /api/v1/cases/{id}/actions/close
+Audit
+GET /api/v1/audit (paged)
+GET /api/v1/evidence/{id}
+Integrations
+POST /api/v1/integrations/insurers/{code}/webhook
+POST /api/v1/integrations/banks/{code}/assets
+
+9. Razor + jQuery UI Pattern
+Pages
+Full page: Index.cshtml
+Data loaded via partial: _Table.cshtml
+Filters trigger AJAX  controller returns partial
+Standard jQuery pattern
+AJAX POST to /Controller/Search
+Replace container HTML
+Pager links re-trigger AJAX
+Shared UI
+All reusable components live in RCL:
+Layout
+Navigation
+Pager
+Status badges
+Alerts
+Modals
+
+10. Integration & HttpClient Standards
+All external APIs use typed clients via HttpClientFactory
+Must include:
+Timeouts
+Retry policy (Polly)
+Circuit breaker
+Correlation ID header
+Idempotency enforced for outbound POSTs
+
+11. Audit & Traceability (non-negotiable)
+Every state change must record:
+TenantId
+User/system actor
+Entity + EntityId
+Action
+Old  New values
+Timestamp (UTC)
+CorrelationId
+Audit tables are append-only.
+
+12. Observability
+All requests logged with CorrelationId
+Application Insights enabled
+Track:
+API latency
+Failures
+Webhook rejection rate
+Queue backlog
+SLA breaches
+
+13. Engineering Guardrails
+No endpoint without pagination if it returns collections
+No secrets in code or config
+No direct DB access outside repositories
+No controller business logic
+No tenant ID from client input
+All writes generate audit records
+
+
+
+
+

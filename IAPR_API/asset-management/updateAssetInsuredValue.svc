@@ -1,0 +1,1 @@
+﻿<%@ ServiceHost Language="C#" Debug="true" Service="IAPR_API.asset_management.updateAssetInsuredValue" CodeBehind="updateAssetInsuredValue.svc.cs" %>
