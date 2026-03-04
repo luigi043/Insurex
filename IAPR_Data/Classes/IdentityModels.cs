@@ -55,6 +55,8 @@ namespace IAPR_Data.Classes
         public DbSet<AuditLogEntry> AuditLog { get; set; }
         public DbSet<Case> Cases { get; set; }
         public DbSet<CaseNote> CaseNotes { get; set; }
+        public DbSet<ApiClientCredential> ApiClients { get; set; }
+        public DbSet<IssuedToken> IssuedTokens { get; set; }
 
         public ApplicationDbContext()
             : base("connIAPRData")

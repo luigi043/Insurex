@@ -126,6 +126,8 @@
     <Compile Include="Service1.svc.cs">
       <DependentUpon>Service1.svc</DependentUpon>
     </Compile>
+    <Compile Include="OAuth2Service.svc.cs" />
+    <Compile Include="ComplianceApiService.svc.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="JsonSchemas\Policy_Status_Schema.json" />

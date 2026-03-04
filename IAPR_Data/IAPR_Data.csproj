@@ -115,6 +115,9 @@
     <Compile Include="Services\AuditLogger.cs" />
     <Compile Include="Services\CaseManager.cs" />
     <Compile Include="Services\NotificationService.cs" />
+    <Compile Include="Classes\PagedResult.cs" />
+    <Compile Include="Classes\OAuth2Models.cs" />
+    <Compile Include="Services\OAuth2TokenService.cs" />
     <Compile Include="Classes\Common\CurrentUser.cs" />
     <Compile Include="Classes\Common\Dashboards.cs" />
     <Compile Include="Classes\Partners\Financer.cs" />
