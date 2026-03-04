@@ -6,6 +6,10 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace InsureX.Api.Controllers;
 
+/// <summary>
+/// Controller for managing insurance policies.
+/// Provides functionality for retrieving and creating policies.
+/// </summary>
 [ApiController]
 [Route("api/v1")]
 public class PoliciesController : ControllerBase
