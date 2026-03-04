@@ -15,8 +15,8 @@ Based on the provided documents (`Asset Protection Register - product write-up`,
 - [x] Implement secure AES-GCM encryption for sensitive application data.
 
 ### Phase 2: Multi-Tenant Architecture
-- [ ] Introduce a `Tenant` and `Organization` entity model.
-- [ ] Add `TenantId` to all relevant domain entities (Assets, Policies, Cases).
+- [x] Introduce a `Tenant` and `Organization` entity model.
+- [/] Add `TenantId` to all relevant domain entities (Assets, Policies, Cases).
 - [ ] Implement `TenantContext` middleware to resolve the current tenant from the request.
 - [ ] Enforce tenant isolation using EF Core Global Query Filters.
 - [ ] Implement SQL Server Row-Level Security (RLS) for strict database isolation.

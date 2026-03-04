@@ -101,6 +101,7 @@
     <Compile Include="Classes\Common\Common.cs" />
     <Compile Include="Classes\Common\ConvertToDataTable.cs" />
     <Compile Include="Classes\IdentityModels.cs" />
+    <Compile Include="Classes\MultiTenantModels.cs" />
     <Compile Include="Classes\Common\CurrentUser.cs" />
     <Compile Include="Classes\Common\Dashboards.cs" />
     <Compile Include="Classes\Partners\Financer.cs" />

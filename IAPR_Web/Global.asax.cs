@@ -9,6 +9,7 @@ using System.Web.SessionState;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
 using IAPR_Data.Classes;
+using System.Data.Entity;
 
 namespace IAPR_Web
 {
@@ -20,9 +21,42 @@ namespace IAPR_Web
             RouteConfig.RegisterRoutes(RouteTable.Routes);
             BundleConfig.RegisterBundles(BundleTable.Bundles);
 
+            // Explicitly force database recreation if the model has changed
+            Database.SetInitializer(new DropCreateDatabaseIfModelChanges<ApplicationDbContext>());
+
             // Seed Default Admin User & generate EF Database
             using (var dbContext = new ApplicationDbContext())
             {
+                // Force Initialization
+                dbContext.Database.Initialize(force: true);
+
+                // 1. Seed System Tenant
+                var systemTenant = dbContext.Tenants.FirstOrDefault(t => t.DomainKey == "system");
+                if (systemTenant == null)
+                {
+                    systemTenant = new Tenant
+                    {
+                        Name = "System Default Tenant",
+                        DomainKey = "system"
+                    };
+                    dbContext.Tenants.Add(systemTenant);
+                    dbContext.SaveChanges(); // Need ID for Organization
+                }
+
+                // 2. Seed HQ Organization
+                var hqOrg = dbContext.Organizations.FirstOrDefault(o => o.TenantId == systemTenant.Id && o.Type == "HQ");
+                if (hqOrg == null)
+                {
+                    hqOrg = new Organization
+                    {
+                        TenantId = systemTenant.Id,
+                        Name = "Headquarters",
+                        Type = "HQ"
+                    };
+                    dbContext.Organizations.Add(hqOrg);
+                    dbContext.SaveChanges(); // Need ID for User
+                }
+
                 var userStore = new UserStore<ApplicationUser>(dbContext);
                 using (var userManager = new UserManager<ApplicationUser>(userStore))
                 {
@@ -35,6 +69,8 @@ namespace IAPR_Web
                             vcSurname = "Administrator",
                             iUser_Type_Id = 1, // Admin role
                             iUser_Status_Id = 1, // Active
+                            TenantId = systemTenant.Id,
+                            OrganizationId = hqOrg.Id
                         };
                         userManager.Create(seedUser, "Password123!");
                     }

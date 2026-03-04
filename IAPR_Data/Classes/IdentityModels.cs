@@ -22,6 +22,15 @@ namespace IAPR_Data.Classes
         public int? iPartner_Id { get; set; }
         public string vcPosition_Title { get; set; }
         public bool bUserReceiveNotifications { get; set; }
+
+        // Multi-Tenant FKs
+        public int? TenantId { get; set; }
+        [ForeignKey("TenantId")]
+        public virtual Tenant Tenant { get; set; }
+
+        public int? OrganizationId { get; set; }
+        [ForeignKey("OrganizationId")]
+        public virtual Organization Organization { get; set; }
         
         // These can be populated securely or managed by Identity
         public async Task<ClaimsIdentity> GenerateUserIdentityAsync(UserManager<ApplicationUser> manager)
@@ -35,6 +44,9 @@ namespace IAPR_Data.Classes
 
     public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
     {
+        public DbSet<Tenant> Tenants { get; set; }
+        public DbSet<Organization> Organizations { get; set; }
+
         public ApplicationDbContext()
             : base("connIAPRData")
         {
