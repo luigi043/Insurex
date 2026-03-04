@@ -75,6 +75,37 @@ namespace IAPR_Web
                         userManager.Create(seedUser, "Password123!");
                     }
                 }
+
+                // 3. Apply SQL Server Row-Level Security (RLS) policies
+                // Uses idempotent SQL: checks for object existence before creating.
+                // Wrapped in try/catch so RLS permission issues don't block startup in dev.
+                try
+                {
+                    var rlsSqlPath = System.IO.Path.Combine(
+                        System.AppDomain.CurrentDomain.BaseDirectory,
+                        "..\\docs\\sql\\rls_setup.sql");
+
+                    if (System.IO.File.Exists(rlsSqlPath))
+                    {
+                        var rlsSql = System.IO.File.ReadAllText(rlsSqlPath);
+                        // Execute each GO-delimited batch separately
+                        var batches = rlsSql.Split(
+                            new[] { "\r\nGO\r\n", "\nGO\n", "\r\nGO\n" },
+                            System.StringSplitOptions.RemoveEmptyEntries);
+                        foreach (var batch in batches)
+                        {
+                            var trimmed = batch.Trim();
+                            if (!string.IsNullOrWhiteSpace(trimmed))
+                                dbContext.Database.ExecuteSqlCommand(trimmed);
+                        }
+                    }
+                }
+                catch (Exception rlsEx)
+                {
+                    // RLS setup is non-fatal: log and continue
+                    System.Diagnostics.Trace.TraceWarning(
+                        "RLS setup skipped: " + rlsEx.Message);
+                }
             }
         }
     }

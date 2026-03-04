@@ -5,6 +5,7 @@ using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
+using System.Data.SqlClient;
 
 namespace IAPR_Data.Classes
 {
@@ -78,6 +79,18 @@ namespace IAPR_Data.Classes
                 return dbSet; // Entity does not participate in multi-tenancy
 
             return dbSet.Where(e => (int?)tenantProp.GetValue(e, null) == resolvedTenantId);
+        }
+
+        /// <summary>
+        /// Activates SQL Server Row-Level Security for this DB connection
+        /// by calling sp_SetTenantContext with the current user's TenantId.
+        /// Must be called once per connection, immediately after opening.
+        /// </summary>
+        public void SetRlsTenantContext(int tenantId)
+        {
+            Database.ExecuteSqlCommand(
+                "EXEC dbo.sp_SetTenantContext @TenantId",
+                new SqlParameter("@TenantId", tenantId));
         }
     }
 }

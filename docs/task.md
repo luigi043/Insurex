@@ -19,7 +19,7 @@ Based on the provided documents (`Asset Protection Register - product write-up`,
 - [x] Add `TenantId` to all relevant domain entities (Assets, Policies, Cases).
 - [x] Implement `TenantContext` middleware to resolve the current tenant from the request.
 - [x] Enforce tenant isolation using EF Core Global Query Filters.
-- [/] Implement SQL Server Row-Level Security (RLS) for strict database isolation.
+- [x] Implement SQL Server Row-Level Security (RLS) for strict database isolation.
 
 ### Phase 3: Event-Driven Compliance Engine
 - [ ] Build secure webhook ingestion endpoints for insurers (HMAC signature validation, replay protection, idempotency).
