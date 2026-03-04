@@ -65,4 +65,53 @@ namespace IAPR_Data.Classes
         public int EscalatedCases { get; set; }
         public decimal AverageResolutionTimeDays { get; set; }
     }
+
+    public class AssetDto
+    {
+        public int Id { get; set; }
+        public int? TenantId { get; set; }
+        public string AssetType { get; set; }
+        public string AssetIdentifier { get; set; }
+        public string RegistrationNumber { get; set; }
+        public decimal FinancedAmount { get; set; }
+        public string BorrowerReference { get; set; }
+        public DateTime LoanStartDate { get; set; }
+        public DateTime LoanEndDate { get; set; }
+        public string Status { get; set; }
+        public string ComplianceStatus { get; set; }
+    }
+
+    public class AssetDetailDto : AssetDto
+    {
+        public BorrowerDto Borrower { get; set; }
+        public List<PolicyDto> Policies { get; set; } = new List<PolicyDto>();
+        public List<ComplianceStateDto> ComplianceHistory { get; set; } = new List<ComplianceStateDto>();
+    }
+
+    public class BorrowerDto
+    {
+        public string Name { get; set; }
+        public string IDNumber { get; set; }
+        public string Email { get; set; }
+        public string Phone { get; set; }
+    }
+
+    public class PolicyDto
+    {
+        public int Id { get; set; }
+        public string PolicyNumber { get; set; }
+        public string InsurerName { get; set; }
+        public string Status { get; set; }
+        public DateTime ExpiryDate { get; set; }
+        public decimal InsuredValue { get; set; }
+    }
+
+    public class ComplianceStateDto
+    {
+        public int Id { get; set; }
+        public string Outcome { get; set; }
+        public string Reason { get; set; }
+        public DateTime EvaluatedAt { get; set; }
+        public string CorrelationId { get; set; }
+    }
 }

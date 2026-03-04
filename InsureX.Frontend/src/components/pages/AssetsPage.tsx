@@ -1,10 +1,12 @@
 import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { assetClient } from '../../api/clients';
 import { Asset } from '../../api/types/Asset';
 import { DataTable, StatusBadge, Pagination } from '../shared';
 import { Car, Search, Filter, Download } from 'lucide-react';
 
 const AssetsPage: React.FC = () => {
+  const navigate = useNavigate();
   const [data, setData] = useState<Asset[]>([]);
   const [totalCount, setTotalCount] = useState(0);
   const [page, setPage] = useState(1);
@@ -108,7 +110,12 @@ const AssetsPage: React.FC = () => {
       </div>
 
       {/* Data Table */}
-      <DataTable columns={columns} data={data} loading={loading} />
+      <DataTable 
+        columns={columns} 
+        data={data} 
+        loading={loading} 
+        onRowClick={(a) => navigate(`/assets/${a.id}`)}
+      />
 
       {/* Pagination */}
       <Pagination 

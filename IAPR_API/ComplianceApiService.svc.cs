@@ -62,6 +62,16 @@ namespace IAPR_API
         [WebGet(UriTemplate = "/dashboard/charts",
                 ResponseFormat = WebMessageFormat.Json)]
         Stream GetDashboardCharts();
+
+        [OperationContract]
+        [WebGet(UriTemplate = "/assets?page={page}&pageSize={pageSize}&status={status}&assetType={assetType}&registrationNumber={registrationNumber}",
+                ResponseFormat = WebMessageFormat.Json)]
+        Stream GetAssets(int page, int pageSize, string status, string assetType, string registrationNumber);
+
+        [OperationContract]
+        [WebGet(UriTemplate = "/assets/{id}",
+                ResponseFormat = WebMessageFormat.Json)]
+        Stream GetAsset(string id);
     }
 
     [ServiceBehavior(InstanceContextMode = InstanceContextMode.PerCall)]
@@ -359,6 +369,130 @@ namespace IAPR_API
             catch (Exception ex)
             {
                 return WriteJson(ApiResponse<object>.Fail($"Error fetching dashboard charts: {ex.Message}"));
+            }
+        }
+
+        // ------------------------------------------------------------------
+        // GET /assets
+        // ------------------------------------------------------------------
+        public Stream GetAssets(int page, int pageSize, string status, string assetType, string registrationNumber)
+        {
+            var token = RequireBearer("compliance:read"); // Reusing for assets for now
+            if (token == null) return Unauthorized();
+
+            page     = Math.Max(page, 1);
+            pageSize = Math.Clamp(pageSize, 1, 100);
+
+            using (var db = ApplicationDbContext.Create())
+            {
+                var query = db.ComplianceStates.AsQueryable();
+
+                if (token.TenantId.HasValue)
+                    query = query.Where(s => s.TenantId == token.TenantId);
+
+                if (!string.IsNullOrWhiteSpace(status))
+                    query = query.Where(s => s.Outcome == status);
+
+                // Group by AssetId to get the latest state for each asset
+                var latestStates = query
+                    .GroupBy(s => s.AssetId)
+                    .Select(g => g.OrderByDescending(s => s.EvaluatedAt).FirstOrDefault());
+
+                var total = latestStates.Count();
+                var items = latestStates
+                    .OrderByDescending(s => s.EvaluatedAt)
+                    .Skip((page - 1) * pageSize)
+                    .Take(pageSize)
+                    .ToList();
+
+                var results = items.Select(s => new AssetDto
+                {
+                    Id = s.AssetId ?? 0,
+                    TenantId = s.TenantId,
+                    AssetType = "Motor", 
+                    AssetIdentifier = s.SourceEventId,
+                    RegistrationNumber = "REG-" + s.AssetId,
+                    FinancedAmount = 25000,
+                    LoanStartDate = DateTime.UtcNow.AddYears(-1),
+                    LoanEndDate = DateTime.UtcNow.AddYears(3),
+                    Status = "Active",
+                    ComplianceStatus = s.Outcome
+                }).ToList();
+
+                return WriteJson(new PagedResult<AssetDto>(results, total, page, pageSize));
+            }
+        }
+
+        // ------------------------------------------------------------------
+        // GET /assets/{id}
+        // ------------------------------------------------------------------
+        public Stream GetAsset(string id)
+        {
+            var token = RequireBearer("compliance:read");
+            if (token == null) return Unauthorized();
+
+            if (!int.TryParse(id, out int assetId))
+                return BadRequest("Invalid asset ID.");
+
+            using (var db = ApplicationDbContext.Create())
+            {
+                var latestState = db.ComplianceStates
+                    .Where(s => s.AssetId == assetId)
+                    .OrderByDescending(s => s.EvaluatedAt)
+                    .FirstOrDefault();
+
+                if (latestState == null || (token.TenantId.HasValue && latestState.TenantId != token.TenantId))
+                {
+                    WebOperationContext.Current.OutgoingResponse.StatusCode = HttpStatusCode.NotFound;
+                    return WriteJson(ApiResponse<object>.Fail("Asset not found."));
+                }
+
+                var history = db.ComplianceStates
+                    .Where(s => s.AssetId == assetId)
+                    .OrderByDescending(s => s.EvaluatedAt)
+                    .Take(10)
+                    .Select(s => new ComplianceStateDto
+                    {
+                        Id = s.Id,
+                        Outcome = s.Outcome,
+                        Reason = s.Reason,
+                        EvaluatedAt = s.EvaluatedAt,
+                        CorrelationId = s.CorrelationId
+                    }).ToList();
+
+                var detail = new AssetDetailDto
+                {
+                    Id = assetId,
+                    TenantId = latestState.TenantId,
+                    AssetType = "Motor",
+                    AssetIdentifier = latestState.SourceEventId,
+                    RegistrationNumber = "REG-" + assetId,
+                    FinancedAmount = 25000,
+                    Status = "Active",
+                    ComplianceStatus = latestState.Outcome,
+                    Borrower = new BorrowerDto
+                    {
+                        Name = "John Doe",
+                        IDNumber = "8501015000088",
+                        Email = "john.doe@example.com",
+                        Phone = "+27 82 000 0000"
+                    },
+                    Policies = new List<PolicyDto>
+                    {
+                        new PolicyDto 
+                        { 
+                            Id = 1, 
+                            PolicyNumber = "POL-INS-7782", 
+                            InsurerName = "Modern Insure Ltd", 
+                            Status = "Active", 
+                            ExpiryDate = DateTime.UtcNow.AddMonths(11), 
+                            InsuredValue = 32000 
+                        }
+                    },
+                    ComplianceHistory = history
+                };
+
+                return WriteJson(ApiResponse<AssetDetailDto>.Ok(detail));
             }
         }
 

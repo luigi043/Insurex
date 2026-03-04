@@ -1,5 +1,5 @@
 import { API } from '../utils/api';
-import type { Asset, AssetFilterParams } from '../types/Asset';
+import type { Asset, AssetFilterParams, AssetDetail } from '../types/Asset';
 import type { ComplianceCase, CaseFilterParams } from '../types/Case';
 import type { PaginatedResponse, ApiResponse } from '../types/Common';
 
@@ -9,8 +9,8 @@ export const assetClient = {
         return response.data;
     },
 
-    getAsset: async (id: string): Promise<ApiResponse<Asset>> => {
-        const response = await API.get<ApiResponse<Asset>>(`/assets/${id}`);
+    getAsset: async (id: string): Promise<ApiResponse<AssetDetail>> => {
+        const response = await API.get<ApiResponse<AssetDetail>>(`/assets/${id}`);
         return response.data;
     },
 };

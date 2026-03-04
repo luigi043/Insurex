@@ -43,9 +43,10 @@ interface TableProps<T> {
     columns: Column<T>[];
     data: T[];
     loading?: boolean;
+    onRowClick?: (item: T) => void;
 }
 
-export function DataTable<T>({ columns, data, loading }: TableProps<T>) {
+export function DataTable<T>({ columns, data, loading, onRowClick }: TableProps<T>) {
     if (loading) {
         return (
             <div className= "w-full space-y-4" >
@@ -76,7 +77,11 @@ export function DataTable<T>({ columns, data, loading }: TableProps<T>) {
                 {
                     data.length > 0 ? (
                         data.map((item, i) => (
-                            <tr key= { i } className = "hover:bg-blue-50/30 transition-colors group" >
+                            <tr 
+                                key= { i } 
+                                className = {`transition-colors group ${onRowClick ? 'cursor-pointer hover:bg-blue-50/50' : 'hover:bg-gray-50/30'}`}
+                                onClick = {() => onRowClick && onRowClick(item)}
+                            >
                             {
                                 columns.map((col, j) => (
                                     <td key= { j } className = "px-6 py-4 text-sm font-medium text-gray-600" >
