@@ -7,6 +7,10 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace InsureX.Api.Controllers;
 
+/// <summary>
+/// Controller for managing fraud investigation cases.
+/// Provides endpoints for retrieving and taking action on cases.
+/// </summary>
 [ApiController]
 [Route("api/v1/cases")]
 public class CasesController : ControllerBase
