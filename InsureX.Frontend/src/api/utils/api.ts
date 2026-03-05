@@ -11,7 +11,7 @@ export interface ErrorResponse {
 
 export const API: AxiosInstance = axios.create({
     // Targeting the IAPR_API endpoint (placeholder URL until dev server is specified)
-    baseURL: import.meta.env.VITE_API_URL || 'http://localhost:5000/api',
+    baseURL: import.meta.env.VITE_API_URL || (import.meta.env.PROD ? '/api' : 'http://localhost:5000/api'),
     timeout: 15000,
     headers: {
         'Content-Type': 'application/json',

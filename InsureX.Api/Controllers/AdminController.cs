@@ -25,6 +25,37 @@ public class AdminController : ControllerBase
         _roleManager = roleManager;
     }
 
+    // POST /api/admin/setup
+    [AllowAnonymous]
+    [HttpPost("setup")]
+    public async Task<IActionResult> SetupDefaultAdmin()
+    {
+        var adminEmail = "admin@insurex.local";
+        if (await _userManager.FindByEmailAsync(adminEmail) == null)
+        {
+            var user = new ApplicationUser
+            {
+                UserName = adminEmail,
+                Email = adminEmail,
+                vcName = "System",
+                vcSurname = "Administrator",
+                iUser_Status_Id = 1,
+                EmailConfirmed = true
+            };
+            
+            var result = await _userManager.CreateAsync(user, "Admin123!");
+            if (result.Succeeded)
+            {
+                if (!await _roleManager.RoleExistsAsync("Administrator"))
+                    await _roleManager.CreateAsync(new IdentityRole("Administrator"));
+                await _userManager.AddToRoleAsync(user, "Administrator");
+                return Ok(new { message = "Default admin created: admin@insurex.local / Admin123!" });
+            }
+            return BadRequest(result.Errors);
+        }
+        return Ok(new { message = "Admin already exists. Use: admin@insurex.local / Admin123!" });
+    }
+
     // GET /api/admin/users
     [HttpGet("users")]
     public async Task<ActionResult<PagedResult<UserDto>>> GetUsers([FromQuery] int page = 1, [FromQuery] int pageSize = 20)
