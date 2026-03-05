@@ -182,22 +182,24 @@ namespace IAPR_Data.Providers
             }
         }
 
-        //public C.Common.CurrentUser GetCurrentUser()
-        //{
-        //    if (Session["CurrentUser"] == null)
-        //    {
+        // GetCurrentUser was removed because Session state is not accessible here in .NET 8.
+        // User identity is managed via JWT claims in the API Controllers.
+        /*
+        public C.Common.CurrentUser GetCurrentUser()
+        {
+            if (Session["CurrentUser"] == null)
+            {
+                P.User_Provider uP = new P.User_Provider();
+                var objUser = uP.ValidateUser("admin@gmail.com", "password12");
+                if (objUser != null)
+                {
+                    Session["CurrentUser"] = objUser;
+                }
+            }
+            return (C.Common.CurrentUser)Session["CurrentUser"];
+        }
+        */
 
-        //        P.User_Provider uP = new P.User_Provider();
-
-        //        objUser = uP.ValidateUser("mphothekisho1@gmail.com14", "password12");
-        //        if (objUser != null)
-        //        {
-
-        //            Session["CurrentUser"] = objUser;
-        //        }
-        //    }
-
-        //}
 
         public List<C.Common.CurrentUser> Get_Partner_Users(int iPartner_Id, int iPartner_Type_Id)
         {

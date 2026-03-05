@@ -5,6 +5,7 @@ import AddUserPage from './components/pages/AddUserPage';
 import RegisterTenantPage from './components/pages/RegisterTenantPage';
 import IntelligencePage from './components/pages/IntelligencePage';
 import IntegrationsPage from './components/pages/IntegrationsPage';
+import SettingsPage from './components/pages/SettingsPage';
 
 import DashboardPage from './components/pages/DashboardPage';
 import AssetsPage from './components/pages/AssetsPage';
@@ -43,6 +44,7 @@ const App: React.FC = () => {
           <Route path="intelligence" element={<IntelligencePage />} />
           <Route path="integrations" element={<IntegrationsPage />} />
           <Route path="audit" element={<AuditPage />} />
+          <Route path="settings" element={<SettingsPage />} />
           <Route path="users" element={<UsersPage />} />
           <Route path="users/new" element={<AddUserPage />} />
           <Route path="users/:id/edit" element={<AddUserPage />} />

@@ -97,6 +97,59 @@ namespace InsureX.Api.Controllers
             return Ok(existing.Secret);
         }
 
+        [HttpPost("webhooks/{id}/test")]
+        public async Task<IActionResult> TestWebhook(int id)
+        {
+            var tenantId = GetCurrentTenantId();
+            if (tenantId == null) return Unauthorized();
+
+            var config = await _db.PartnerWebhookConfigs
+                .FirstOrDefaultAsync(c => c.Id == id && c.TenantId == tenantId);
+
+            if (config == null) return NotFound();
+            if (string.IsNullOrEmpty(config.TargetUrl)) return BadRequest("Target URL not configured.");
+
+            var payload = new
+            {
+                EventId = Guid.NewGuid().ToString(),
+                EventType = "ping",
+                Timestamp = DateTimeOffset.UtcNow.ToUnixTimeSeconds(),
+                Data = new { Message = "Test webhook from InsureX" }
+            };
+
+            var json = System.Text.Json.JsonSerializer.Serialize(payload);
+            var timestampStr = payload.Timestamp.ToString();
+
+            using var httpClient = new System.Net.Http.HttpClient();
+            httpClient.Timeout = TimeSpan.FromSeconds(10);
+            
+            using var requestMessage = new System.Net.Http.HttpRequestMessage(System.Net.Http.HttpMethod.Post, config.TargetUrl);
+            requestMessage.Content = new System.Net.Http.StringContent(json, System.Text.Encoding.UTF8, "application/json");
+
+            using var hmac = new System.Security.Cryptography.HMACSHA256(System.Text.Encoding.UTF8.GetBytes(config.Secret));
+            var hash = hmac.ComputeHash(System.Text.Encoding.UTF8.GetBytes(json));
+            var signature = BitConverter.ToString(hash).Replace("-", "").ToLowerInvariant();
+
+            requestMessage.Headers.Add("X-InsureX-Signature", signature);
+            requestMessage.Headers.Add("X-InsureX-Timestamp", timestampStr);
+            requestMessage.Headers.Add("X-InsureX-Event-Id", payload.EventId);
+
+            try
+            {
+                var response = await httpClient.SendAsync(requestMessage);
+                return Ok(new 
+                { 
+                    Success = response.IsSuccessStatusCode, 
+                    StatusCode = (int)response.StatusCode,
+                    ResponseBody = await response.Content.ReadAsStringAsync()
+                });
+            }
+            catch (Exception ex)
+            {
+                return Ok(new { Success = false, Error = ex.Message });
+            }
+        }
+
         [HttpDelete("webhooks/{id}")]
         public async Task<IActionResult> DeleteWebhook(int id)
         {

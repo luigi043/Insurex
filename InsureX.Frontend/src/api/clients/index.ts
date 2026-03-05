@@ -16,6 +16,10 @@ export const authClient = {
         const response = await API.post('/auth/refresh');
         return response.data;
     },
+    changePassword: async (currentPassword: string, newPassword: string) => {
+        const response = await API.post('/auth/change-password', { currentPassword, newPassword });
+        return response.data;
+    },
 };
 
 // --- Dashboard ---
@@ -242,6 +246,10 @@ export const integrationClient = {
     },
     deleteWebhook: async (id: number) => {
         const response = await API.delete(`/partnerintegration/webhooks/${id}`);
+        return response.data;
+    },
+    testWebhook: async (id: number) => {
+        const response = await API.post(`/partnerintegration/webhooks/${id}/test`);
         return response.data;
     },
 };

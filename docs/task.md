@@ -59,11 +59,26 @@ Based on the provided documents (`Asset Protection Register - product write-up`,
 
 ### Phase 11: Webhook Ingestion & Partner Integration
 
-- [ ] Implement HMAC-SHA256 signature validation for incoming insurer webhooks.
-- [ ] Add replay protection and idempotency logic to `WebhookEventQueue`.
-- [ ] Build Partner Integration API for managing webhook endpoints and secrets.
-- [ ] Create "Integrations" management page in React.
-- [ ] Implement manual "Webhook Trigger" test utility for developers.
+- [x] Implement HMAC-SHA256 signature validation for incoming insurer webhooks.
+- [x] Add replay protection and idempotency logic to `WebhookEventQueue`.
+- [x] Build Partner Integration API for managing webhook endpoints and secrets.
+- [x] Create "Integrations" management page in React.
+- [x] Implement manual "Webhook Trigger" test utility for developers.
+
+### Phase 12: Admin Login & Password Update
+
+- [ ] Implement `ChangePassword` endpoint in `AuthController.cs`.
+- [ ] Add `changePassword` method to `authClient` in React frontend.
+- [ ] Create `SettingsPage.tsx` for password management.
+- [ ] Add `Settings` route to `App.tsx` and Navigation Menu.
+- [ ] Verify password change flow.
+
+### Phase 12: Final Polish & Production Readiness
+
+- [ ] Dockerize the application (API and Frontend).
+- [ ] Configure Docker Compose for easy local deployment.
+- [ ] Verify environment variables and API URLs in production builds.
+- [ ] Final end-to-end system testing.
 
 ## Completed Tasks
 

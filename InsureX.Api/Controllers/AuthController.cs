@@ -1,4 +1,5 @@
 using IAPR_Data.Classes;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
@@ -69,6 +70,56 @@ public class AuthController : ControllerBase
         return Ok(new { message = "Token refresh not yet implemented" });
     }
 
+    [Authorize]
+    [HttpPost("change-password")]
+    public async Task<IActionResult> ChangePassword([FromBody] ChangePasswordRequest request)
+    {
+        var userIdString = User.FindFirstValue(ClaimTypes.NameIdentifier);
+        if (string.IsNullOrEmpty(userIdString)) return Unauthorized("User ID not found in token.");
+
+        // Fallback to legacy validation if the user doesn't exist in AspNetUsers yet
+        // since we are dealing with a migrated database where users might only exist in the legacy table.
+        // For a full migration, all users should be in AspNetUsers.
+        // For this demo, we'll try to use UserManager if they exist, otherwise use the legacy provider.
+
+        var user = await _userManager.FindByIdAsync(userIdString);
+        
+        if (user != null)
+        {
+            var result = await _userManager.ChangePasswordAsync(user, request.CurrentPassword, request.NewPassword);
+            if (result.Succeeded)
+            {
+                return Ok(new { message = "Password updated successfully." });
+            }
+            return BadRequest(new { errors = result.Errors.Select(e => e.Description) });
+        }
+        else
+        {
+            // Legacy fallback
+            var userName = User.FindFirstValue(ClaimTypes.Name);
+            if (string.IsNullOrEmpty(userName)) return Unauthorized();
+
+            var userProv = new P.User_Provider();
+            var legacyUser = userProv.ValidateUser(userName, request.CurrentPassword);
+            
+            if (legacyUser == null)
+            {
+                return BadRequest(new { errors = new[] { "Incorrect current password." } });
+            }
+
+            // In legacy, ChangePassword hash updates the AspNetUsers table but using the old Username logic.
+            // Since we implemented Identity, we'll use the provider's logic which calls the DB.
+            var success = userProv.ChangePassword(legacyUser.iUser_Id, userName, request.NewPassword);
+            
+            if (success)
+            {
+                return Ok(new { message = "Password updated successfully via legacy provider." });
+            }
+            
+            return BadRequest(new { errors = new[] { "Failed to update password." } });
+        }
+    }
+
     private string GenerateJwtToken(string userId, string userName, string fullName, string userTypeId, string partnerId)
     {
         var jwtConfig = _config.GetSection("Jwt");
@@ -120,4 +171,10 @@ public class LoginResponse
     public string FullName { get; set; } = "";
     public string Role { get; set; } = "";
     public int PartnerId { get; set; }
+}
+
+public class ChangePasswordRequest
+{
+    public string CurrentPassword { get; set; } = "";
+    public string NewPassword { get; set; } = "";
 }
