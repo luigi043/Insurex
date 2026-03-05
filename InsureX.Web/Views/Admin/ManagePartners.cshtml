@@ -1,14 +1,68 @@
 @{ ViewData["Title"] = "Manage Partners"; }
+
 <div class="container-fluid">
     <h1 class="h3 mb-4 text-gray-800">Manage Partners</h1>
     @if (TempData["Error"] != null) { <div class="alert alert-danger">@TempData["Error"]</div> }
     @if (TempData["Success"] != null) { <div class="alert alert-success">@TempData["Success"]</div> }
+
     <div class="card shadow mb-4">
-        <div class="card-header py-3"><h6 class="m-0 font-weight-bold text-primary">Partners</h6></div>
+        <div class="card-header py-3 d-flex justify-content-between">
+            <h6 class="m-0 font-weight-bold text-primary">Partners</h6>
+            <button class="btn btn-sm btn-primary" data-toggle="modal" data-target="#addPartnerModal"><i class="fas fa-plus"></i> Add Partner</button>
+        </div>
         <div class="card-body">
             <div class="table-responsive">
-                <table class="table table-bordered" id="dataTable"><thead><tr><th>ID</th><th>Name</th><th>Type</th><th>Contact</th><th>Status</th><th>Actions</th></tr></thead><tbody></tbody></table>
+                <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                    <thead>
+                        <tr><th>ID</th><th>Name</th><th>Type</th><th>Email</th><th>Contact</th><th>Actions</th></tr>
+                    </thead>
+                    <tbody>
+                        @if (ViewBag.Partners is System.Data.DataTable dt) {
+                            foreach (System.Data.DataRow row in dt.Rows) {
+                                <tr>
+                                    <td>@row[0]</td>
+                                    <td>@(row.Table.Columns.Contains("vcPartner_Name") ? row["vcPartner_Name"] : row[1])</td>
+                                    <td>@(row.Table.Columns.Contains("vcPartner_Type") ? row["vcPartner_Type"] : "")</td>
+                                    <td>@(row.Table.Columns.Contains("vcEmail") ? row["vcEmail"] : "")</td>
+                                    <td>@(row.Table.Columns.Contains("vcContact_Number") ? row["vcContact_Number"] : "")</td>
+                                    <td>
+                                        <a href="@Url.Action("EditPartnerUsers", new { partnerId = row[0] })" class="btn btn-sm btn-info" title="Manage Users"><i class="fas fa-users"></i></a>
+                                    </td>
+                                </tr>
+                            }
+                        }
+                    </tbody>
+                </table>
             </div>
+        </div>
+    </div>
+</div>
+
+<!-- Add Partner Modal -->
+<div class="modal fade" id="addPartnerModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form asp-action="ManagePartners" method="post">
+                @Html.AntiForgeryToken()
+                <input type="hidden" name="action" value="add" />
+                <div class="modal-header"><h5 class="modal-title">Add New Partner</h5><button type="button" class="close" data-dismiss="modal">&times;</button></div>
+                <div class="modal-body">
+                    <div class="form-group"><label>Partner Name</label><input name="PartnerName" class="form-control" required /></div>
+                    <div class="form-group">
+                        <label>Partner Type</label>
+                        <select name="PartnerType" class="form-control">
+                            <option value="Financer">Financer</option>
+                            <option value="Insurer">Insurer</option>
+                        </select>
+                    </div>
+                    <div class="form-group"><label>Contact Email</label><input name="ContactEmail" type="email" class="form-control" required /></div>
+                    <div class="form-group"><label>Contact Number</label><input name="ContactNumber" class="form-control" /></div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Add Partner</button>
+                </div>
+            </form>
         </div>
     </div>
 </div>

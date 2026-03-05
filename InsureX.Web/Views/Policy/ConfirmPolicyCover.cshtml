@@ -12,12 +12,30 @@
                 <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
                     <thead>
                         <tr>
-                            <th>Policy #</th><th>Customer</th><th>Asset</th><th>Finance Value</th>
-                            <th>Insured Value</th><th>Status</th><th>Actions</th>
+                            <th>Policy #</th><th>Customer</th><th>Asset Type</th>
+                            <th>Finance Value</th><th>Insured Value</th><th>Actions</th>
                         </tr>
                     </thead>
                     <tbody>
-                        <!-- Data populated from ViewBag.PendingPolicies -->
+                        @if (ViewBag.PendingPolicies is System.Data.DataTable dt) {
+                            foreach (System.Data.DataRow row in dt.Rows) {
+                                <tr>
+                                    <td>@row["vcPolicy_Number"]</td>
+                                    <td>@(row.Table.Columns.Contains("vcCustomer_Name") ? row["vcCustomer_Name"] : "")</td>
+                                    <td>@(row.Table.Columns.Contains("vcAsset_Type") ? row["vcAsset_Type"] : "")</td>
+                                    <td>@(Convert.ToDecimal(row["dcFinance_Value"]).ToString("C", new System.Globalization.CultureInfo("en-ZA")))</td>
+                                    <td>@(Convert.ToDecimal(row["dcInsured_Value"]).ToString("C", new System.Globalization.CultureInfo("en-ZA")))</td>
+                                    <td>
+                                        <form asp-action="ConfirmPolicyCover" method="post" style="display:inline;">
+                                            @Html.AntiForgeryToken()
+                                            <input type="hidden" name="policyId" value="@row["iPolicy_Id"]" />
+                                            <button type="submit" name="action" value="confirm" class="btn btn-sm btn-success"><i class="fas fa-check"></i> Confirm</button>
+                                            <button type="submit" name="action" value="reject" class="btn btn-sm btn-danger"><i class="fas fa-times"></i> Reject</button>
+                                        </form>
+                                    </td>
+                                </tr>
+                            }
+                        }
                     </tbody>
                 </table>
             </div>

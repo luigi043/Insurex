@@ -1,13 +1,30 @@
-@{ ViewData["Title"] = "Partner Invoices"; }
+@{ ViewData["Title"] = "View Partner Invoice"; }
+
 <div class="container-fluid">
     <h1 class="h3 mb-4 text-gray-800">Partner Invoices</h1>
+    @if (TempData["Error"] != null) { <div class="alert alert-danger">@TempData["Error"]</div> }
+
     <div class="card shadow mb-4">
-        <div class="card-header py-3"><h6 class="m-0 font-weight-bold text-primary">Invoice List</h6></div>
+        <div class="card-header py-3"><h6 class="m-0 font-weight-bold text-primary">Invoices</h6></div>
         <div class="card-body">
             <div class="table-responsive">
                 <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
-                    <thead><tr><th>Invoice #</th><th>Partner</th><th>Date</th><th>Amount</th><th>Status</th><th>Actions</th></tr></thead>
-                    <tbody></tbody>
+                    <thead>
+                        <tr><th>Invoice #</th><th>Date</th><th>Description</th><th>Amount</th><th>Status</th></tr>
+                    </thead>
+                    <tbody>
+                        @if (ViewBag.Invoices is System.Data.DataTable dt) {
+                            foreach (System.Data.DataRow row in dt.Rows) {
+                                <tr>
+                                    <td>@(row.Table.Columns.Contains("vcInvoice_Number") ? row["vcInvoice_Number"] : row[0])</td>
+                                    <td>@(row.Table.Columns.Contains("dtDate") ? Convert.ToDateTime(row["dtDate"]).ToString("yyyy-MM-dd") : "")</td>
+                                    <td>@(row.Table.Columns.Contains("vcDescription") ? row["vcDescription"] : "")</td>
+                                    <td>@(row.Table.Columns.Contains("dcAmount") ? Convert.ToDecimal(row["dcAmount"]).ToString("C", new System.Globalization.CultureInfo("en-ZA")) : "")</td>
+                                    <td>@(row.Table.Columns.Contains("vcStatus") ? row["vcStatus"] : "")</td>
+                                </tr>
+                            }
+                        }
+                    </tbody>
                 </table>
             </div>
         </div>

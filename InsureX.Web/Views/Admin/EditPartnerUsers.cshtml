@@ -1,14 +1,55 @@
 @{ ViewData["Title"] = "Edit Partner Users"; }
+
 <div class="container-fluid">
     <h1 class="h3 mb-4 text-gray-800">Edit Partner Users</h1>
     @if (TempData["Error"] != null) { <div class="alert alert-danger">@TempData["Error"]</div> }
-    @if (TempData["Success"] != null) { <div class="alert alert-success">@TempData["Success"]</div> }
+
     <div class="card shadow mb-4">
-        <div class="card-header py-3"><h6 class="m-0 font-weight-bold text-primary">Users</h6></div>
+        <div class="card-header py-3"><h6 class="m-0 font-weight-bold text-primary">Select Partner</h6></div>
         <div class="card-body">
-            <div class="table-responsive">
-                <table class="table table-bordered" id="dataTable"><thead><tr><th>Name</th><th>Email</th><th>Role</th><th>Status</th><th>Actions</th></tr></thead><tbody></tbody></table>
-            </div>
+            <form asp-action="EditPartnerUsers" method="get">
+                <div class="form-row">
+                    <div class="form-group col-md-6">
+                        <select name="partnerId" class="form-control selectpicker" data-live-search="true">
+                            <option value="">-- Select Partner --</option>
+                            @if (ViewBag.Partners is System.Data.DataTable dtPartners) {
+                                foreach (System.Data.DataRow row in dtPartners.Rows) {
+                                    int pid = Convert.ToInt32(row[0]);
+                                    <option value="@pid" selected="@(ViewBag.SelectedPartnerId == pid)">@(row.Table.Columns.Contains("vcPartner_Name") ? row["vcPartner_Name"] : row[1])</option>
+                                }
+                            }
+                        </select>
+                    </div>
+                    <div class="form-group col-md-2">
+                        <button type="submit" class="btn btn-primary"><i class="fas fa-search"></i> Load Users</button>
+                    </div>
+                </div>
+            </form>
         </div>
     </div>
+
+    @if (ViewBag.Users is System.Data.DataTable dtUsers) {
+        <div class="card shadow mb-4">
+            <div class="card-header py-3"><h6 class="m-0 font-weight-bold text-primary">Users</h6></div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                        <thead>
+                            <tr><th>Name</th><th>Email</th><th>Role</th><th>Status</th></tr>
+                        </thead>
+                        <tbody>
+                            @foreach (System.Data.DataRow row in dtUsers.Rows) {
+                                <tr>
+                                    <td>@(row.Table.Columns.Contains("vcName") ? row["vcName"] : row[0])</td>
+                                    <td>@(row.Table.Columns.Contains("vcEmail") ? row["vcEmail"] : "")</td>
+                                    <td>@(row.Table.Columns.Contains("vcRole") ? row["vcRole"] : "")</td>
+                                    <td>@(row.Table.Columns.Contains("vcStatus") ? row["vcStatus"] : "")</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    }
 </div>

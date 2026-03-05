@@ -1,35 +1,103 @@
 @model InsureX.Web.Models.SearchResultViewModel
-@{ ViewData["Title"] = "Search"; }
+@{ ViewData["Title"] = "Search Results"; }
+
 <div class="container-fluid">
     <h1 class="h3 mb-4 text-gray-800">Search</h1>
+    @if (TempData["Error"] != null) { <div class="alert alert-danger">@TempData["Error"]</div> }
+
     <div class="card shadow mb-4">
+        <div class="card-header py-3"><h6 class="m-0 font-weight-bold text-primary">Search by Policy Number</h6></div>
         <div class="card-body">
             <form asp-action="Index" method="get">
-                <div class="input-group mb-3">
-                    <input type="text" name="q" value="@Model.Query" class="form-control" placeholder="Search for assets, policies, customers..." />
-                    <div class="input-group-append">
-                        <button class="btn btn-primary" type="submit"><i class="fas fa-search"></i> Search</button>
+                <div class="form-row">
+                    <div class="form-group col-md-8">
+                        <input type="text" name="q" value="@Model.Query" class="form-control" placeholder="Enter policy number..." />
+                    </div>
+                    <div class="form-group col-md-4">
+                        <button type="submit" class="btn btn-primary"><i class="fas fa-search"></i> Search</button>
                     </div>
                 </div>
             </form>
-            @if (Model.Results.Any())
-            {
+        </div>
+    </div>
+
+    @if (Model.Results.Any()) {
+        <div class="card shadow mb-4" id="pnlPolicyList">
+            <div class="card-header py-3"><h6 class="m-0 font-weight-bold text-primary">Policies Found (@Model.Results.Count)</h6></div>
+            <div class="card-body">
                 <div class="table-responsive">
-                    <table class="table table-bordered" id="dataTable">
-                        <thead><tr><th>ID</th><th>Type</th><th>Description</th><th>Status</th></tr></thead>
+                    <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                        <thead>
+                            <tr><th>Policy #</th><th>Status</th><th>Finance Value</th><th>Insured Value</th><th># Assets</th><th>Actions</th></tr>
+                        </thead>
                         <tbody>
-                            @foreach (var item in Model.Results)
-                            {
-                                <tr><td>@item.Id</td><td>@item.Type</td><td>@item.Description</td><td>@item.Status</td></tr>
+                            @foreach (var item in Model.Results) {
+                                <tr>
+                                    <td>@item.Description</td>
+                                    <td>@item.Status</td>
+                                    @if (ViewBag.PolicySummaries is System.Data.DataTable dtSummary) {
+                                        @{
+                                            var summaryRow = dtSummary.AsEnumerable().FirstOrDefault(r => r[0]?.ToString() == item.Description);
+                                        }
+                                        <td>@(summaryRow != null ? Convert.ToDecimal(summaryRow[1]).ToString("C", new System.Globalization.CultureInfo("en-ZA")) : "")</td>
+                                        <td>@(summaryRow != null ? Convert.ToDecimal(summaryRow[2]).ToString("C", new System.Globalization.CultureInfo("en-ZA")) : "")</td>
+                                        <td>@(summaryRow != null ? summaryRow[3] : "")</td>
+                                    } else {
+                                        <td></td><td></td><td></td>
+                                    }
+                                    <td>
+                                        <button class="btn btn-sm btn-primary btn-view-assets" data-policy-id="@item.Id"><i class="fas fa-eye"></i> View Assets</button>
+                                    </td>
+                                </tr>
                             }
                         </tbody>
                     </table>
                 </div>
-            }
-            else if (!string.IsNullOrEmpty(Model.Query))
-            {
-                <p class="text-muted">No results found for "<strong>@Model.Query</strong>"</p>
-            }
+            </div>
         </div>
-    </div>
+
+        <!-- Asset list panel (populated via AJAX) -->
+        <div class="card shadow mb-4" id="pnlAssetList" style="display:none;">
+            <div class="card-header py-3 d-flex justify-content-between">
+                <h6 class="m-0 font-weight-bold text-primary">Policy Assets</h6>
+                <button class="btn btn-sm btn-secondary" id="btnBackToPolicies"><i class="fas fa-arrow-left"></i> Back</button>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-bordered" id="assetTable" width="100%" cellspacing="0">
+                        <thead>
+                            <tr><th>Asset Type</th><th>Description</th><th>Finance Value</th><th>Insured Value</th><th>Status</th></tr>
+                        </thead>
+                        <tbody id="assetTableBody"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    }
 </div>
+
+@section Scripts {
+<script>
+    $('.btn-view-assets').click(function () {
+        var policyId = $(this).data('policy-id');
+        $.getJSON('@Url.Action("PolicyAssets")?policyId=' + policyId, function (result) {
+            if (result.success) {
+                var html = '';
+                $.each(result.data, function (i, asset) {
+                    html += '<tr><td>' + (asset.type || '') + '</td><td>' + (asset.description || '') +
+                        '</td><td>' + (asset.financeValue || '') + '</td><td>' + (asset.insuredValue || '') +
+                        '</td><td>' + (asset.status || '') + '</td></tr>';
+                });
+                $('#assetTableBody').html(html || '<tr><td colspan="5">No assets found.</td></tr>');
+                $('#pnlPolicyList').hide();
+                $('#pnlAssetList').show();
+            }
+        });
+    });
+
+    $('#btnBackToPolicies').click(function () {
+        $('#pnlAssetList').hide();
+        $('#pnlPolicyList').show();
+    });
+</script>
+}
