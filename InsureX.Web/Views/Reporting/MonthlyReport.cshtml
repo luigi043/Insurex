@@ -1,18 +1,61 @@
 @model InsureX.Web.Models.MonthlyReportViewModel
 @{ ViewData["Title"] = "Monthly Report"; }
+
 <div class="container-fluid">
     <h1 class="h3 mb-4 text-gray-800">Monthly Report</h1>
+    @if (TempData["Error"] != null) { <div class="alert alert-danger">@TempData["Error"]</div> }
+
     <div class="card shadow mb-4">
-        <div class="card-header py-3"><h6 class="m-0 font-weight-bold text-primary">Select Date Range</h6></div>
+        <div class="card-header py-3"><h6 class="m-0 font-weight-bold text-primary">Date Range</h6></div>
         <div class="card-body">
             <form asp-action="MonthlyReport" method="post">
                 @Html.AntiForgeryToken()
                 <div class="form-row">
-                    <div class="form-group col-md-4"><label>From Date</label><input asp-for="FromDate" type="date" class="form-control" /></div>
-                    <div class="form-group col-md-4"><label>To Date</label><input asp-for="ToDate" type="date" class="form-control" /></div>
-                    <div class="form-group col-md-4 d-flex align-items-end"><button type="submit" class="btn btn-primary"><i class="fas fa-chart-bar"></i> Generate</button></div>
+                    <div class="form-group col-md-4">
+                        <label>From Date</label>
+                        <input asp-for="FromDate" type="date" class="form-control" />
+                    </div>
+                    <div class="form-group col-md-4">
+                        <label>To Date</label>
+                        <input asp-for="ToDate" type="date" class="form-control" />
+                    </div>
+                    <div class="form-group col-md-4 d-flex align-items-end">
+                        <button type="submit" class="btn btn-primary"><i class="fas fa-filter"></i> Generate Report</button>
+                    </div>
                 </div>
             </form>
         </div>
     </div>
+
+    @if (ViewBag.ReportData is System.Data.DataTable dt && dt.Rows.Count > 0) {
+        <div class="card shadow mb-4">
+            <div class="card-header py-3"><h6 class="m-0 font-weight-bold text-primary">Report Results</h6></div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                        <thead>
+                            <tr>
+                                @foreach (System.Data.DataColumn col in dt.Columns) {
+                                    <th>@col.ColumnName</th>
+                                }
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (System.Data.DataRow row in dt.Rows) {
+                                <tr>
+                                    @foreach (System.Data.DataColumn col in dt.Columns) {
+                                        @if (col.DataType == typeof(decimal)) {
+                                            <td>@(Convert.ToDecimal(row[col]).ToString("C", new System.Globalization.CultureInfo("en-ZA")))</td>
+                                        } else {
+                                            <td>@row[col]</td>
+                                        }
+                                    }
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    }
 </div>

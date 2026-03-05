@@ -3,44 +3,97 @@
     <h1 class="h3 mb-4 text-gray-800">Add New Asset</h1>
     @if (TempData["Error"] != null) { <div class="alert alert-danger">@TempData["Error"]</div> }
     @if (TempData["Success"] != null) { <div class="alert alert-success">@TempData["Success"]</div> }
+
     <div class="card shadow mb-4">
-        <div class="card-header py-3"><h6 class="m-0 font-weight-bold text-primary">Asset Details</h6></div>
+        <div class="card-header py-3"><h6 class="m-0 font-weight-bold text-primary">Customer & Asset Details</h6></div>
         <div class="card-body">
             <form asp-action="AddNewAsset" method="post">
                 @Html.AntiForgeryToken()
+
                 <div class="form-row">
-                    <div class="form-group col-md-6">
-                        <label>Asset Type</label>
-                        <select name="AssetTypeId" id="assetTypeSelect" class="form-control selectpicker" data-live-search="true">
-                            <option value="">-- Select Asset Type --</option>
+                    <div class="form-group col-md-4">
+                        <label>Identification Type</label>
+                        <select name="IdentificationTypeId" class="form-control selectpicker">
+                            <option value="">--</option>
+                            @if (ViewBag.IdentificationTypes != null) {
+                                foreach (var item in (List<KeyValuePair<string, string>>)ViewBag.IdentificationTypes) {
+                                    <option value="@item.Key">@item.Value</option>
+                                }
+                            }
                         </select>
                     </div>
-                    <div class="form-group col-md-6">
-                        <label>Customer</label>
-                        <select name="CustomerId" class="form-control selectpicker" data-live-search="true">
-                            <option value="">-- Select Customer --</option>
+                    <div class="form-group col-md-4">
+                        <label>ID Number</label>
+                        <input type="text" name="IdentificationNumber" class="form-control" />
+                    </div>
+                    <div class="form-group col-md-2">
+                        <label>Title</label>
+                        <select name="PersonTitleId" class="form-control">
+                            <option value="">--</option>
+                            @if (ViewBag.PersonTitles != null) {
+                                foreach (var item in (List<KeyValuePair<string, string>>)ViewBag.PersonTitles) {
+                                    <option value="@item.Key">@item.Value</option>
+                                }
+                            }
+                        </select>
+                    </div>
+                    <div class="form-group col-md-2">
+                        <label>Province</label>
+                        <select name="ProvinceId" class="form-control">
+                            <option value="">--</option>
+                            @if (ViewBag.Provinces != null) {
+                                foreach (var item in (List<KeyValuePair<string, string>>)ViewBag.Provinces) {
+                                    <option value="@item.Key">@item.Value</option>
+                                }
+                            }
                         </select>
                     </div>
                 </div>
-                <div id="assetTypeFields"></div>
+
                 <div class="form-row">
+                    <div class="form-group col-md-4"><label>First Names</label><input type="text" name="FirstNames" class="form-control" /></div>
+                    <div class="form-group col-md-4"><label>Surname</label><input type="text" name="Surname" class="form-control" /></div>
+                    <div class="form-group col-md-4"><label>Contact Number</label><input type="text" name="ContactNumber" class="form-control" /></div>
+                </div>
+
+                <hr />
+                <h6 class="font-weight-bold text-primary">Asset Details</h6>
+                <div class="form-row">
+                    <div class="form-group col-md-6">
+                        <label>Asset Type</label>
+                        <select name="AssetTypeId" id="assetTypeSelect" class="form-control selectpicker" data-live-search="true" required>
+                            <option value="">-- Select Asset Type --</option>
+                            @if (ViewBag.AssetTypes != null) {
+                                foreach (var item in (List<KeyValuePair<string, string>>)ViewBag.AssetTypes) {
+                                    <option value="@item.Key">@item.Value</option>
+                                }
+                            }
+                        </select>
+                    </div>
                     <div class="form-group col-md-6">
                         <label>Finance Value</label>
                         <input type="text" name="FinanceValue" class="form-control" data-type="currency" />
                     </div>
                 </div>
+
+                <div id="assetTypeFields"></div>
+
                 <button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> Save Asset</button>
+                <button type="reset" class="btn btn-secondary"><i class="fas fa-times"></i> Cancel</button>
             </form>
         </div>
     </div>
 </div>
+
 @section Scripts {
 <script>
     $('#assetTypeSelect').change(function () {
         var assetType = $(this).val();
         if (assetType) {
             $.get('@Url.Action("AssetTypePartial", "Asset")?assetType=' + assetType, function (html) {
-                $('#assetTypeFields').html(html); formatCurrencyTextBox();
+                $('#assetTypeFields').html(html);
+                formatCurrencyTextBox();
+                DropDownSearch();
             });
         } else { $('#assetTypeFields').html(''); }
     });

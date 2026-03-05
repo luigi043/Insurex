@@ -1,18 +1,26 @@
-@{ ViewData["Title"] = "Update Charge Fee"; }
+@{ ViewData["Title"] = "Update Charge"; }
+
 <div class="container-fluid">
-    <h1 class="h3 mb-4 text-gray-800">Update Charge Fee</h1>
+    <h1 class="h3 mb-4 text-gray-800">Update Charge</h1>
     @if (TempData["Error"] != null) { <div class="alert alert-danger">@TempData["Error"]</div> }
     @if (TempData["Success"] != null) { <div class="alert alert-success">@TempData["Success"]</div> }
+
     <div class="card shadow mb-4">
+        <div class="card-header py-3"><h6 class="m-0 font-weight-bold text-primary">Update Existing Charge</h6></div>
         <div class="card-body">
             <form asp-action="UpdateCharge" method="post">
                 @Html.AntiForgeryToken()
                 <div class="form-row">
-                    <div class="form-group col-md-4"><label>Charge ID</label><input type="text" name="ChargeId" class="form-control" required /></div>
-                    <div class="form-group col-md-4"><label>New Amount</label><input type="text" name="Amount" class="form-control" data-type="currency" required /></div>
-                    <div class="form-group col-md-4"><label>Effective Date</label><input type="date" name="EffectiveDate" class="form-control" /></div>
+                    <div class="form-group col-md-6">
+                        <label>Charge ID</label>
+                        <input type="number" name="ChargeId" class="form-control" required />
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label>New Amount (ZAR)</label>
+                        <input type="text" name="Amount" class="form-control" data-type="currency" required />
+                    </div>
                 </div>
-                <button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> Update</button>
+                <button type="submit" class="btn btn-warning"><i class="fas fa-save"></i> Update Charge</button>
             </form>
         </div>
     </div>

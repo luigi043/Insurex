@@ -1,18 +1,38 @@
-@{ ViewData["Title"] = "Add New Charge"; }
+@{ ViewData["Title"] = "New Charge"; }
+
 <div class="container-fluid">
-    <h1 class="h3 mb-4 text-gray-800">Add New Charge</h1>
+    <h1 class="h3 mb-4 text-gray-800">New Charge</h1>
     @if (TempData["Error"] != null) { <div class="alert alert-danger">@TempData["Error"]</div> }
     @if (TempData["Success"] != null) { <div class="alert alert-success">@TempData["Success"]</div> }
+
     <div class="card shadow mb-4">
+        <div class="card-header py-3"><h6 class="m-0 font-weight-bold text-primary">Add New Charge</h6></div>
         <div class="card-body">
             <form asp-action="NewCharge" method="post">
                 @Html.AntiForgeryToken()
                 <div class="form-row">
-                    <div class="form-group col-md-4"><label>Charge Type</label><input type="text" name="ChargeType" class="form-control" required /></div>
-                    <div class="form-group col-md-4"><label>Amount</label><input type="text" name="Amount" class="form-control" data-type="currency" required /></div>
-                    <div class="form-group col-md-4"><label>Description</label><input type="text" name="Description" class="form-control" /></div>
+                    <div class="form-group col-md-4">
+                        <label>Partner ID</label>
+                        <input type="number" name="PartnerId" class="form-control" required />
+                    </div>
+                    <div class="form-group col-md-4">
+                        <label>Charge Type</label>
+                        <select name="ChargeType" class="form-control">
+                            <option value="Monthly">Monthly</option>
+                            <option value="Setup">Setup</option>
+                            <option value="Custom">Custom</option>
+                        </select>
+                    </div>
+                    <div class="form-group col-md-4">
+                        <label>Amount (ZAR)</label>
+                        <input type="text" name="Amount" class="form-control" data-type="currency" required />
+                    </div>
                 </div>
-                <button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> Save Charge</button>
+                <div class="form-group">
+                    <label>Description</label>
+                    <textarea name="Description" class="form-control" rows="3"></textarea>
+                </div>
+                <button type="submit" class="btn btn-primary"><i class="fas fa-plus"></i> Add Charge</button>
             </form>
         </div>
     </div>

@@ -103,7 +103,13 @@ namespace InsureX.Web.Controllers
             if (!ModelState.IsValid)
                 return View(model);
 
-            // TODO: Implement password reminder email via IAPR_Data providers
+            try
+            {
+                var uP = new Pro.User_Provider();
+                uP.SendPasswordResetEmail(model.Email);
+            }
+            catch { /* Swallow to avoid leaking user existence */ }
+
             TempData["Message"] = "If an account with that email exists, a password reset link has been sent.";
             return RedirectToAction("PasswordRequestConfirm");
         }
@@ -124,9 +130,26 @@ namespace InsureX.Web.Controllers
             if (!ModelState.IsValid)
                 return View(model);
 
-            // TODO: Implement password change via IAPR_Data providers
-            TempData["Success"] = "Password changed successfully.";
-            return RedirectToAction("Index", "Home");
+            try
+            {
+                int userId = int.Parse(User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value ?? "0");
+                var uP = new Pro.User_Provider();
+                bool changed = uP.ChangePassword(userId, model.CurrentPassword, model.NewPassword);
+
+                if (changed)
+                {
+                    TempData["Success"] = "Password changed successfully.";
+                    return RedirectToAction("Index", "Home");
+                }
+
+                ModelState.AddModelError(string.Empty, "Current password is incorrect.");
+            }
+            catch (Exception ex)
+            {
+                ModelState.AddModelError(string.Empty, ex.Message);
+            }
+
+            return View(model);
         }
 
         [HttpGet]
@@ -141,9 +164,25 @@ namespace InsureX.Web.Controllers
             if (!ModelState.IsValid)
                 return View(model);
 
-            // TODO: Implement registration via IAPR_Data providers
-            TempData["Success"] = "Registration successful. Please log in.";
-            return RedirectToAction("Login");
+            try
+            {
+                var uP = new Pro.User_Provider();
+                int userId = uP.RegisterNewUser(model.FirstName, model.LastName, model.Email, model.Password);
+
+                if (userId > 0)
+                {
+                    TempData["Success"] = "Registration successful. Please log in.";
+                    return RedirectToAction("Login");
+                }
+
+                ModelState.AddModelError(string.Empty, "Registration failed. Please try again.");
+            }
+            catch (Exception ex)
+            {
+                ModelState.AddModelError(string.Empty, ex.Message);
+            }
+
+            return View(model);
         }
     }
 }

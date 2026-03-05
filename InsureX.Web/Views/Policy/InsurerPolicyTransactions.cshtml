@@ -2,6 +2,8 @@
 
 <div class="container-fluid">
     <h1 class="h3 mb-4 text-gray-800">Insurer Policy Transactions</h1>
+    @if (TempData["Error"] != null) { <div class="alert alert-danger">@TempData["Error"]</div> }
+
     <div class="card shadow mb-4">
         <div class="card-header py-3"><h6 class="m-0 font-weight-bold text-primary">Transaction History</h6></div>
         <div class="card-body">
@@ -13,7 +15,23 @@
                             <th>Finance Value</th><th>Insured Value</th><th>Status</th><th>Date</th><th>Actions</th>
                         </tr>
                     </thead>
-                    <tbody></tbody>
+                    <tbody>
+                        @if (ViewBag.Transactions is System.Data.DataTable dt) {
+                            foreach (System.Data.DataRow row in dt.Rows) {
+                                <tr>
+                                    <td>@(row.Table.Columns.Contains("vcPolicy_Number") ? row["vcPolicy_Number"] : "")</td>
+                                    <td>@(row.Table.Columns.Contains("vcCustomer_Name") ? row["vcCustomer_Name"] : "")</td>
+                                    <td>@(row.Table.Columns.Contains("vcAsset_Type") ? row["vcAsset_Type"] : "")</td>
+                                    <td>@(row.Table.Columns.Contains("vcFinancer") ? row["vcFinancer"] : "")</td>
+                                    <td>@(row.Table.Columns.Contains("dcFinance_Value") ? Convert.ToDecimal(row["dcFinance_Value"]).ToString("C", new System.Globalization.CultureInfo("en-ZA")) : "")</td>
+                                    <td>@(row.Table.Columns.Contains("dcInsured_Value") ? Convert.ToDecimal(row["dcInsured_Value"]).ToString("C", new System.Globalization.CultureInfo("en-ZA")) : "")</td>
+                                    <td>@(row.Table.Columns.Contains("vcStatus") ? row["vcStatus"] : "")</td>
+                                    <td>@(row.Table.Columns.Contains("dtDate") ? Convert.ToDateTime(row["dtDate"]).ToString("yyyy-MM-dd") : "")</td>
+                                    <td><a href="@Url.Action("FindAsset", "Asset", new { searchTerm = row.Table.Columns.Contains("vcPolicy_Number") ? row["vcPolicy_Number"] : "" })" class="btn btn-sm btn-primary"><i class="fas fa-eye"></i></a></td>
+                                </tr>
+                            }
+                        }
+                    </tbody>
                 </table>
             </div>
         </div>
