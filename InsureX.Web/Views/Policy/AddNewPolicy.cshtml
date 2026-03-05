@@ -10,30 +10,135 @@
         <div class="card-body">
             <form asp-action="AddNewPolicy" method="post">
                 @Html.AntiForgeryToken()
+
                 <div class="form-row">
-                    <div class="form-group col-md-6">
+                    <div class="form-group col-md-4">
                         <label>Policy Number</label>
                         <input type="text" name="PolicyNumber" class="form-control" required />
                     </div>
-                    <div class="form-group col-md-6">
+                    <div class="form-group col-md-4">
                         <label>Insurer</label>
-                        <select name="InsurerId" class="form-control selectpicker" data-live-search="true">
+                        <select name="InsurerId" class="form-control selectpicker" data-live-search="true" required>
                             <option value="">-- Select Insurer --</option>
+                            @if (ViewBag.InsuranceCompanies != null) {
+                                foreach (var item in (List<KeyValuePair<string, string>>)ViewBag.InsuranceCompanies) {
+                                    <option value="@item.Key">@item.Value</option>
+                                }
+                            }
+                        </select>
+                    </div>
+                    <div class="form-group col-md-4">
+                        <label>Policy Type</label>
+                        <select name="PolicyTypeId" id="ddlPolicyType" class="form-control selectpicker" required>
+                            <option value="">-- Select Policy Type --</option>
+                            @if (ViewBag.PolicyTypes != null) {
+                                foreach (var item in (List<KeyValuePair<string, string>>)ViewBag.PolicyTypes) {
+                                    <option value="@item.Key">@item.Value</option>
+                                }
+                            }
                         </select>
                     </div>
                 </div>
+
                 <div class="form-row">
                     <div class="form-group col-md-4">
-                        <label>Inception Date</label>
-                        <input type="date" name="InceptionDate" class="form-control" />
+                        <label>Payment Frequency</label>
+                        <select name="PaymentFrequencyId" class="form-control selectpicker" required>
+                            <option value="">-- Select --</option>
+                            @if (ViewBag.PaymentFrequencies != null) {
+                                foreach (var item in (List<KeyValuePair<string, string>>)ViewBag.PaymentFrequencies) {
+                                    <option value="@item.Key">@item.Value</option>
+                                }
+                            }
+                        </select>
                     </div>
-                    <div class="form-group col-md-4">
-                        <label>Expiry Date</label>
-                        <input type="date" name="ExpiryDate" class="form-control" />
+                </div>
+
+                <hr />
+                <!-- Personal Policy Holder (shown when Policy Type = 1) -->
+                <div id="pnlPersonal">
+                    <h6 class="font-weight-bold text-primary">Policy Holder - Personal</h6>
+                    <div class="form-row">
+                        <div class="form-group col-md-2">
+                            <label>Title</label>
+                            <select name="PersonTitleId" class="form-control">
+                                <option value="">--</option>
+                                @if (ViewBag.PersonTitles != null) {
+                                    foreach (var item in (List<KeyValuePair<string, string>>)ViewBag.PersonTitles) {
+                                        <option value="@item.Key">@item.Value</option>
+                                    }
+                                }
+                            </select>
+                        </div>
+                        <div class="form-group col-md-3"><label>First Names</label><input type="text" name="FirstNames" class="form-control" /></div>
+                        <div class="form-group col-md-3"><label>Surname</label><input type="text" name="Surname" class="form-control" /></div>
+                        <div class="form-group col-md-2">
+                            <label>ID Type</label>
+                            <select name="IdentificationTypeId" class="form-control">
+                                <option value="">--</option>
+                                @if (ViewBag.IdentificationTypes != null) {
+                                    foreach (var item in (List<KeyValuePair<string, string>>)ViewBag.IdentificationTypes) {
+                                        <option value="@item.Key">@item.Value</option>
+                                    }
+                                }
+                            </select>
+                        </div>
+                        <div class="form-group col-md-2"><label>ID Number</label><input type="text" name="IdentificationNumber" class="form-control" /></div>
                     </div>
+                    <div class="form-row">
+                        <div class="form-group col-md-4"><label>Contact Number</label><input type="text" name="ContactNumber" class="form-control" /></div>
+                        <div class="form-group col-md-4"><label>Alt. Contact</label><input type="text" name="AltContactNumber" class="form-control" /></div>
+                        <div class="form-group col-md-4"><label>Email Address</label><input type="email" name="Email" class="form-control" /></div>
+                    </div>
+                </div>
+
+                <!-- Business Policy Holder (shown when Policy Type = 2) -->
+                <div id="pnlBusiness" style="display:none;">
+                    <h6 class="font-weight-bold text-primary">Policy Holder - Business</h6>
+                    <div class="form-row">
+                        <div class="form-group col-md-4"><label>Company Name</label><input type="text" name="CompanyName" class="form-control" /></div>
+                        <div class="form-group col-md-4"><label>Registration #</label><input type="text" name="RegistrationNumber" class="form-control" /></div>
+                        <div class="form-group col-md-4"><label>VAT Number</label><input type="text" name="VATNumber" class="form-control" /></div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group col-md-6"><label>Contact Number</label><input type="text" name="BizContactNumber" class="form-control" /></div>
+                        <div class="form-group col-md-6"><label>Email</label><input type="email" name="BizEmail" class="form-control" /></div>
+                    </div>
+                </div>
+
+                <hr />
+                <h6 class="font-weight-bold text-primary">Physical Address</h6>
+                <div class="form-row">
+                    <div class="form-group col-md-3"><label>Building/Unit</label><input type="text" name="BuildingUnit" class="form-control" /></div>
+                    <div class="form-group col-md-3"><label>Address Line 1</label><input type="text" name="AddressLine1" class="form-control" /></div>
+                    <div class="form-group col-md-3"><label>Address Line 2</label><input type="text" name="AddressLine2" class="form-control" /></div>
+                    <div class="form-group col-md-3"><label>Suburb</label><input type="text" name="Suburb" class="form-control" /></div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group col-md-4"><label>City</label><input type="text" name="City" class="form-control" /></div>
                     <div class="form-group col-md-4">
-                        <label>Premium</label>
-                        <input type="text" name="Premium" class="form-control" data-type="currency" />
+                        <label>Province</label>
+                        <select name="ProvinceId" class="form-control selectpicker">
+                            <option value="">-- Select --</option>
+                            @if (ViewBag.Provinces != null) {
+                                foreach (var item in (List<KeyValuePair<string, string>>)ViewBag.Provinces) {
+                                    <option value="@item.Key">@item.Value</option>
+                                }
+                            }
+                        </select>
+                    </div>
+                    <div class="form-group col-md-4"><label>Postal Code</label><input type="text" name="PostalCode" class="form-control" /></div>
+                </div>
+                <div class="custom-control custom-checkbox mb-3">
+                    <input type="checkbox" class="custom-control-input" id="chkPostalSame" name="PostalSameAsPhysical">
+                    <label class="custom-control-label" for="chkPostalSame">Postal address same as physical</label>
+                </div>
+                <div id="pnlPostal">
+                    <h6 class="font-weight-bold text-primary">Postal Address</h6>
+                    <div class="form-row">
+                        <div class="form-group col-md-4"><label>PO Box/Bag</label><input type="text" name="POBox" class="form-control" /></div>
+                        <div class="form-group col-md-4"><label>Post Office Name</label><input type="text" name="PostOfficeName" class="form-control" /></div>
+                        <div class="form-group col-md-4"><label>Post Postal Code</label><input type="text" name="PostPostalCode" class="form-control" /></div>
                     </div>
                 </div>
 
@@ -42,14 +147,13 @@
                 <div class="form-row">
                     <div class="form-group col-md-6">
                         <label>Asset Type</label>
-                        <select name="AssetTypeId" id="assetTypeSelect" class="form-control selectpicker" data-live-search="true">
+                        <select name="AssetTypeId" id="assetTypeSelect" class="form-control selectpicker" data-live-search="true" required>
                             <option value="">-- Select Asset Type --</option>
-                        </select>
-                    </div>
-                    <div class="form-group col-md-6">
-                        <label>Customer</label>
-                        <select name="CustomerId" class="form-control selectpicker" data-live-search="true">
-                            <option value="">-- Select Customer --</option>
+                            @if (ViewBag.AssetTypes != null) {
+                                foreach (var item in (List<KeyValuePair<string, string>>)ViewBag.AssetTypes) {
+                                    <option value="@item.Key">@item.Value</option>
+                                }
+                            }
                         </select>
                     </div>
                 </div>
@@ -57,18 +161,8 @@
                 <!-- Dynamic asset type fields loaded via jQuery AJAX -->
                 <div id="assetTypeFields"></div>
 
-                <div class="form-row">
-                    <div class="form-group col-md-6">
-                        <label>Finance Value</label>
-                        <input type="text" name="FinanceValue" class="form-control" data-type="currency" />
-                    </div>
-                    <div class="form-group col-md-6">
-                        <label>Insured Value</label>
-                        <input type="text" name="InsuredValue" class="form-control" data-type="currency" />
-                    </div>
-                </div>
-
-                <button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> Save Policy & Asset</button>
+                <button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> Create Policy & Save Asset</button>
+                <button type="reset" class="btn btn-secondary"><i class="fas fa-times"></i> Cancel</button>
             </form>
         </div>
     </div>
@@ -76,6 +170,23 @@
 
 @section Scripts {
 <script>
+    // Toggle personal/business policy holder panels
+    $('#ddlPolicyType').change(function () {
+        if ($(this).val() === '2') {
+            $('#pnlPersonal').hide();
+            $('#pnlBusiness').show();
+        } else {
+            $('#pnlPersonal').show();
+            $('#pnlBusiness').hide();
+        }
+    });
+
+    // Toggle postal address
+    $('#chkPostalSame').change(function () {
+        $('#pnlPostal').toggle(!this.checked);
+    });
+
+    // Load asset type partial form
     $('#assetTypeSelect').change(function () {
         var assetType = $(this).val();
         if (assetType) {

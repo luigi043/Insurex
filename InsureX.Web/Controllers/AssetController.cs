@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Data;
 using P = IAPR_Data.Providers;
 
 namespace InsureX.Web.Controllers
@@ -7,17 +8,52 @@ namespace InsureX.Web.Controllers
     [Authorize]
     public class AssetController : Controller
     {
+        #region Form Field Helpers
+
+        private void LoadAssetFormFields()
+        {
+            var frmF = new P.GetFormFields_Provider();
+            DataSet ds = frmF.GetFormFieldsVehicleAsset();
+
+            ViewBag.IdentificationTypes = DataTableToList(ds.Tables[2]);
+            ViewBag.PersonTitles = DataTableToList(ds.Tables[4]);
+            ViewBag.Provinces = DataTableToList(ds.Tables[5]);
+            ViewBag.AssetTypes = DataTableToList(ds.Tables[14]);
+            ViewBag.PolicyTypes = DataTableToList(ds.Tables[3]);
+            ViewBag.InsuranceCompanies = DataTableToList(ds.Tables[0]);
+            ViewBag.PaymentFrequencies = DataTableToList(ds.Tables[10]);
+        }
+
+        private void LoadFinancerAssetTypes(int financerId)
+        {
+            var frmF = new P.GetFormFields_Provider();
+            DataSet ds = frmF.GetFormFieldsAssetsFinancedByFinancer(financerId);
+            ViewBag.AssetTypes = DataTableToList(ds.Tables[0]);
+        }
+
+        private static List<KeyValuePair<string, string>> DataTableToList(DataTable dt)
+        {
+            var list = new List<KeyValuePair<string, string>>();
+            foreach (DataRow row in dt.Rows)
+                list.Add(new KeyValuePair<string, string>(row[0].ToString()!, row[1].ToString()!));
+            return list;
+        }
+
+        #endregion
+
+        #region Add New Asset
+
         [HttpGet]
         public IActionResult AddNewAsset()
         {
-            try
-            {
-                var gfP = new P.GetFormFields_Provider();
-                ViewBag.AssetTypes = gfP.getAssetTypes();
-                ViewBag.Customers = gfP.getFinancerCustomers(
-                    int.Parse(User.FindFirst("iPartner_Id")?.Value ?? "0"));
-            }
-            catch { }
+            int userTypeId = int.Parse(User.FindFirst("iUser_Type_Id")?.Value ?? "0");
+            int partnerId = int.Parse(User.FindFirst("iPartner_Id")?.Value ?? "0");
+
+            if (userTypeId >= 3) // Financer
+                LoadFinancerAssetTypes(partnerId);
+            else
+                LoadAssetFormFields();
+
             return View();
         }
 
@@ -27,46 +63,123 @@ namespace InsureX.Web.Controllers
         {
             try
             {
-                // TODO: Build asset from form and save via appropriate provider
-                TempData["Success"] = "Asset created successfully.";
-                return RedirectToAction("FindAsset");
+                int partnerId = int.Parse(User.FindFirst("iPartner_Id")?.Value ?? "0");
+                string assetType = form["AssetTypeId"].ToString();
+
+                var assetProv = new P.Asset_Provider();
+                bool saved = assetProv.Save_New_Asset_Without_Policy(partnerId, int.Parse(assetType), form);
+
+                if (saved)
+                {
+                    TempData["Success"] = "Asset saved successfully.";
+                    return RedirectToAction("AddNewAsset");
+                }
+
+                TempData["Error"] = "Failed to save asset.";
             }
             catch (Exception ex)
             {
-                TempData["Error"] = ex.Message;
-                return View();
+                TempData["Error"] = "Error: " + ex.Message;
             }
-        }
 
-        [HttpGet]
-        public IActionResult FindAsset(string? searchTerm = null)
-        {
-            try
-            {
-                if (!string.IsNullOrEmpty(searchTerm))
-                {
-                    int partnerId = int.Parse(User.FindFirst("iPartner_Id")?.Value ?? "0");
-                    var sP = new P.Search_Provider();
-                    ViewBag.Results = sP.SearchAssets(searchTerm, partnerId);
-                }
-            }
-            catch { }
-            ViewBag.SearchTerm = searchTerm;
+            LoadAssetFormFields();
             return View();
         }
 
+        #endregion
+
+        #region Find Asset
+
         [HttpGet]
+        public IActionResult FindAsset(string searchTerm)
+        {
+            ViewBag.SearchTerm = searchTerm;
+
+            if (!string.IsNullOrEmpty(searchTerm))
+            {
+                try
+                {
+                    int partnerId = int.Parse(User.FindFirst("iPartner_Id")?.Value ?? "0");
+                    var assetProv = new P.Asset_Provider();
+                    DataSet ds = assetProv.Find_Assets(partnerId, searchTerm);
+
+                    if (ds?.Tables.Count > 0)
+                        ViewBag.Assets = ds.Tables[0];
+                }
+                catch (Exception ex)
+                {
+                    TempData["Error"] = ex.Message;
+                }
+            }
+
+            return View();
+        }
+
+        #endregion
+
+        #region Asset Type Partial (jQuery AJAX)
+
+        [HttpGet]
+        public IActionResult AssetTypePartial(string assetType)
+        {
+            string partialName = assetType switch
+            {
+                "1" => "AssetTypes/_Vehicle",
+                "2" => "AssetTypes/_Property",
+                "3" => "AssetTypes/_Watercraft",
+                "4" => "AssetTypes/_Aviation",
+                "5" => "AssetTypes/_Stock",
+                "6" => "AssetTypes/_AccountReceivable",
+                "7" => "AssetTypes/_Machinery",
+                "8" => "AssetTypes/_PlantEquipment",
+                "9" => "AssetTypes/_BusinessInterruption",
+                "10" => "AssetTypes/_KeymanInsurance",
+                "11" => "AssetTypes/_ElectronicEquipment",
+                _ => ""
+            };
+
+            if (string.IsNullOrEmpty(partialName))
+                return Content("");
+
+            // Load cover types for asset-specific dropdowns
+            try
+            {
+                var frmF = new P.GetFormFields_Provider();
+                DataSet ds = frmF.GetFormFieldsVehicleAsset();
+                if (ds.Tables.Count > 6)
+                    ViewBag.CoverTypes = DataTableToList(ds.Tables[6]);
+            }
+            catch { }
+
+            return PartialView(partialName);
+        }
+
+        #endregion
+
+        #region Unconfirmed Insurance
+
         public IActionResult UnconfirmedInsurance()
         {
             try
             {
                 int partnerId = int.Parse(User.FindFirst("iPartner_Id")?.Value ?? "0");
-                var gaP = new P.Generic_Asset_Provider();
-                ViewBag.UnconfirmedAssets = gaP.getUnconfirmedAssetsByPartner(partnerId);
+                var assetProv = new P.Asset_Provider();
+                DataSet ds = assetProv.Get_Unconfirmed_Insurance(partnerId);
+
+                if (ds?.Tables.Count > 0)
+                    ViewBag.UnconfirmedAssets = ds.Tables[0];
             }
-            catch { }
+            catch (Exception ex)
+            {
+                TempData["Error"] = ex.Message;
+            }
+
             return View();
         }
+
+        #endregion
+
+        #region Update Finance Value
 
         [HttpGet]
         public IActionResult UpdateFinanceValue()
@@ -80,54 +193,32 @@ namespace InsureX.Web.Controllers
         {
             try
             {
-                // TODO: Update finance value via provider
-                TempData["Success"] = "Finance value updated successfully.";
+                int assetId = int.Parse(form["AssetId"].ToString());
+                decimal newValue = decimal.Parse(form["NewFinanceValue"].ToString());
+
+                var assetProv = new P.Asset_Provider();
+                assetProv.Update_Finance_Value(assetId, newValue);
+
+                TempData["Success"] = "Finance value updated.";
                 return RedirectToAction("UpdateFinanceValue");
             }
             catch (Exception ex)
             {
-                TempData["Error"] = ex.Message;
-                return View();
+                TempData["Error"] = "Error: " + ex.Message;
             }
+
+            return View();
         }
 
-        [HttpGet]
-        public IActionResult RequestInsuranceDetails(int id)
+        #endregion
+
+        #region Request Insurance Details
+
+        public IActionResult RequestInsuranceDetails()
         {
-            try
-            {
-                // TODO: Send insurance details request via provider
-                TempData["Success"] = "Insurance details request sent.";
-            }
-            catch (Exception ex)
-            {
-                TempData["Error"] = ex.Message;
-            }
-            return RedirectToAction("UnconfirmedInsurance");
+            return View();
         }
 
-        /// <summary>
-        /// Returns the partial view for a specific asset type form.
-        /// Called via jQuery AJAX when user selects an asset type.
-        /// </summary>
-        [HttpGet]
-        public IActionResult AssetTypePartial(string assetType)
-        {
-            return assetType?.ToLower() switch
-            {
-                "vehicle" => PartialView("AssetTypes/_Vehicle"),
-                "aviation" => PartialView("AssetTypes/_Aviation"),
-                "property" => PartialView("AssetTypes/_Property"),
-                "electronic_equipment" => PartialView("AssetTypes/_ElectronicEquipment"),
-                "machinery" => PartialView("AssetTypes/_Machinery"),
-                "plant_equipment" => PartialView("AssetTypes/_PlantEquipment"),
-                "stock" => PartialView("AssetTypes/_Stock"),
-                "watercraft" => PartialView("AssetTypes/_Watercraft"),
-                "keyman_insurance" => PartialView("AssetTypes/_KeymanInsurance"),
-                "account_receivable" => PartialView("AssetTypes/_AccountReceivable"),
-                "business_interruption" => PartialView("AssetTypes/_BusinessInterruption"),
-                _ => PartialView("AssetTypes/_Vehicle")
-            };
-        }
+        #endregion
     }
 }

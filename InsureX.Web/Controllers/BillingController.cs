@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Data;
 using P = IAPR_Data.Providers;
 
 namespace InsureX.Web.Controllers
@@ -7,66 +8,99 @@ namespace InsureX.Web.Controllers
     [Authorize]
     public class BillingController : Controller
     {
-        [HttpGet]
+        #region View Partner Invoice
+
         public IActionResult ViewPartnerInvoice()
         {
             try
             {
                 int partnerId = int.Parse(User.FindFirst("iPartner_Id")?.Value ?? "0");
-                // TODO: Load invoices via billing provider
+                var billingProv = new P.Billing_Provider();
+                DataSet ds = billingProv.Get_Partner_Invoices(partnerId);
+
+                if (ds?.Tables.Count > 0)
+                    ViewBag.Invoices = ds.Tables[0];
             }
-            catch { }
+            catch (Exception ex)
+            {
+                TempData["Error"] = ex.Message;
+            }
+
             return View();
         }
 
-        [HttpGet]
+        #endregion
+
+        #region New Charge
+
         [Authorize(Roles = "Admin")]
+        [HttpGet]
         public IActionResult NewCharge()
         {
             return View();
         }
 
-        [HttpPost]
         [Authorize(Roles = "Admin")]
+        [HttpPost]
         [ValidateAntiForgeryToken]
         public IActionResult NewCharge(IFormCollection form)
         {
             try
             {
-                // TODO: Create new billing charge via provider
-                TempData["Success"] = "Charge created successfully.";
-                return RedirectToAction("ViewPartnerInvoice");
+                var billingProv = new P.Billing_Provider();
+                billingProv.Add_New_Charge(
+                    int.Parse(form["PartnerId"].ToString()),
+                    form["ChargeType"].ToString(),
+                    decimal.Parse(form["Amount"].ToString()),
+                    form["Description"].ToString()
+                );
+
+                TempData["Success"] = "Charge added successfully.";
+                return RedirectToAction("NewCharge");
             }
             catch (Exception ex)
             {
-                TempData["Error"] = ex.Message;
-                return View();
+                TempData["Error"] = "Error: " + ex.Message;
             }
+
+            return View();
         }
 
-        [HttpGet]
+        #endregion
+
+        #region Update Charge
+
         [Authorize(Roles = "Admin")]
+        [HttpGet]
         public IActionResult UpdateCharge()
         {
             return View();
         }
 
-        [HttpPost]
         [Authorize(Roles = "Admin")]
+        [HttpPost]
         [ValidateAntiForgeryToken]
         public IActionResult UpdateCharge(IFormCollection form)
         {
             try
             {
-                // TODO: Update billing charge fee via provider
+                var billingProv = new P.Billing_Provider();
+                billingProv.Update_Charge(
+                    int.Parse(form["ChargeId"].ToString()),
+                    decimal.Parse(form["Amount"].ToString())
+                );
+
                 TempData["Success"] = "Charge updated successfully.";
-                return RedirectToAction("ViewPartnerInvoice");
+                return RedirectToAction("UpdateCharge");
             }
             catch (Exception ex)
             {
-                TempData["Error"] = ex.Message;
-                return View();
+                TempData["Error"] = "Error: " + ex.Message;
             }
+
+            return View();
         }
+
+        #endregion
     }
 }
