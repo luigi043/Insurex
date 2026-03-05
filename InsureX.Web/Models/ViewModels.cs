@@ -30,20 +30,33 @@ namespace InsureX.Web.Models
 
     public class DashboardViewModel
     {
+        // All Assets
         public int AllAssetCount { get; set; }
         public decimal AllAssetTotal { get; set; }
+
+        // Insured
         public int InsuredAssetCount { get; set; }
         public decimal InsuredAssetTotal { get; set; }
+
+        // Uninsured
         public int UninsuredAssetCount { get; set; }
         public decimal UninsuredAssetTotal { get; set; }
+
+        // Uninsured breakdown
+        public int PremiumUnpaidAssetCount { get; set; }
         public decimal PremiumUnpaidAssetTotal { get; set; }
         public decimal PremiumUnpaidAssetTotalPercent { get; set; }
+        public int NoInsuranceAssetCount { get; set; }
         public decimal NoInsuranceAssetTotal { get; set; }
         public decimal NoInsuranceAssetTotalPercent { get; set; }
+
+        // Insured breakdown
         public decimal AdequatelyInsuredTotal { get; set; }
         public decimal AdequatelyInsuredTotalPercent { get; set; }
         public decimal UnderInsuredTotal { get; set; }
         public decimal UnderInsuredTotalPercent { get; set; }
+
+        // Shortfall
         public decimal InsuredShortFall { get; set; }
     }
 

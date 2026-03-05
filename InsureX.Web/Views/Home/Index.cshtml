@@ -20,7 +20,7 @@
                 <div class="col-xl-6 col-md-6 mb-4">
                     <div class="card-body bg-gradient-Insurex text-light">
                         <div class="text-xs font-weight-bold mb-1">Total Finance Value</div>
-                        <div class="h5 mb-0 font-weight-bold text-light">@Model.AllAssetTotal.ToString("C")</div>
+                        <div class="h5 mb-0 font-weight-bold text-light">@Model.AllAssetTotal.ToString("C", new System.Globalization.CultureInfo("en-ZA"))</div>
                     </div>
                 </div>
             </div>
@@ -34,7 +34,7 @@
                 <div class="col-xl-6 col-md-6 mb-4">
                     <div class="card-body bg-gradient-Insurex text-light">
                         <div class="text-xs font-weight-bold mb-1">Insured Financed Value</div>
-                        <div class="h5 mb-0 font-weight-bold text-light">@Model.InsuredAssetTotal.ToString("C")</div>
+                        <div class="h5 mb-0 font-weight-bold text-light">@Model.InsuredAssetTotal.ToString("C", new System.Globalization.CultureInfo("en-ZA"))</div>
                     </div>
                 </div>
             </div>
@@ -48,7 +48,7 @@
                 <div class="col-xl-6 col-md-6 mb-4">
                     <div class="card-body bg-gradient-Insurex-Shortfall text-light">
                         <div class="text-xs font-weight-bold mb-1">Uninsured Financed Value</div>
-                        <div class="h5 mb-0 font-weight-bold text-light">@Model.UninsuredAssetTotal.ToString("C")</div>
+                        <div class="h5 mb-0 font-weight-bold text-light">@Model.UninsuredAssetTotal.ToString("C", new System.Globalization.CultureInfo("en-ZA"))</div>
                     </div>
                 </div>
             </div>
@@ -58,7 +58,7 @@
         </div>
     </div>
 
-    <!-- Uninsured Financed Value Section -->
+    <!-- Uninsured Financed Value Breakdown -->
     <div class="row chartBlock">
         <div class="form-group col-md-6">
             <div class="row text-center">
@@ -70,13 +70,13 @@
                 <div class="col-xl-7 col-md-6 mb-4">
                     <div class="card-body bg-gradient-Insurex text-light">
                         <div class="text-xs font-weight-bold mb-1">Unpaid Premiums</div>
-                        <div class="h5 mb-0 font-weight-bold text-light">@Model.PremiumUnpaidAssetTotal.ToString("C")</div>
+                        <div class="h5 mb-0 font-weight-bold text-light">@Model.PremiumUnpaidAssetTotal.ToString("C", new System.Globalization.CultureInfo("en-ZA"))</div>
                     </div>
                 </div>
                 <div class="col-xl-5 col-md-6 mb-4">
                     <div class="card-body bg-gradient-Insurex text-light">
                         <div class="text-xs font-weight-bold mb-1">Percentage</div>
-                        <div class="h5 mb-0 font-weight-bold text-light">@Model.PremiumUnpaidAssetTotalPercent.ToString("F1")%</div>
+                        <div class="h5 mb-0 font-weight-bold text-light">@Model.PremiumUnpaidAssetTotalPercent%</div>
                     </div>
                 </div>
             </div>
@@ -84,13 +84,13 @@
                 <div class="col-xl-7 col-md-6 mb-4">
                     <div class="card-body bg-gradient-Insurex text-light">
                         <div class="text-xs font-weight-bold mb-1">No Insurance Details</div>
-                        <div class="h5 mb-0 font-weight-bold text-light">@Model.NoInsuranceAssetTotal.ToString("C")</div>
+                        <div class="h5 mb-0 font-weight-bold text-light">@Model.NoInsuranceAssetTotal.ToString("C", new System.Globalization.CultureInfo("en-ZA"))</div>
                     </div>
                 </div>
                 <div class="col-xl-5 col-md-6 mb-4">
                     <div class="card-body bg-gradient-Insurex text-light">
                         <div class="text-xs font-weight-bold mb-1">Percentage</div>
-                        <div class="h5 mb-0 font-weight-bold text-light">@Model.NoInsuranceAssetTotalPercent.ToString("F1")%</div>
+                        <div class="h5 mb-0 font-weight-bold text-light">@Model.NoInsuranceAssetTotalPercent%</div>
                     </div>
                 </div>
             </div>
@@ -100,7 +100,7 @@
         </div>
     </div>
 
-    <!-- Insured Financed Value Section -->
+    <!-- Insured Financed Value Breakdown -->
     <div class="row chartBlock">
         <div class="form-group col-md-6">
             <div class="row text-center">
@@ -112,13 +112,13 @@
                 <div class="col-xl-7 col-md-6 mb-4">
                     <div class="card-body bg-gradient-Insurex text-light">
                         <div class="text-xs font-weight-bold mb-1">Adequately Insured Value</div>
-                        <div class="h5 mb-0 font-weight-bold text-light">@Model.AdequatelyInsuredTotal.ToString("C")</div>
+                        <div class="h5 mb-0 font-weight-bold text-light">@Model.AdequatelyInsuredTotal.ToString("C", new System.Globalization.CultureInfo("en-ZA"))</div>
                     </div>
                 </div>
                 <div class="col-xl-5 col-md-6 mb-4">
                     <div class="card-body bg-gradient-Insurex text-light">
                         <div class="text-xs font-weight-bold mb-1">Percentage</div>
-                        <div class="h5 mb-0 font-weight-bold text-light">@Model.AdequatelyInsuredTotalPercent.ToString("F1")%</div>
+                        <div class="h5 mb-0 font-weight-bold text-light">@Model.AdequatelyInsuredTotalPercent%</div>
                     </div>
                 </div>
             </div>
@@ -126,13 +126,21 @@
                 <div class="col-xl-7 col-md-6 mb-4">
                     <div class="card-body bg-gradient-Insurex-Shortfall text-light">
                         <div class="text-xs font-weight-bold mb-1">Under Insured Value</div>
-                        <div class="h5 mb-0 font-weight-bold text-light">@Model.UnderInsuredTotal.ToString("C")</div>
+                        <div class="h5 mb-0 font-weight-bold text-light">@Model.UnderInsuredTotal.ToString("C", new System.Globalization.CultureInfo("en-ZA"))</div>
                     </div>
                 </div>
                 <div class="col-xl-5 col-md-6 mb-4">
                     <div class="card-body bg-gradient-Insurex-Shortfall text-light">
                         <div class="text-xs font-weight-bold mb-1">Percentage</div>
-                        <div class="h5 mb-0 font-weight-bold text-light">@Model.UnderInsuredTotalPercent.ToString("F1")%</div>
+                        <div class="h5 mb-0 font-weight-bold text-light">@Model.UnderInsuredTotalPercent%</div>
+                    </div>
+                </div>
+            </div>
+            <div class="row text-center">
+                <div class="col-xl-12 mb-4">
+                    <div class="card-body bg-gradient-Insurex-Shortfall text-light">
+                        <div class="text-xs font-weight-bold mb-1">Insured Shortfall</div>
+                        <div class="h5 mb-0 font-weight-bold text-light">@Model.InsuredShortFall.ToString("C", new System.Globalization.CultureInfo("en-ZA"))</div>
                     </div>
                 </div>
             </div>
@@ -142,7 +150,7 @@
         </div>
     </div>
 
-    <!-- Chart containers for AJAX-loaded FusionCharts -->
+    <!-- Full-width Chart Sections -->
     <div class="row chartBlock">
         <div class="form-group col-md-12"><div id="chartUninsuredByFinancer"></div></div>
     </div>
@@ -159,7 +167,7 @@
         <div class="form-group col-md-12"><div id="chartCommunications"></div></div>
     </div>
 
-    <a href="@Url.Action("Export", "Reporting", new { reportType = "Dashboard", format = "pdf" })" class="btn btn-primary">
+    <a href="@Url.Action("Export", "Reporting", new { reportType = "Dashboard", format = "pdf" })" class="btn btn-primary mb-4">
         <i class="fas fa-download"></i> Download Dashboard
     </a>
 </div>
@@ -167,22 +175,68 @@
 @section Scripts {
 <script>
     $(function () {
-        // Load chart data via AJAX
-        $.getJSON('@Url.Action("ChartData", "Home")?chartType=insuranceStatus', function (data) {
-            if (typeof FusionCharts !== 'undefined') {
-                new FusionCharts({
-                    type: 'doughnut2d', renderAt: 'chartInsuranceStatus', width: '100%', height: '400',
-                    dataFormat: 'json',
-                    dataSource: {
-                        chart: { caption: "Insurance Status", theme: "fusion" },
-                        data: [
-                            { label: "Insured", value: "@Model.InsuredAssetCount" },
-                            { label: "Uninsured", value: "@Model.UninsuredAssetCount" }
-                        ]
-                    }
-                }).render();
-            }
-        });
+        function renderDoughnut(url, containerId, fallbackCaption) {
+            $.getJSON(url, function (result) {
+                if (result && result.data && result.data.length > 0 && typeof FusionCharts !== 'undefined') {
+                    new FusionCharts({
+                        type: 'doughnut2d', renderAt: containerId, width: '100%', height: '400',
+                        dataFormat: 'json',
+                        dataSource: {
+                            chart: $.extend({
+                                showpercentvalues: '1',
+                                defaultcenterlabel: 'Total Assets: @Model.AllAssetCount',
+                                centerlabel: '<b>$label: $value</b>',
+                                plottooltext: '<b>$label</b>: <b>$percentValue</b>',
+                                doughnutRadius: '75', legendposition: 'bottom',
+                                captionFontColor: '#4e73df', theme: 'fusion'
+                            }, result.chart || {}),
+                            data: result.data
+                        }
+                    }).render();
+                }
+            });
+        }
+
+        function renderBar(url, containerId) {
+            $.getJSON(url, function (result) {
+                if (result && result.data && result.data.length > 0 && typeof FusionCharts !== 'undefined') {
+                    new FusionCharts({
+                        type: 'column2d', renderAt: containerId, width: '100%', height: '400',
+                        dataFormat: 'json',
+                        dataSource: {
+                            chart: $.extend({ theme: 'fusion', captionFontColor: '#4e73df' }, result.chart || {}),
+                            data: result.data
+                        }
+                    }).render();
+                }
+            });
+        }
+
+        function renderMsBar(url, containerId) {
+            $.getJSON(url, function (result) {
+                if (result && result.categories && typeof FusionCharts !== 'undefined') {
+                    new FusionCharts({
+                        type: 'mscolumn2d', renderAt: containerId, width: '100%', height: '400',
+                        dataFormat: 'json',
+                        dataSource: {
+                            chart: $.extend({ theme: 'fusion', captionFontColor: '#4e73df' }, result.chart || {}),
+                            categories: result.categories,
+                            dataset: result.dataset
+                        }
+                    }).render();
+                }
+            });
+        }
+
+        // Load all charts
+        renderDoughnut('@Url.Action("ChartInsuranceStatus")', 'chartInsuranceStatus');
+        renderDoughnut('@Url.Action("ChartUninsuredAssetsCount")', 'chartUninsuredAssetsCount');
+        renderDoughnut('@Url.Action("ChartInsuredAssets")', 'chartInsuredAssets');
+        renderMsBar('@Url.Action("ChartUninsuredByFinancer")', 'chartUninsuredByFinancer');
+        renderBar('@Url.Action("ChartUninsuredStatistics")', 'chartUninsuredStatistics');
+        renderBar('@Url.Action("ChartNonPaymentReinstated")', 'chartNonPaymentReInstated');
+        renderBar('@Url.Action("ChartUninsuredByInsurer")', 'chartUninsuredByInsurer');
+        renderBar('@Url.Action("ChartCommunications")', 'chartCommunications');
     });
 </script>
 }
