@@ -86,6 +86,32 @@ public class PolicyController : ControllerBase
         catch (Exception ex) { return StatusCode(500, new { message = ex.Message }); }
     }
 
+    // POST /api/policy/personal
+    [HttpPost("personal")]
+    public IActionResult CreatePersonalPolicy([FromBody] IAPR_Data.Classes.Policy.Policy policy)
+    {
+        try
+        {
+            var prov = new P.Policy_Provider();
+            int policyId = prov.Save_New_Policy_Personal(policy);
+            return Ok(new { policyId, message = "Personal policy created successfully" });
+        }
+        catch (Exception ex) { return StatusCode(500, new { message = ex.Message }); }
+    }
+
+    // POST /api/policy/business
+    [HttpPost("business")]
+    public IActionResult CreateBusinessPolicy([FromBody] IAPR_Data.Classes.Policy.Policy policy)
+    {
+        try
+        {
+            var prov = new P.Policy_Provider();
+            int policyId = prov.Save_New_Policy_Business(policy);
+            return Ok(new { policyId, message = "Business policy created successfully" });
+        }
+        catch (Exception ex) { return StatusCode(500, new { message = ex.Message }); }
+    }
+
     // GET /api/policy/{id}/assets
     [HttpGet("{policyId}/assets")]
     public IActionResult GetPolicyAssets(int policyId)

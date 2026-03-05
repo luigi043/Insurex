@@ -98,6 +98,19 @@ public class AssetController : ControllerBase
         return Ok(new { data = Array.Empty<object>() });
     }
 
+    // POST /api/asset
+    [HttpPost]
+    public IActionResult CreateAsset([FromBody] IAPR_Data.Classes.AssetTypes.Vehicle_Asset asset)
+    {
+        try
+        {
+            var prov = new P.Vehicle_Asset_Provider();
+            prov.Save_New_Vehicle_Asset(asset);
+            return Ok(new { message = "Asset registered successfully" });
+        }
+        catch (Exception ex) { return StatusCode(500, new { message = ex.Message }); }
+    }
+
     #region Helpers
 
     private int GetClaim(string name)

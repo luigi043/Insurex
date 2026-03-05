@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { policyClient } from '../../api/clients';
-import { RefreshCw, CheckCircle, XCircle, FileText, Eye } from 'lucide-react';
+import { RefreshCw, CheckCircle, XCircle, FileText, Eye, Plus } from 'lucide-react';
 
 const PolicyPage: React.FC = () => {
+  const navigate = useNavigate();
   const [transactions, setTransactions] = useState<any[]>([]);
   const [pending, setPending] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
@@ -48,9 +50,17 @@ const PolicyPage: React.FC = () => {
 
   return (
     <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-700">
-      <header>
-        <h1 className="text-3xl font-extrabold text-gray-900 tracking-tight">Policy Management</h1>
-        <p className="text-sm text-gray-500 mt-1">View transactions and manage policy confirmations</p>
+      <header className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+        <div>
+          <h1 className="text-3xl font-extrabold text-gray-900 tracking-tight">Policy Management</h1>
+          <p className="text-sm text-gray-500 mt-1">View transactions and manage policy confirmations</p>
+        </div>
+        <button 
+          onClick={() => navigate('/policies/new')}
+          className="flex items-center gap-2 px-6 py-2 bg-blue-600 rounded-xl text-sm font-bold text-white shadow-lg shadow-blue-200 hover:bg-blue-700 transition-all active:scale-95"
+        >
+          <Plus className="w-4 h-4" /> New Policy
+        </button>
       </header>
 
       {/* Tabs */}

@@ -60,6 +60,10 @@ export const assetClient = {
         const response = await API.get('/asset/types');
         return response.data;
     },
+    addAsset: async (asset: any) => {
+        const response = await API.post('/asset', asset);
+        return response.data;
+    },
 };
 
 // --- Policy ---
@@ -82,6 +86,14 @@ export const policyClient = {
     },
     getPolicyAssets: async (policyId: number) => {
         const response = await API.get(`/policy/${policyId}/assets`);
+        return response.data;
+    },
+    addPersonalPolicy: async (policy: any) => {
+        const response = await API.post('/policy/personal', policy);
+        return response.data;
+    },
+    addBusinessPolicy: async (policy: any) => {
+        const response = await API.post('/policy/business', policy);
         return response.data;
     },
 };

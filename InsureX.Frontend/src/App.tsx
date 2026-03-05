@@ -13,6 +13,8 @@ import LoginPage from './components/pages/LoginPage';
 import PolicyPage from './components/pages/PolicyPage';
 import BillingPage from './components/pages/BillingPage';
 import ReportingPage from './components/pages/ReportingPage';
+import AddAssetPage from './components/pages/AddAssetPage';
+import AddPolicyPage from './components/pages/AddPolicyPage';
 
 const App: React.FC = () => {
   return (
@@ -29,6 +31,8 @@ const App: React.FC = () => {
           <Route path="policies" element={<PolicyPage />} />
           <Route path="billing" element={<BillingPage />} />
           <Route path="reports" element={<ReportingPage />} />
+          <Route path="assets/new" element={<AddAssetPage />} />
+          <Route path="policies/new" element={<AddPolicyPage />} />
           <Route path="compliance" element={<CompliancePage />} />
           <Route path="cases" element={<CasesPage />} />
           <Route path="audit" element={<AuditPage />} />
