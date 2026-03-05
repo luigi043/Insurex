@@ -67,13 +67,13 @@ Based on the provided documents (`Asset Protection Register - product write-up`,
 
 ### Phase 12: Admin Login & Password Update
 
-- [ ] Implement `ChangePassword` endpoint in `AuthController.cs`.
-- [ ] Add `changePassword` method to `authClient` in React frontend.
-- [ ] Create `SettingsPage.tsx` for password management.
-- [ ] Add `Settings` route to `App.tsx` and Navigation Menu.
-- [ ] Verify password change flow.
+- [x] Implement `ChangePassword` endpoint in `AuthController.cs`.
+- [x] Add `changePassword` method to `authClient` in React frontend.
+- [x] Create `SettingsPage.tsx` for password management.
+- [x] Add `Settings` route to `App.tsx` and Navigation Menu.
+- [x] Verify password change flow.
 
-### Phase 12: Final Polish & Production Readiness
+### Phase 13: Final Polish & Production Readiness
 
 - [ ] Dockerize the application (API and Frontend).
 - [ ] Configure Docker Compose for easy local deployment.

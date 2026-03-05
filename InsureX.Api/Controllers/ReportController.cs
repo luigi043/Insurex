@@ -62,6 +62,38 @@ public class ReportController : ControllerBase
         return File(Encoding.UTF8.GetBytes(csv.ToString()), "text/csv", $"Assets_Portfolio_Export_{DateTime.UtcNow:yyyyMMdd}.csv");
     }
 
+    [HttpGet("users/export")]
+    public async Task<IActionResult> GetUsersExport()
+    {
+        // Join Users with UserRoles and Roles to get the Role Name
+        var usersWithRoles = await (from user in _db.Users
+                                    join userRole in _db.UserRoles on user.Id equals userRole.UserId into ur
+                                    from userRole in ur.DefaultIfEmpty()
+                                    join role in _db.Roles on userRole.RoleId equals role.Id into r
+                                    from role in r.DefaultIfEmpty()
+                                    select new 
+                                    {
+                                        user.LegacyUserId,
+                                        user.UserName,
+                                        user.vcName,
+                                        user.vcSurname,
+                                        user.vcPosition_Title,
+                                        user.Email,
+                                        user.iUser_Status_Id,
+                                        RoleName = role != null ? role.Name : "None"
+                                    }).ToListAsync();
+
+        var csv = new StringBuilder();
+        csv.AppendLine("LegacyUserId,UserName,Name,Surname,Position,Email,IsActive,Role,Password_Warning");
+
+        foreach (var user in usersWithRoles)
+        {
+            csv.AppendLine($"{user.LegacyUserId},{user.UserName},\"{user.vcName}\",\"{user.vcSurname}\",\"{user.vcPosition_Title}\",{user.Email},{(user.iUser_Status_Id == 1 ? "Active" : "Inactive")},\"{user.RoleName}\",\"PROTECTED_BY_BCRYPT_HASH_CANNOT_EXPORT\"");
+        }
+
+        return File(Encoding.UTF8.GetBytes(csv.ToString()), "text/csv", $"Users_Export_{DateTime.UtcNow:yyyyMMdd}.csv");
+    }
+
     private int? GetTenantId()
     {
         var claim = User.FindFirst("TenantId");

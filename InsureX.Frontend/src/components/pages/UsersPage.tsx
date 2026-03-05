@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { adminClient } from '../../api/clients';
+import { adminClient, reportClient } from '../../api/clients';
 import type { User } from '../../api/types/Admin';
 import { DataTable, StatusBadge, Pagination } from '../shared';
 import { 
     Users, UserPlus, Search, 
-    AtSign, ShieldCheck, Building2
+    AtSign, ShieldCheck, Building2, Download
 } from 'lucide-react';
 
 const UsersPage: React.FC = () => {
@@ -42,6 +42,14 @@ const UsersPage: React.FC = () => {
         e.preventDefault();
         setPage(1);
         fetchUsers();
+    };
+
+    const handleExport = async () => {
+        try {
+            await reportClient.exportUsers();
+        } catch (error) {
+            console.error('Failed to export users:', error);
+        }
     };
 
     const columns = [
@@ -129,12 +137,20 @@ const UsersPage: React.FC = () => {
                     <p className="text-gray-500 mt-1 font-medium">Manage system access, roles, and organizational assignments.</p>
                 </div>
                 
-                <button 
-                    onClick={() => navigate('/users/new')}
-                    className="flex items-center gap-2 px-6 py-3 bg-blue-600 text-white rounded-2xl text-sm font-black uppercase hover:bg-blue-700 transition-all active:scale-95 shadow-xl shadow-blue-100"
-                >
-                    <UserPlus className="w-4 h-4" /> Add New User
-                </button>
+                <div className="flex gap-3">
+                    <button 
+                        onClick={handleExport}
+                        className="flex items-center gap-2 px-6 py-3 bg-white text-gray-700 border border-gray-200 rounded-2xl text-sm font-black uppercase hover:bg-gray-50 transition-all active:scale-95 shadow-sm"
+                    >
+                        <Download className="w-4 h-4" /> Export
+                    </button>
+                    <button 
+                        onClick={() => navigate('/users/new')}
+                        className="flex items-center gap-2 px-6 py-3 bg-blue-600 text-white rounded-2xl text-sm font-black uppercase hover:bg-blue-700 transition-all active:scale-95 shadow-xl shadow-blue-100"
+                    >
+                        <UserPlus className="w-4 h-4" /> Add New User
+                    </button>
+                </div>
             </header>
 
             <div className="flex flex-col lg:flex-row gap-4">

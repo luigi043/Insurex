@@ -224,6 +224,16 @@ export const reportClient = {
         a.click();
         document.body.removeChild(a);
     },
+    exportUsers: async () => {
+        const baseUrl = (axios.defaults.baseURL || '').replace(/\/+$/, '');
+        const url = `${baseUrl}/api/report/users/export`;
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `Users_Export.csv`;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+    },
 };
 
 // --- Partner Integrations ---
