@@ -17,6 +17,7 @@ const NavigationBar: React.FC = () => {
     { name: 'Cases', path: '/cases', icon: '📁' },
     { name: 'Audit Log', path: '/audit', icon: '📜' },
     { name: 'Reports', path: '/reports', icon: '📥' },
+    { name: 'Integrations', path: '/integrations', icon: '🔌' },
     { name: 'Users', path: '/users', icon: '👥' },
     { name: 'Organizations', path: '/organizations', icon: '🏢' },
 ];

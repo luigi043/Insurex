@@ -221,3 +221,27 @@ export const reportClient = {
         document.body.removeChild(a);
     },
 };
+
+// --- Partner Integrations ---
+export const integrationClient = {
+    getWebhooks: async () => {
+        const response = await API.get('/partnerintegration/webhooks');
+        return response.data;
+    },
+    createWebhook: async (config: any) => {
+        const response = await API.post('/partnerintegration/webhooks', config);
+        return response.data;
+    },
+    updateWebhook: async (id: number, config: any) => {
+        const response = await API.put(`/partnerintegration/webhooks/${id}`, config);
+        return response.data;
+    },
+    rotateSecret: async (id: number) => {
+        const response = await API.post(`/partnerintegration/webhooks/${id}/rotate-secret`);
+        return response.data;
+    },
+    deleteWebhook: async (id: number) => {
+        const response = await API.delete(`/partnerintegration/webhooks/${id}`);
+        return response.data;
+    },
+};

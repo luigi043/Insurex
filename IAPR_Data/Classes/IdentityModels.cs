@@ -41,6 +41,7 @@ namespace IAPR_Data.Classes
         public DbSet<Tenant> Tenants { get; set; }
         public DbSet<Organization> Organizations { get; set; }
         public DbSet<WebhookEvent> WebhookEvents { get; set; }
+        public DbSet<PartnerWebhookConfig> PartnerWebhookConfigs { get; set; }
         public DbSet<ComplianceState> ComplianceStates { get; set; }
         public DbSet<OutboxMessage> OutboxMessages { get; set; }
         public DbSet<AuditLogEntry> AuditLog { get; set; }

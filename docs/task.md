@@ -52,10 +52,18 @@ Based on the provided documents (`Asset Protection Register - product write-up`,
 
 ### Phase 10: Advanced Intelligence & Bulk Operations
 
-- [ ] Implement Bulk Asset Import service (processing CSV/Excel via `Bulk_Import_Provider`).
-- [ ] Build Intelligence API for risk scoring and compliance trends.
-- [ ] Create Intelligence Dashboard in React with interactive data visualizations.
-- [ ] Implement OAuth2 Client Credentials for secure partner integrations.
+- [x] Implement Bulk Asset Import service (processing CSV/Excel via `Bulk_Import_Provider`).
+- [x] Build Intelligence API for risk scoring and compliance trends.
+- [x] Create Intelligence Dashboard in React with interactive data visualizations.
+- [x] Implement OAuth2 Client Credentials for secure partner integrations.
+
+### Phase 11: Webhook Ingestion & Partner Integration
+
+- [ ] Implement HMAC-SHA256 signature validation for incoming insurer webhooks.
+- [ ] Add replay protection and idempotency logic to `WebhookEventQueue`.
+- [ ] Build Partner Integration API for managing webhook endpoints and secrets.
+- [ ] Create "Integrations" management page in React.
+- [ ] Implement manual "Webhook Trigger" test utility for developers.
 
 ## Completed Tasks
 

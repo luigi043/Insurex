@@ -56,6 +56,7 @@ builder.Services.AddAuthorization();
 
 // --- 3. Core Services ---
 builder.Services.AddSingleton<WebhookEventQueue>();
+builder.Services.AddScoped<IWebhookSignatureValidator, WebhookSignatureValidator>();
 builder.Services.AddScoped<ComplianceEngine>();
 // Add other migrated services here (AuditLogger is static, but can be made a service later)
 

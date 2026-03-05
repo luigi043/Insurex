@@ -1,5 +1,6 @@
 using System;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace IAPR_Data.Classes.Webhook
 {
@@ -54,6 +55,45 @@ namespace IAPR_Data.Classes.Webhook
         {
             ReceivedAt = DateTime.UtcNow;
             Status = "Pending";
+        }
+    }
+
+    /// <summary>
+    /// Stores the webhook configuration for a partner (Insurer or Bank).
+    /// Used for signature validation (inbound) and later for notification delivery (outbound).
+    /// </summary>
+    public class PartnerWebhookConfig
+    {
+        [Key]
+        public int Id { get; set; }
+
+        [Required]
+        public int TenantId { get; set; }
+
+        [ForeignKey("TenantId")]
+        public virtual Tenant Tenant { get; set; }
+
+        /// <summary>The URL where we should send events to (for outbound sync)</summary>
+        [StringLength(500)]
+        public string TargetUrl { get; set; }
+
+        /// <summary>The shared HMAC secret used to sign/validate messages</summary>
+        [Required]
+        [StringLength(100)]
+        public string Secret { get; set; }
+
+        public bool IsActive { get; set; }
+
+        /// <summary>Comma-separated list of subscribed event types</summary>
+        public string SubscribedEvents { get; set; }
+
+        public DateTime UpdatedAt { get; set; }
+
+        public PartnerWebhookConfig()
+        {
+            IsActive = true;
+            Secret = Guid.NewGuid().ToString("N"); // Auto-generate hex secret
+            UpdatedAt = DateTime.UtcNow;
         }
     }
 }

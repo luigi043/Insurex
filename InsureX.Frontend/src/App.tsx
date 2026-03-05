@@ -4,6 +4,7 @@ import MainLayout from './components/layouts/MainLayout';
 import AddUserPage from './components/pages/AddUserPage';
 import RegisterTenantPage from './components/pages/RegisterTenantPage';
 import IntelligencePage from './components/pages/IntelligencePage';
+import IntegrationsPage from './components/pages/IntegrationsPage';
 
 import DashboardPage from './components/pages/DashboardPage';
 import AssetsPage from './components/pages/AssetsPage';
@@ -40,6 +41,7 @@ const App: React.FC = () => {
           <Route path="compliance" element={<CompliancePage />} />
           <Route path="cases" element={<CasesPage />} />
           <Route path="intelligence" element={<IntelligencePage />} />
+          <Route path="integrations" element={<IntegrationsPage />} />
           <Route path="audit" element={<AuditPage />} />
           <Route path="users" element={<UsersPage />} />
           <Route path="users/new" element={<AddUserPage />} />
