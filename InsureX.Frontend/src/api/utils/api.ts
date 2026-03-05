@@ -10,8 +10,11 @@ export interface ErrorResponse {
 }
 
 export const API: AxiosInstance = axios.create({
-    // Targeting the IAPR_API endpoint (placeholder URL until dev server is specified)
-    baseURL: import.meta.env.VITE_API_URL || (import.meta.env.PROD ? '/api' : 'http://localhost:5000/api'),
+    // Always use /api — Vite proxies this to http://localhost:5062 in dev,
+    // and nginx proxies it to the API container in production.
+    // Previously this was hardcoded to 'http://localhost:5000/api' in dev which
+    // bypassed the Vite proxy entirely and hit the wrong port.
+    baseURL: import.meta.env.VITE_API_URL || '/api',
     timeout: 15000,
     headers: {
         'Content-Type': 'application/json',
@@ -50,6 +53,3 @@ API.interceptors.response.use(
         return Promise.reject(error);
     }
 );
-
-
-
