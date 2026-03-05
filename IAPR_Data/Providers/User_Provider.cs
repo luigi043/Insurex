@@ -106,13 +106,15 @@ namespace IAPR_Data.Providers
         private void AuthenticateUser(string userName, string password, out C.Common.CurrentUser p_User)
         {
             p_User = null;
-            using (var dbContext = new C.ApplicationDbContext())
+            using (var dbContext = C.ApplicationDbContext.Create(System.Configuration.ConfigurationManager.ConnectionStrings["connIAPRData"].ToString()))
             {
-                var userStore = new UserStore<C.ApplicationUser>(dbContext);
-                using (var userManager = new UserManager<C.ApplicationUser>(userStore))
+                var user = dbContext.Users.FirstOrDefault(u => u.UserName == userName);
+                if (user != null)
                 {
-                    var user = userManager.Find(userName, password);
-                    if (user != null)
+                    var hasher = new PasswordHasher<C.ApplicationUser>();
+                    var result = hasher.VerifyHashedPassword(user, user.PasswordHash, password);
+                    
+                    if (result == PasswordVerificationResult.Success || result == PasswordVerificationResult.SuccessRehashNeeded)
                     {
                         p_User = new C.Common.CurrentUser
                         {
@@ -166,21 +168,18 @@ namespace IAPR_Data.Providers
 
         public bool ChangePassword(int iUser_Id, string vcUsername, string vcPassword)
         {
-            using (var dbContext = new C.ApplicationDbContext())
+            using (var dbContext = C.ApplicationDbContext.Create(System.Configuration.ConfigurationManager.ConnectionStrings["connIAPRData"].ToString()))
             {
-                var userStore = new UserStore<C.ApplicationUser>(dbContext);
-                using (var userManager = new UserManager<C.ApplicationUser>(userStore))
+                var user = dbContext.Users.FirstOrDefault(u => u.UserName == vcUsername);
+                if (user != null)
                 {
-                    var user = userManager.FindByName(vcUsername);
-                    if (user != null)
-                    {
-                        userManager.RemovePassword(user.Id);
-                        var result = userManager.AddPassword(user.Id, vcPassword);
-                        return result.Succeeded;
-                    }
+                    var hasher = new PasswordHasher<C.ApplicationUser>();
+                    user.PasswordHash = hasher.HashPassword(user, vcPassword);
+                    dbContext.SaveChanges();
+                    return true;
                 }
+                return false;
             }
-            return false;
         }
 
         //public C.Common.CurrentUser GetCurrentUser()

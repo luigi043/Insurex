@@ -84,7 +84,7 @@ namespace IAPR_Data.Services
 
         private void PublishPending()
         {
-            using (var db = ApplicationDbContext.Create())
+            using (var db = ApplicationDbContext.Create(System.Configuration.ConfigurationManager.ConnectionStrings["connIAPRData"].ToString()))
             {
                 // Fetch up to 50 unpublished messages ordered by creation time
                 var pending = db.OutboxMessages

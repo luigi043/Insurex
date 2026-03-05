@@ -1,9 +1,11 @@
 using IAPR_Data.Classes;
 using IAPR_Data.Services;
+using IAPR_Data.Providers;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Net;
+using System.Data;
 
 namespace InsureX.Api.Controllers;
 
@@ -14,11 +16,13 @@ public class ComplianceController : ControllerBase
 {
     private readonly ApplicationDbContext _db;
     private readonly ComplianceEngine _complianceEngine;
+    private readonly Daschboard_Provider _dashboardProvider;
 
-    public ComplianceController(ApplicationDbContext db, ComplianceEngine complianceEngine)
+    public ComplianceController(ApplicationDbContext db, ComplianceEngine complianceEngine, Daschboard_Provider dashboardProvider)
     {
         _db = db;
         _complianceEngine = complianceEngine;
+        _dashboardProvider = dashboardProvider;
     }
 
     // GET /api/compliance/states
@@ -156,14 +160,14 @@ public class ComplianceController : ControllerBase
     public async Task<ActionResult<PagedResult<AuditLogEntry>>> GetAuditLog([FromQuery] int page = 1, [FromQuery] int pageSize = 20)
     {
         var tenantId = GetTenantId();
-        var query = _db.AuditLogEntries.AsQueryable();
+        var query = _db.AuditLog.AsQueryable();
 
         if (tenantId.HasValue)
             query = query.Where(a => a.TenantId == tenantId);
 
         var total = await query.CountAsync();
         var items = await query
-            .OrderByDescending(a => a.Timestamp)
+            .OrderByDescending(a => a.OccurredAt)
             .Skip((page - 1) * pageSize)
             .Take(pageSize)
             .ToListAsync();

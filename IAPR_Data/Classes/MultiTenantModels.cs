@@ -18,6 +18,9 @@ namespace IAPR_Data.Classes
         [StringLength(100)]
         public string DomainKey { get; set; }
 
+        [StringLength(50)]
+        public string Type { get; set; } // Financer | Insurer | Broker | Admin
+
         public DateTime CreatedAt { get; set; }
 
         public bool IsActive { get; set; }

@@ -17,7 +17,7 @@ public class AssetController : ControllerBase
         try
         {
             int partnerId = GetClaim("iPartner_Id");
-            var prov = new P.Asset_Provider();
+            var prov = new P.Generic_Asset_Provider();
             var ds = prov.Find_Assets(partnerId, q ?? "");
 
             if (ds?.Tables.Count > 0)
@@ -35,7 +35,7 @@ public class AssetController : ControllerBase
         try
         {
             int partnerId = GetClaim("iPartner_Id");
-            var prov = new P.Asset_Provider();
+            var prov = new P.Generic_Asset_Provider();
             var ds = prov.Get_Unconfirmed_Insurance(partnerId);
 
             if (ds?.Tables.Count > 0)
@@ -52,7 +52,7 @@ public class AssetController : ControllerBase
     {
         try
         {
-            var prov = new P.Asset_Provider();
+            var prov = new P.Generic_Asset_Provider();
             prov.Update_Finance_Value(assetId, request.NewValue);
             return Ok(new { message = "Finance value updated" });
         }

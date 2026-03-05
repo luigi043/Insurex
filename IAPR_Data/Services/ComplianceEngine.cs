@@ -247,7 +247,7 @@ namespace IAPR_Data.Services
                     return new { 
                         RiskType = "ExpiringPolicy", 
                         Severity = daysToExpiry <= 7 ? "High" : "Medium",
-                        Message = $"Policy {policy.PolicyNumber} expires in {Math.Ceiling(daysToExpiry)} days.",
+                        Message = $"Policy {policy.vcPolicy_Number} expires in {Math.Ceiling(daysToExpiry)} days.",
                         AssetIdentifier = asset.AssetIdentifier
                     };
                 }

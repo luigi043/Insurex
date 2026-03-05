@@ -1,5 +1,6 @@
 using IAPR_Data.Classes;
 using IAPR_Data.Services;
+using IAPR_Data.Providers;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -21,7 +22,7 @@ builder.Services.AddScoped<ApplicationDbContext>(p =>
 
 // --- Register Core Services & Providers ---
 builder.Services.AddScoped<ComplianceEngine>();
-builder.Services.AddScoped<DashboardProvider>();
+builder.Services.AddScoped<Daschboard_Provider>();
 builder.Services.AddScoped<User_Provider>();
 
 builder.Services.AddIdentity<ApplicationUser, IdentityRole>()

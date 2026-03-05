@@ -144,8 +144,32 @@ export const adminClient = {
         const response = await API.get<PaginatedResponse<User>>('/admin/users', { params });
         return response.data;
     },
+    createUser: async (user: Partial<User>) => {
+        const response = await API.post('/admin/users', user);
+        return response.data;
+    },
+    updateUser: async (id: string, user: Partial<User>) => {
+        const response = await API.put(`/admin/users/${id}`, user);
+        return response.data;
+    },
     getTenants: async (params: AdminFilterParams): Promise<PaginatedResponse<Tenant>> => {
         const response = await API.get<PaginatedResponse<Tenant>>('/admin/tenants', { params });
+        return response.data;
+    },
+    createTenant: async (tenant: Partial<Tenant>) => {
+        const response = await API.post('/admin/tenants', tenant);
+        return response.data;
+    },
+    createFinancer: async (tenant: Partial<Tenant>) => {
+        const response = await API.post('/admin/tenants/financer', tenant);
+        return response.data;
+    },
+    createInsurer: async (tenant: Partial<Tenant>) => {
+        const response = await API.post('/admin/tenants/insurer', tenant);
+        return response.data;
+    },
+    updateTenant: async (id: number, tenant: Partial<Tenant>) => {
+        const response = await API.put(`/admin/tenants/${id}`, tenant);
         return response.data;
     },
 };

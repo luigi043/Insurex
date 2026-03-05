@@ -16,6 +16,9 @@ namespace IAPR_Data.Classes.Policy
         
         public int iPolicy_Type_Id { get; set; }
         public int iPolicy_Payment_Frequency_Type_Id { get; set; }
+        public int? AssetId { get; set; }
+        public string? Status { get; set; }
+        public DateTime ExpiryDate { get; set; }
         public Policy_Holder_Consumer policy_Holder_Individual { get; set; }
         public Policy_Holder_Business policy_Holder_Business { get; set; }
     }

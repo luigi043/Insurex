@@ -22,19 +22,19 @@ public class ReportController : ControllerBase
     public async Task<IActionResult> GetAuditExport()
     {
         var tenantId = GetTenantId();
-        var query = _db.AuditLogEntries.AsQueryable();
+        var query = _db.AuditLog.AsQueryable();
 
         if (tenantId.HasValue)
             query = query.Where(a => a.TenantId == tenantId);
 
-        var logs = await query.OrderByDescending(a => a.Timestamp).Take(1000).ToListAsync();
+        var logs = await query.OrderByDescending(a => a.OccurredAt).Take(1000).ToListAsync();
 
         var csv = new StringBuilder();
         csv.AppendLine("Timestamp,Entity,Action,Actor,CorrelationId,Notes");
 
         foreach (var log in logs)
         {
-            csv.AppendLine($"{log.Timestamp:yyyy-MM-dd HH:mm:ss},{log.EntityName},{log.Action},{log.ActorName},{log.CorrelationId},\"{log.Notes?.Replace("\"", "'")}\"");
+            csv.AppendLine($"{log.OccurredAt:yyyy-MM-dd HH:mm:ss},{log.EntityName},{log.Action},{log.ActorName},{log.CorrelationId},\"{log.Notes?.Replace("\"", "'")}\"");
         }
 
         return File(Encoding.UTF8.GetBytes(csv.ToString()), "text/csv", $"AuditLog_Export_{DateTime.UtcNow:yyyyMMdd}.csv");

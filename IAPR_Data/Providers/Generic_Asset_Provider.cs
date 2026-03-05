@@ -357,6 +357,21 @@ namespace IAPR_Data.Providers
         }
         #endregion
 
+        #region Shims for Modernized API
+        public DataSet Find_Assets(int partnerId, string q)
+        {
+             return new DataSet(); // Return empty for now
+        }
+        public DataSet Get_Unconfirmed_Insurance(int partnerId)
+        {
+             return new DataSet(); // Return empty for now
+        }
+        public void Update_Finance_Value(int assetId, decimal newValue)
+        {
+             // Update logic would go here
+        }
+        #endregion
+
     }
 }
 //private DataTable ConvertAssetDetailsTODataTable(IEnumerable<C.AssetTypes.UpdateAssetFinanceValueRequest.AssetDetails> policy_details, int trasactionId)

@@ -569,6 +569,24 @@ namespace IAPR_Data.Providers
         }
 
         #endregion
+        #region Shims for Modernized API
+        public DataSet Get_Policy_Transactions(int partnerId)
+        {
+             return new DataSet(); // Return empty for now
+        }
+        public DataSet Get_Pending_Policy_Confirmations(int partnerId)
+        {
+             return new DataSet(); // Return empty for now
+        }
+        public void Confirm_Policy_Cover(int policyId)
+        {
+             Save_PolicyStatus(policyId, 1, DateTime.Now.ToString("yyyy-MM-dd")); // 1 = Active/Confirmed
+        }
+        public void Reject_Policy_Cover(int policyId)
+        {
+             Save_PolicyStatus(policyId, 2, DateTime.Now.ToString("yyyy-MM-dd")); // 2 = Rejected/Cancelled
+        }
+        #endregion
         #region private
         #endregion
     }

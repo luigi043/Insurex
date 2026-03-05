@@ -18,7 +18,8 @@ public class BillingController : ControllerBase
         {
             int partnerId = GetClaim("iPartner_Id");
             var prov = new P.Billing_Provider();
-            var ds = prov.Get_Partner_Invoices(partnerId);
+            // Using GetInvoiceTotalsForPartnerForPeriod as a shim for Get_Partner_Invoices
+            var ds = prov.GetInvoiceTotalsForPartnerForPeriod(partnerId, 0, DateTime.Now.Month, DateTime.Now.Year);
 
             if (ds?.Tables.Count > 0)
                 return Ok(new { data = DataTableToList(ds.Tables[0]) });
@@ -36,7 +37,7 @@ public class BillingController : ControllerBase
         try
         {
             var prov = new P.Billing_Provider();
-            prov.Add_New_Charge(request.PartnerId, request.ChargeType, request.Amount, request.Description);
+            prov.Save_New_Partner_Charge(request.ChargeType, request.Description, request.Amount, false, 0, 0, DateTime.Now.ToString("yyyy-MM-dd"), "");
             return Ok(new { message = "Charge added successfully" });
         }
         catch (Exception ex) { return StatusCode(500, new { message = ex.Message }); }
@@ -50,7 +51,7 @@ public class BillingController : ControllerBase
         try
         {
             var prov = new P.Billing_Provider();
-            prov.Update_Charge(chargeId, request.Amount);
+            prov.Update_Partner_Charge(chargeId, request.Amount, DateTime.Now.ToString("yyyy-MM-dd"), "");
             return Ok(new { message = "Charge updated successfully" });
         }
         catch (Exception ex) { return StatusCode(500, new { message = ex.Message }); }

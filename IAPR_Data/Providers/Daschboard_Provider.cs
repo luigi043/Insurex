@@ -482,6 +482,13 @@ namespace IAPR_Data.Providers
 
         }
 
+        public DataSet Get_Insurer_Landing_DashboardTable(int iInsurer_Id)
+        {
+            // Shim: Return a dataset with empty tables to prevent null refs and count errors in controller
+            var ds = new DataSet();
+            for (int i = 0; i < 6; i++) ds.Tables.Add(new DataTable());
+            return ds;
+        }
     }
 }
 

@@ -32,7 +32,7 @@ public class AuthController : ControllerBase
         {
             // Try legacy provider first
             var userProv = new P.User_Provider();
-            var legacyUser = userProv.AuthenticateUser(request.UserName, request.Password);
+            var legacyUser = userProv.ValidateUser(request.UserName, request.Password);
 
             if (legacyUser != null)
             {

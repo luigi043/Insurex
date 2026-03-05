@@ -34,7 +34,7 @@ namespace IAPR_Data.Services
             if (string.IsNullOrWhiteSpace(clientId) || string.IsNullOrWhiteSpace(clientSecret))
                 return null;
 
-            using (var db = ApplicationDbContext.Create())
+            using (var db = ApplicationDbContext.Create(System.Configuration.ConfigurationManager.ConnectionStrings["connIAPRData"].ToString()))
             {
                 var client = db.ApiClients
                     .FirstOrDefault(c => c.ClientId == clientId && c.IsActive && c.RevokedAt == null);
@@ -94,7 +94,7 @@ namespace IAPR_Data.Services
             var tokenHash = Hash(rawToken);
             var now = DateTime.UtcNow;
 
-            using (var db = ApplicationDbContext.Create())
+            using (var db = ApplicationDbContext.Create(System.Configuration.ConfigurationManager.ConnectionStrings["connIAPRData"].ToString()))
             {
                 var issued = db.IssuedTokens.FirstOrDefault(t =>
                     t.TokenHash == tokenHash &&

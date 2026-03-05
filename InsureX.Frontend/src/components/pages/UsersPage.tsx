@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { adminClient } from '../../api/clients';
 import type { User } from '../../api/types/Admin';
 import { DataTable, StatusBadge, Pagination } from '../shared';
@@ -8,6 +9,7 @@ import {
 } from 'lucide-react';
 
 const UsersPage: React.FC = () => {
+    const navigate = useNavigate();
     const [data, setData] = useState<User[]>([]);
     const [totalCount, setTotalCount] = useState(0);
     const [page, setPage] = useState(1);
@@ -100,6 +102,19 @@ const UsersPage: React.FC = () => {
             header: 'Status', 
             key: 'isActive',
             render: (u: User) => <StatusBadge status={u.isActive ? 'Active' : 'Inactive'} type="compliance" />
+        },
+        {
+            header: 'Actions',
+            key: 'actions',
+            render: (u: User) => (
+                <button 
+                    onClick={() => navigate(`/users/${u.id}/edit`)}
+                    className="p-2 text-gray-400 hover:text-blue-600 hover:bg-blue-50 rounded-xl transition-all"
+                    title="Edit User"
+                >
+                    <AtSign className="w-4 h-4" /> {/* Or Edit icon, using AtSign for now as it exists */}
+                </button>
+            )
         }
     ];
 
@@ -114,7 +129,10 @@ const UsersPage: React.FC = () => {
                     <p className="text-gray-500 mt-1 font-medium">Manage system access, roles, and organizational assignments.</p>
                 </div>
                 
-                <button className="flex items-center gap-2 px-6 py-3 bg-blue-600 text-white rounded-2xl text-sm font-black uppercase hover:bg-blue-700 transition-all active:scale-95 shadow-xl shadow-blue-100">
+                <button 
+                    onClick={() => navigate('/users/new')}
+                    className="flex items-center gap-2 px-6 py-3 bg-blue-600 text-white rounded-2xl text-sm font-black uppercase hover:bg-blue-700 transition-all active:scale-95 shadow-xl shadow-blue-100"
+                >
                     <UserPlus className="w-4 h-4" /> Add New User
                 </button>
             </header>

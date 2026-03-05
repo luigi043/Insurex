@@ -42,7 +42,7 @@ namespace IAPR_Data.Services
                 ActorName     = actorName     ?? "System",
                 TenantId      = tenantId,
                 Notes         = notes,
-                Timestamp     = DateTime.UtcNow
+                OccurredAt     = DateTime.UtcNow
             };
 
             db.AuditLog.Add(entry);

@@ -1,6 +1,9 @@
 import React from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import MainLayout from './components/layouts/MainLayout';
+import AddUserPage from './components/pages/AddUserPage';
+import RegisterTenantPage from './components/pages/RegisterTenantPage';
+
 import DashboardPage from './components/pages/DashboardPage';
 import AssetsPage from './components/pages/AssetsPage';
 import AssetDetailPage from './components/pages/AssetDetailPage';
@@ -37,7 +40,11 @@ const App: React.FC = () => {
           <Route path="cases" element={<CasesPage />} />
           <Route path="audit" element={<AuditPage />} />
           <Route path="users" element={<UsersPage />} />
-          <Route path="organizations" element={<TenantsPage />} />
+          <Route path="users/new" element={<AddUserPage />} />
+          <Route path="users/:id/edit" element={<AddUserPage />} />
+          <Route path="tenants" element={<TenantsPage />} />
+          <Route path="tenants/new" element={<RegisterTenantPage />} />
+          <Route path="tenants/:id/edit" element={<RegisterTenantPage />} />
         </Route>
 
         {/* Fallback */}

@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { adminClient } from '../../api/clients';
 import type { Tenant } from '../../api/types/Admin';
 import { DataTable, StatusBadge, Pagination } from '../shared';
@@ -8,6 +9,7 @@ import {
 } from 'lucide-react';
 
 const TenantsPage: React.FC = () => {
+    const navigate = useNavigate();
     const [data, setData] = useState<Tenant[]>([]);
     const [totalCount, setTotalCount] = useState(0);
     const [page, setPage] = useState(1);
@@ -92,6 +94,19 @@ const TenantsPage: React.FC = () => {
                     )}
                 </div>
             )
+        },
+        {
+            header: 'Actions',
+            key: 'actions',
+            render: (t: Tenant) => (
+                <button 
+                    onClick={() => navigate(`/tenants/${t.id}/edit`)}
+                    className="p-2 text-gray-400 hover:text-blue-600 hover:bg-blue-50 rounded-xl transition-all"
+                    title="Edit Entity"
+                >
+                    <Plus className="w-4 h-4" /> {/* Or Edit icon */}
+                </button>
+            )
         }
     ];
 
@@ -107,7 +122,10 @@ const TenantsPage: React.FC = () => {
                     <p className="text-gray-500 mt-1 font-medium">Global directory of financial entities, insurers, and brokerage networks.</p>
                 </div>
                 
-                <button className="flex items-center gap-2 px-8 py-4 bg-gray-900 text-white rounded-2xl text-xs font-black uppercase hover:bg-blue-600 transition-all active:scale-95 shadow-2xl shadow-gray-200">
+                <button 
+                    onClick={() => navigate('/tenants/new')}
+                    className="flex items-center gap-2 px-8 py-4 bg-gray-900 text-white rounded-2xl text-xs font-black uppercase hover:bg-blue-600 transition-all active:scale-95 shadow-2xl shadow-gray-200"
+                >
                     <Plus className="w-4 h-4" /> Register Entity
                 </button>
             </header>

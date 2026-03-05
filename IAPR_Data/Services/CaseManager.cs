@@ -136,7 +136,7 @@ namespace IAPR_Data.Services
         {
             try
             {
-                using (var db = ApplicationDbContext.Create())
+                using (var db = ApplicationDbContext.Create(System.Configuration.ConfigurationManager.ConnectionStrings["connIAPRData"].ToString()))
                 using (var tx = db.Database.BeginTransaction())
                 {
                     var cas = db.Cases.Find(caseId);
@@ -205,7 +205,7 @@ namespace IAPR_Data.Services
             var openStatuses = new[] { CaseStatus.Open.ToString(), CaseStatus.InProgress.ToString() };
             var now = DateTime.UtcNow;
 
-            using (var db = ApplicationDbContext.Create())
+            using (var db = ApplicationDbContext.Create(System.Configuration.ConfigurationManager.ConnectionStrings["connIAPRData"].ToString()))
             using (var tx = db.Database.BeginTransaction())
             {
                 var overdue = db.Cases
