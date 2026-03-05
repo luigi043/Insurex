@@ -1,12 +1,13 @@
-﻿using System;
+using IAPR_Data.Utils;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Configuration;
 using System.Data;
-using System.Data.SqlClient;
-using Microsoft.ApplicationBlocks.Data;
+using Microsoft.Data.SqlClient;
+
 using C = IAPR_Data.Classes;
 using U = IAPR_Data.Utils;
 
@@ -410,4 +411,12 @@ namespace IAPR_Data.Providers
 
     }
 }
+
+
+
+
+
+
+
+
 

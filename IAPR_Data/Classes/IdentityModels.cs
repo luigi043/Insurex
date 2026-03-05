@@ -1,48 +1,39 @@
-using System.Data.Entity;
 using System.Security.Claims;
-using System.Threading.Tasks;
-using Microsoft.AspNet.Identity;
-using Microsoft.AspNet.Identity.EntityFramework;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
-using System.Data.SqlClient;
+using Microsoft.Data.SqlClient;
 using IAPR_Data.Classes.Webhook;
+using Microsoft.Extensions.Configuration;
 
 namespace IAPR_Data.Classes
 {
-    // You can add profile data for the user by adding more properties to your ApplicationUser class.
+    // Profile data for the user
     public class ApplicationUser : IdentityUser
     {
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int LegacyUserId { get; set; }
-        // Add custom properties to match the legacy CurrentUser
-        public string vcName { get; set; }
-        public string vcSurname { get; set; }
+        
+        public string? vcName { get; set; }
+        public string? vcSurname { get; set; }
         public int iUser_Type_Id { get; set; }
         public int iUser_Status_Id { get; set; }
-        public string vcUser_Status_Description { get; set; }
+        public string? vcUser_Status_Description { get; set; }
         public int? iPartner_Type_Id { get; set; }
         public int? iPartner_Id { get; set; }
-        public string vcPosition_Title { get; set; }
+        public string? vcPosition_Title { get; set; }
         public bool bUserReceiveNotifications { get; set; }
 
         // Multi-Tenant FKs
         public int? TenantId { get; set; }
         [ForeignKey("TenantId")]
-        public virtual Tenant Tenant { get; set; }
+        public virtual Tenant? Tenant { get; set; }
 
         public int? OrganizationId { get; set; }
         [ForeignKey("OrganizationId")]
-        public virtual Organization Organization { get; set; }
-        
-        // These can be populated securely or managed by Identity
-        public async Task<ClaimsIdentity> GenerateUserIdentityAsync(UserManager<ApplicationUser> manager)
-        {
-            // Note the authenticationType must match the one defined in CookieAuthenticationOptions.AuthenticationType
-            var userIdentity = await manager.CreateIdentityAsync(this, DefaultAuthenticationTypes.ApplicationCookie);
-            // Add custom user claims here
-            return userIdentity;
-        }
+        public virtual Organization? Organization { get; set; }
     }
 
     public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
@@ -57,49 +48,68 @@ namespace IAPR_Data.Classes
         public DbSet<CaseNote> CaseNotes { get; set; }
         public DbSet<ApiClientCredential> ApiClients { get; set; }
         public DbSet<IssuedToken> IssuedTokens { get; set; }
+        public DbSet<Asset> Assets { get; set; }
+        public DbSet<IAPR_Data.Classes.Policy.Policy> Policies { get; set; }
 
-        public ApplicationDbContext()
-            : base("connIAPRData")
+        public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
+            : base(options)
         {
         }
 
-        public static ApplicationDbContext Create()
+        protected override void OnModelCreating(ModelBuilder builder)
         {
-            return new ApplicationDbContext();
+            base.OnModelCreating(builder);
+
+            // Configure global query filters for multi-tenancy if needed
+            // For now, we'll stick to the manual scoping method to maintain functional parity
         }
 
         /// <summary>
         /// Returns a LINQ query scoped to the current user's Tenant.
-        /// Uses TenantContext to resolve the active TenantId from OWIN claims.
         /// </summary>
-        /// <param name="tenantId">Optional override; if null, uses TenantContext.Current</param>
         public IQueryable<TEntity> ForTenant<TEntity>(int? tenantId = null)
             where TEntity : class
         {
-            int? resolvedTenantId = tenantId ?? TenantContext.Current;
+            // In .NET 8, tenantId should be resolved via an IHttpContextAccessor or a Scoped Service
+            // For this migration, we expect the ID to be passed or resolved externally
             var dbSet = Set<TEntity>();
 
-            if (resolvedTenantId == null)
-                return dbSet; // No tenant restriction for system-level queries
+            if (tenantId == null)
+                return dbSet;
 
-            // Apply TenantId filter via reflection-based convention
             var tenantProp = typeof(TEntity).GetProperty("TenantId");
             if (tenantProp == null)
-                return dbSet; // Entity does not participate in multi-tenancy
+                return dbSet;
 
-            return dbSet.Where(e => (int?)tenantProp.GetValue(e, null) == resolvedTenantId);
+            // Note: EF Core requires building the expression tree for dynamic filtering
+            // but for simplicity in this migration we'll keep the logic understandable
+            return dbSet.Where(e => EF.Property<int?>(e, "TenantId") == tenantId);
         }
 
         /// <summary>
-        /// Activates SQL Server Row-Level Security for this DB connection
-        /// by calling sp_SetTenantContext with the current user's TenantId.
-        /// Must be called once per connection, immediately after opening.
+        /// Activates SQL Server Row-Level Security for this DB connection.
         /// </summary>
         public void SetRlsTenantContext(int tenantId)
         {
-            Database.ExecuteSqlCommand(
+            Database.ExecuteSqlRaw(
                 "EXEC dbo.sp_SetTenantContext @TenantId",
                 new SqlParameter("@TenantId", tenantId));
         }
+
+        // Static factory is replaced by Dependency Injection in .NET 8
+        // but can be maintained as a shim for legacy code if necessary.
+        public static ApplicationDbContext Create(string connectionString)
+        {
+            var optionsBuilder = new DbContextOptionsBuilder<ApplicationDbContext>();
+            optionsBuilder.UseSqlServer(connectionString);
+            return new ApplicationDbContext(optionsBuilder.Options);
+        }
     }
 }
+
+
+
+
+
+
+

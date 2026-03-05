@@ -169,7 +169,7 @@ namespace IAPR_Data.Services
             // Try to resolve as a template name — look in MailTemplates folder
             try
             {
-                var basePath = System.Web.Hosting.HostingEnvironment.ApplicationPhysicalPath;
+                var basePath = AppDomain.CurrentDomain.BaseDirectory;
                 if (!string.IsNullOrEmpty(basePath))
                 {
                     var filePath = System.IO.Path.Combine(basePath, "MailTemplates", keyOrBody + ".html");
@@ -188,3 +188,10 @@ namespace IAPR_Data.Services
         }
     }
 }
+
+
+
+
+
+
+

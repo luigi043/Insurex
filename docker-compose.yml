@@ -12,6 +12,18 @@ services:
     volumes:
       - mssql-data:/var/opt/mssql
 
+  api:
+    build:
+      context: .
+      dockerfile: InsureX.Api/Dockerfile
+    container_name: insurex-api
+    ports:
+      - "5000:8080"
+    depends_on:
+      - db
+    environment:
+      - ConnectionStrings__DefaultConnection=Server=db;Database=IAPR_Data;User Id=sa;Password=YourStrong!Passw0rd;TrustServerCertificate=True
+
   frontend:
     build:
       context: ./InsureX.Frontend
@@ -20,9 +32,9 @@ services:
     ports:
       - "80:80"
     depends_on:
-      - db
+      - api
     environment:
-      - VITE_API_URL=http://localhost:12857/api/compliance # Pointing to local dev host for now
+      - VITE_API_URL=http://localhost:5000/api
 
 volumes:
   mssql-data:

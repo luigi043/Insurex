@@ -174,3 +174,10 @@ namespace IAPR_Data.Services
             Scopes != null && Scopes.Contains(scope, StringComparer.OrdinalIgnoreCase);
     }
 }
+
+
+
+
+
+
+

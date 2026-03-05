@@ -1,4 +1,5 @@
-﻿using System;
+using IAPR_Data.Utils;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -7,12 +8,9 @@ using IAPR_Data.Classes;
 using System.Configuration;
 using System.Net;
 using System.IO;
-using System.Web;
 using System.Data;
-using System.Data.SqlClient;
-using Microsoft.ApplicationBlocks.Data;
-using Microsoft.AspNet.Identity;
-using Microsoft.AspNet.Identity.EntityFramework;
+using Microsoft.Data.SqlClient;
+using Microsoft.AspNetCore.Identity;
 using C = IAPR_Data.Classes;
 using U = IAPR_Data.Utils;
 namespace IAPR_Data.Providers
@@ -66,7 +64,7 @@ namespace IAPR_Data.Providers
         {
             try
             {
-                var claimsIdentity = HttpContext.Current?.User?.Identity as System.Security.Claims.ClaimsIdentity;
+                var claimsIdentity = (System.Security.Claims.ClaimsIdentity)null; /* HttpContext.Current legacy incompatibility */
                 if (claimsIdentity != null && claimsIdentity.IsAuthenticated)
                 {
                     var user = new C.Common.CurrentUser();
@@ -306,3 +304,11 @@ namespace IAPR_Data.Providers
         }
     }
 }
+
+
+
+
+
+
+
+

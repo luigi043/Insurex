@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -24,3 +24,10 @@ namespace IAPR_Data.Classes.Policy
         public Common.Addresses.Postal_Address postal_Address { get; set; }
     }
 }
+
+
+
+
+
+
+

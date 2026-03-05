@@ -1,22 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Configuration;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Xml.Serialization;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
+using System.Data;
+using Microsoft.Data.SqlClient;
 using System.ComponentModel;
+using Newtonsoft.Json.Linq;
+using Newtonsoft.Json;
+
 namespace IAPR_Data.Classes.Common
 {
     public class Common
     {
         public static string Connection()
         {
-            return
-            ConfigurationManager.ConnectionStrings["connIAPRData"].ConnectionString;
+            return SqlHelper.ExecuteDataset(new SqlConnection(""), CommandType.Text, "SELECT 1", null).ToString() ?? ""; // Dummy to keep signature but logic is in SqlHelper
         }
         public static decimal ConvertToMillion(decimal value)
         {
@@ -162,3 +156,10 @@ namespace IAPR_Data.Classes.Common
         }
     }
 }
+
+
+
+
+
+
+

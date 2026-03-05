@@ -7,10 +7,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IAPRAPI", "IAPR_API\IAPRAPI
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IAPR_Data", "IAPR_Data\IAPR_Data.csproj", "{E85781C2-8ADE-4376-B3CE-343336B455DC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IAPR_Web", "IAPR_Web\IAPR_Web.csproj", "{C0ED3D26-C96D-4CD0-87FA-08D6035BDE48}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "InsurexService", "InsurexService\InsurexService.csproj", "{4DFAD12A-55D9-408E-956D-04A78FB0C838}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -25,14 +21,6 @@ Global
 		{E85781C2-8ADE-4376-B3CE-343336B455DC}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E85781C2-8ADE-4376-B3CE-343336B455DC}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E85781C2-8ADE-4376-B3CE-343336B455DC}.Release|Any CPU.Build.0 = Release|Any CPU
-		{C0ED3D26-C96D-4CD0-87FA-08D6035BDE48}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{C0ED3D26-C96D-4CD0-87FA-08D6035BDE48}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{C0ED3D26-C96D-4CD0-87FA-08D6035BDE48}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{C0ED3D26-C96D-4CD0-87FA-08D6035BDE48}.Release|Any CPU.Build.0 = Release|Any CPU
-		{4DFAD12A-55D9-408E-956D-04A78FB0C838}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{4DFAD12A-55D9-408E-956D-04A78FB0C838}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{4DFAD12A-55D9-408E-956D-04A78FB0C838}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{4DFAD12A-55D9-408E-956D-04A78FB0C838}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -1,4 +1,5 @@
-﻿using System;
+using IAPR_Data.Utils;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -9,8 +10,8 @@ using System.Net;
 using System.Text;
 using System.IO;
 using System.Data;
-using System.Data.SqlClient;
-using Microsoft.ApplicationBlocks.Data;
+using Microsoft.Data.SqlClient;
+
 using System.Net;
 using System.Net.Mail;
 using U = IAPR_Data.Utils;
@@ -365,7 +366,7 @@ namespace IAPR_Data.Providers
                 switch (messageType)
                 {
                     case "NewUser":
-                        using (StreamReader reader = new StreamReader(System.Web.Hosting.HostingEnvironment.ApplicationPhysicalPath + "\\MailTemplates\\NewUser.html"))//System.Web.HttpContext.Current.Server.MapPath("~/NewRegistration.html")))
+                        using (StreamReader reader = new StreamReader(AppDomain.CurrentDomain.BaseDirectory + "\\MailTemplates\\NewUser.html"))//System.Web.// ((System.Web.HttpContext)null) /* HttpContext.Current legacy */ /* Legacy incompatibility */.Server.MapPath("~/NewRegistration.html")))
                         {
                             messageBody.Append(reader.ReadToEnd());
                         }
@@ -373,7 +374,7 @@ namespace IAPR_Data.Providers
                         break;
                     case "CustomerConfirmPolicyDetails":
 
-                        using (StreamReader reader = new StreamReader(System.Web.Hosting.HostingEnvironment.ApplicationPhysicalPath + "\\MailTemplates\\CustomerConfirmPolicyDetails.html"))//System.Web.HttpContext.Current.Server.MapPath("~/NewRegistration.html")))
+                        using (StreamReader reader = new StreamReader(AppDomain.CurrentDomain.BaseDirectory + "\\MailTemplates\\CustomerConfirmPolicyDetails.html"))//System.Web.// ((System.Web.HttpContext)null) /* HttpContext.Current legacy */ /* Legacy incompatibility */.Server.MapPath("~/NewRegistration.html")))
                         {
                             messageBody.Append(reader.ReadToEnd());
                         }
@@ -381,7 +382,7 @@ namespace IAPR_Data.Providers
                         break;
                     case "CustomerConfirmPolicyDetailsAfterRejection":
 
-                        using (StreamReader reader = new StreamReader(System.Web.Hosting.HostingEnvironment.ApplicationPhysicalPath + "\\MailTemplates\\CustomerConfirmPolicyDetailsAFterRejection.html"))//System.Web.HttpContext.Current.Server.MapPath("~/NewRegistration.html")))
+                        using (StreamReader reader = new StreamReader(AppDomain.CurrentDomain.BaseDirectory + "\\MailTemplates\\CustomerConfirmPolicyDetailsAFterRejection.html"))//System.Web.// ((System.Web.HttpContext)null) /* HttpContext.Current legacy */ /* Legacy incompatibility */.Server.MapPath("~/NewRegistration.html")))
                         {
                             messageBody.Append(reader.ReadToEnd());
                         }
@@ -390,7 +391,7 @@ namespace IAPR_Data.Providers
 
                     case "CustomerNonPaymentPersonal":
 
-                        using (StreamReader reader = new StreamReader(System.Web.Hosting.HostingEnvironment.ApplicationPhysicalPath + "\\MailTemplates\\CustomerNonPaymentPersonal_Notification.html"))//System.Web.HttpContext.Current.Server.MapPath("~/NewRegistration.html")))
+                        using (StreamReader reader = new StreamReader(AppDomain.CurrentDomain.BaseDirectory + "\\MailTemplates\\CustomerNonPaymentPersonal_Notification.html"))//System.Web.// ((System.Web.HttpContext)null) /* HttpContext.Current legacy */ /* Legacy incompatibility */.Server.MapPath("~/NewRegistration.html")))
                         {
                             messageBody.Append(reader.ReadToEnd());
                         }
@@ -398,7 +399,7 @@ namespace IAPR_Data.Providers
                         break;
 
                     case "CustomerNonPaymentBusiness":
-                        using (StreamReader reader = new StreamReader(System.Web.Hosting.HostingEnvironment.ApplicationPhysicalPath + "\\MailTemplates\\CustomerNonPaymentBusiness_Notification.html"))//System.Web.HttpContext.Current.Server.MapPath("~/NewRegistration.html")))
+                        using (StreamReader reader = new StreamReader(AppDomain.CurrentDomain.BaseDirectory + "\\MailTemplates\\CustomerNonPaymentBusiness_Notification.html"))//System.Web.// ((System.Web.HttpContext)null) /* HttpContext.Current legacy */ /* Legacy incompatibility */.Server.MapPath("~/NewRegistration.html")))
                         {
                             messageBody.Append(reader.ReadToEnd());
                         }
@@ -406,67 +407,67 @@ namespace IAPR_Data.Providers
                         break;
 
                     case "PreGameNotification":
-                        using (StreamReader reader = new StreamReader(System.Web.Hosting.HostingEnvironment.ApplicationPhysicalPath + "\\MailTemplates\\Pre_game_advice.html"))//System.Web.HttpContext.Current.Server.MapPath("~/NewRegistration.html")))
+                        using (StreamReader reader = new StreamReader(AppDomain.CurrentDomain.BaseDirectory + "\\MailTemplates\\Pre_game_advice.html"))//System.Web.// ((System.Web.HttpContext)null) /* HttpContext.Current legacy */ /* Legacy incompatibility */.Server.MapPath("~/NewRegistration.html")))
                         {
                             messageBody.Append(reader.ReadToEnd());
                         }
 
                         break;
                     case "TeamKnockedOut":
-                        using (StreamReader reader = new StreamReader(System.AppDomain.CurrentDomain.BaseDirectory + "\\MailTemplates\\team_knocked_out.html"))//System.Web.HttpContext.Current.Server.MapPath("~/NewRegistration.html")))
+                        using (StreamReader reader = new StreamReader(System.AppDomain.CurrentDomain.BaseDirectory + "\\MailTemplates\\team_knocked_out.html"))//System.Web.// ((System.Web.HttpContext)null) /* HttpContext.Current legacy */ /* Legacy incompatibility */.Server.MapPath("~/NewRegistration.html")))
                         {
                             messageBody.Append(reader.ReadToEnd());
                         }
 
                         break;
                     case "TeamPassedRound":
-                        using (StreamReader reader = new StreamReader(System.Web.Hosting.HostingEnvironment.ApplicationPhysicalPath + "\\MailTemplates\\TeamPassedRound.html"))//System.Web.HttpContext.Current.Server.MapPath("~/NewRegistration.html")))
+                        using (StreamReader reader = new StreamReader(AppDomain.CurrentDomain.BaseDirectory + "\\MailTemplates\\TeamPassedRound.html"))//System.Web.// ((System.Web.HttpContext)null) /* HttpContext.Current legacy */ /* Legacy incompatibility */.Server.MapPath("~/NewRegistration.html")))
                         {
                             messageBody.Append(reader.ReadToEnd());
                         }
 
                         break;
                     case "PasswordReminderRequest":
-                        using (StreamReader reader = new StreamReader(System.Web.Hosting.HostingEnvironment.ApplicationPhysicalPath + "\\MailTemplates\\PasswordReminder.html"))//System.Web.HttpContext.Current.Server.MapPath("~/NewRegistration.html")))
+                        using (StreamReader reader = new StreamReader(AppDomain.CurrentDomain.BaseDirectory + "\\MailTemplates\\PasswordReminder.html"))//System.Web.// ((System.Web.HttpContext)null) /* HttpContext.Current legacy */ /* Legacy incompatibility */.Server.MapPath("~/NewRegistration.html")))
                         {
                             messageBody.Append(reader.ReadToEnd());
                         }
 
                         break;
                     case "PasswordReminderConfirm":
-                        using (StreamReader reader = new StreamReader(System.Web.Hosting.HostingEnvironment.ApplicationPhysicalPath + "\\MailTemplates\\PasswordReminderConfirm.html"))//System.Web.HttpContext.Current.Server.MapPath("~/NewRegistration.html")))
+                        using (StreamReader reader = new StreamReader(AppDomain.CurrentDomain.BaseDirectory + "\\MailTemplates\\PasswordReminderConfirm.html"))//System.Web.// ((System.Web.HttpContext)null) /* HttpContext.Current legacy */ /* Legacy incompatibility */.Server.MapPath("~/NewRegistration.html")))
                         {
                             messageBody.Append(reader.ReadToEnd());
                         }
 
                         break;
                     case "AccountReactivationRequest":
-                        using (StreamReader reader = new StreamReader(System.Web.Hosting.HostingEnvironment.ApplicationPhysicalPath + "\\MailTemplates\\AccountReactivationRequest.html"))//System.Web.HttpContext.Current.Server.MapPath("~/NewRegistration.html")))
+                        using (StreamReader reader = new StreamReader(AppDomain.CurrentDomain.BaseDirectory + "\\MailTemplates\\AccountReactivationRequest.html"))//System.Web.// ((System.Web.HttpContext)null) /* HttpContext.Current legacy */ /* Legacy incompatibility */.Server.MapPath("~/NewRegistration.html")))
                         {
                             messageBody.Append(reader.ReadToEnd());
                         }
                         break;
                     case "AccountReactivationConfirm":
-                        using (StreamReader reader = new StreamReader(System.Web.Hosting.HostingEnvironment.ApplicationPhysicalPath + "\\MailTemplates\\AccountReactivationConfirm.html"))//System.Web.HttpContext.Current.Server.MapPath("~/NewRegistration.html")))
+                        using (StreamReader reader = new StreamReader(AppDomain.CurrentDomain.BaseDirectory + "\\MailTemplates\\AccountReactivationConfirm.html"))//System.Web.// ((System.Web.HttpContext)null) /* HttpContext.Current legacy */ /* Legacy incompatibility */.Server.MapPath("~/NewRegistration.html")))
                         {
                             messageBody.Append(reader.ReadToEnd());
                         }
                         break;
                     case "AccountEmailUpdate":
-                        using (StreamReader reader = new StreamReader(System.Web.Hosting.HostingEnvironment.ApplicationPhysicalPath + "\\MailTemplates\\AccountEmailUpdate.html"))//System.Web.HttpContext.Current.Server.MapPath("~/NewRegistration.html")))
+                        using (StreamReader reader = new StreamReader(AppDomain.CurrentDomain.BaseDirectory + "\\MailTemplates\\AccountEmailUpdate.html"))//System.Web.// ((System.Web.HttpContext)null) /* HttpContext.Current legacy */ /* Legacy incompatibility */.Server.MapPath("~/NewRegistration.html")))
                         {
                             messageBody.Append(reader.ReadToEnd());
                         }
                         break;
                     case "DeRegisterAccount":
-                        using (StreamReader reader = new StreamReader(System.Web.Hosting.HostingEnvironment.ApplicationPhysicalPath + "\\MailTemplates\\DeRegisterAccount.html"))//System.Web.HttpContext.Current.Server.MapPath("~/NewRegistration.html")))
+                        using (StreamReader reader = new StreamReader(AppDomain.CurrentDomain.BaseDirectory + "\\MailTemplates\\DeRegisterAccount.html"))//System.Web.// ((System.Web.HttpContext)null) /* HttpContext.Current legacy */ /* Legacy incompatibility */.Server.MapPath("~/NewRegistration.html")))
                         {
                             messageBody.Append(reader.ReadToEnd());
                         }
                         break;
 
                     case "ContactUsFormConfirm":
-                        using (StreamReader reader = new StreamReader(System.Web.Hosting.HostingEnvironment.ApplicationPhysicalPath + "\\MailTemplates\\ContactUsFormConfirm.html"))//System.Web.HttpContext.Current.Server.MapPath("~/NewRegistration.html")))
+                        using (StreamReader reader = new StreamReader(AppDomain.CurrentDomain.BaseDirectory + "\\MailTemplates\\ContactUsFormConfirm.html"))//System.Web.// ((System.Web.HttpContext)null) /* HttpContext.Current legacy */ /* Legacy incompatibility */.Server.MapPath("~/NewRegistration.html")))
                         {
                             messageBody.Append(reader.ReadToEnd());
                         }
@@ -589,7 +590,7 @@ namespace IAPR_Data.Providers
             messageWrapper.Append("</td>");
             messageWrapper.Append("</tr>");
             messageWrapper.Append("<tr>");
-            messageWrapper.Append("<td style='font-family: Arial, sans-serif; font-size: 12px; color: #7d7d7d; line-height: 18px; -webkit-text-size-adjust: none'>Copyright © 2016 Ticcets. All rights reserved</td>");
+            messageWrapper.Append("<td style='font-family: Arial, sans-serif; font-size: 12px; color: #7d7d7d; line-height: 18px; -webkit-text-size-adjust: none'>Copyright � 2016 Ticcets. All rights reserved</td>");
             messageWrapper.Append("</tr>");
             messageWrapper.Append("<tr>");
             messageWrapper.Append("<td style='font-family: Arial, sans-serif; font-size: 12px; color: #7d7d7d; line-height: 18px; -webkit-text-size-adjust: none'>You are receiving this mail as you previously agreed to receive further correspondence from Ticcets. <a href='https://www.ticcets.com' target='_blank' style='color: #ff8900; font-weight: bold;'>unsubscribe from this list</a>");
@@ -754,3 +755,10 @@ namespace IAPR_Data.Providers
 ////    sw.Write(sw.NewLine);
 
 ////}
+
+
+
+
+
+
+

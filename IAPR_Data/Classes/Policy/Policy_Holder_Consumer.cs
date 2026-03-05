@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -29,3 +29,10 @@ namespace IAPR_Data.Classes.Policy
         // public  Vehicle_Asset vehicle_Asset { get; set; }
     }
 }
+
+
+
+
+
+
+

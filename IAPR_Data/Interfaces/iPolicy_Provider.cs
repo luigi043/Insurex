@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -6,8 +6,8 @@ using System.Threading.Tasks;
 using System.Net;
 using System.IO;
 using System.Data;
-using System.Data.SqlClient;
-using Microsoft.ApplicationBlocks.Data;
+using Microsoft.Data.SqlClient;
+
 using IAPR_Data.Interfaces;
 using C = IAPR_Data.Classes;
 
@@ -25,3 +25,10 @@ namespace IAPR_Data.Interfaces
         C.Response Save_Bulk_Policy_NonPayment(C.Policy.PolicyNonPaymentRequest policyNonPaymentRequest);
     }
 }
+
+
+
+
+
+
+

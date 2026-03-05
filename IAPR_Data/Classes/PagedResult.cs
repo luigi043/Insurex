@@ -58,3 +58,10 @@ namespace IAPR_Data.Classes
             => new ApiResponse<T> { Success = false, Message = message, CorrelationId = correlationId };
     }
 }
+
+
+
+
+
+
+

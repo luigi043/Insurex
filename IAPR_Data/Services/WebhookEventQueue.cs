@@ -2,118 +2,95 @@ using System;
 using System.Collections.Concurrent;
 using System.Linq;
 using System.Threading;
+using System.Threading.Tasks;
 using IAPR_Data.Classes;
 using IAPR_Data.Classes.Webhook;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 
 namespace IAPR_Data.Services
 {
     /// <summary>
-    /// Lightweight in-process message queue for decoupled webhook event processing.
-    /// Acts as the message bus between the WebhookService (producer) and the ComplianceEngine (consumer).
-    /// Uses a ConcurrentQueue + dedicated background thread — compatible with .NET Framework 4.8.
+    /// Thread-safe queue for decoupled webhook event processing.
+    /// In .NET 8, this is registered as a Singleton and consumed by a BackgroundService.
     /// </summary>
-    public sealed class WebhookEventQueue : IDisposable
+    public sealed class WebhookEventQueue
     {
-        private static readonly Lazy<WebhookEventQueue> _instance =
-            new Lazy<WebhookEventQueue>(() => new WebhookEventQueue());
-
-        /// <summary>Singleton access point</summary>
-        public static WebhookEventQueue Instance => _instance.Value;
-
         private readonly ConcurrentQueue<WebhookEventMessage> _queue
             = new ConcurrentQueue<WebhookEventMessage>();
 
-        private readonly CancellationTokenSource _cts = new CancellationTokenSource();
-        private readonly Thread _workerThread;
-        private volatile bool _isRunning;
+        private readonly ILogger<WebhookEventQueue> _logger;
+        private readonly IDbContextFactory<ApplicationDbContext> _dbFactory;
 
-        // Pluggable processor delegate — set by the compliance engine
-        public Action<WebhookEventMessage> OnMessage { get; set; }
-
-        private WebhookEventQueue()
+        public WebhookEventQueue(ILogger<WebhookEventQueue> logger, IDbContextFactory<ApplicationDbContext> dbFactory)
         {
-            _workerThread = new Thread(ProcessLoop)
-            {
-                IsBackground = true,
-                Name = "WebhookEventQueue-Worker"
-            };
+            _logger = logger;
+            _dbFactory = dbFactory;
         }
 
-        /// <summary>Starts the background processing loop</summary>
-        public void Start()
-        {
-            if (_isRunning) return;
-            _isRunning = true;
-            _workerThread.Start();
-        }
+        public Action<WebhookEventMessage>? OnMessage { get; set; }
+        public Func<WebhookEventMessage, Task>? OnMessageAsync { get; set; }
 
-        /// <summary>Enqueues a webhook event message for async processing</summary>
         public void Enqueue(WebhookEventMessage message)
         {
             if (message == null) throw new ArgumentNullException(nameof(message));
             _queue.Enqueue(message);
         }
 
-        private void ProcessLoop()
+        public async Task ProcessNextAsync(CancellationToken ct)
         {
-            while (!_cts.IsCancellationRequested)
+            if (_queue.TryDequeue(out var message))
             {
-                if (_queue.TryDequeue(out var message))
+                try
                 {
+                    if (OnMessageAsync != null)
+                        await OnMessageAsync(message);
+                    else
+                        OnMessage?.Invoke(message);
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogError(ex, "Failed to process event {EventId}", message.EventId);
+
                     try
                     {
-                        OnMessage?.Invoke(message);
-                    }
-                    catch (Exception ex)
-                    {
-                        System.Diagnostics.Trace.TraceError(
-                            $"[WebhookEventQueue] Failed to process event {message?.EventId}: {ex.Message}");
-
-                        // Mark event as Failed in the DB
-                        try
+                        using (var db = await _dbFactory.CreateDbContextAsync(ct))
                         {
-                            using (var db = ApplicationDbContext.Create())
+                            var evt = await db.WebhookEvents
+                                       .FirstOrDefaultAsync(e => e.EventId == message.EventId, ct);
+                            if (evt != null)
                             {
-                                var evt = db.WebhookEvents
-                                           .FirstOrDefault(e => e.EventId == message.EventId);
-                                if (evt != null)
-                                {
-                                    evt.Status = "Failed";
-                                    evt.ProcessingError = ex.Message;
-                                    db.SaveChanges();
-                                }
+                                evt.Status = "Failed";
+                                evt.ProcessingError = ex.Message;
+                                await db.SaveChangesAsync(ct);
                             }
                         }
-                        catch { /* db error during error logging — swallow */ }
                     }
-                }
-                else
-                {
-                    // Queue is empty — rest the thread briefly
-                    Thread.Sleep(200);
+                    catch (Exception dbEx)
+                    {
+                        _logger.LogError(dbEx, "Failed to log processing error to DB for event {EventId}", message.EventId);
+                    }
                 }
             }
         }
 
-        public void Stop() => _cts.Cancel();
-
-        public void Dispose()
-        {
-            Stop();
-            _cts.Dispose();
-        }
+        public bool IsEmpty => _queue.IsEmpty;
     }
 
-    /// <summary>
-    /// Lightweight message envelope passed through the in-process queue.
-    /// </summary>
     public class WebhookEventMessage
     {
-        public string EventId { get; set; }
-        public string Source { get; set; }
-        public string EventType { get; set; }
-        public string Payload { get; set; }
+        public string EventId { get; set; } = string.Empty;
+        public string Source { get; set; } = string.Empty;
+        public string EventType { get; set; } = string.Empty;
+        public string Payload { get; set; } = string.Empty;
         public int? TenantId { get; set; }
         public DateTime ReceivedAt { get; set; }
     }
 }
+
+
+
+
+
+
+

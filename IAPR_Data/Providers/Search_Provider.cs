@@ -1,4 +1,5 @@
-﻿using System;
+using IAPR_Data.Utils;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -9,8 +10,8 @@ using System.Net;
 using System.Text;
 using System.IO;
 using System.Data;
-using System.Data.SqlClient;
-using Microsoft.ApplicationBlocks.Data;
+using Microsoft.Data.SqlClient;
+
 using System.Net;
 using System.Net.Mail;
 using C = IAPR_Data.Classes;
@@ -45,3 +46,11 @@ namespace IAPR_Data.Providers
         }
     }
 }
+
+
+
+
+
+
+
+

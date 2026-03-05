@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -6,8 +6,8 @@ using System.Threading.Tasks;
 using System.Text;
 using System.IO;
 using System.Data;
-using System.Data.SqlClient;
-using Microsoft.ApplicationBlocks.Data;
+using Microsoft.Data.SqlClient;
+
 using C = IAPR_Data.Classes;
 using U = IAPR_Data.Utils;
 using System.Reflection;
@@ -1088,3 +1088,10 @@ namespace IAPR_Data.Classes.Common
         #endregion
     }
 }
+
+
+
+
+
+
+

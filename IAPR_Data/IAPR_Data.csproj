@@ -1,198 +1,21 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
   <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{E85781C2-8ADE-4376-B3CE-343336B455DC}</ProjectGuid>
-    <OutputType>Library</OutputType>
-    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
     <RootNamespace>IAPR_Data</RootNamespace>
-    <AssemblyName>IAPR_Data_Data</AssemblyName>
-    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
-    <FileAlignment>512</FileAlignment>
-    <TargetFrameworkProfile />
+    <AssemblyName>IAPR_Data</AssemblyName>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <DebugType>pdbonly</DebugType>
-    <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-  </PropertyGroup>
+
   <ItemGroup>
-    <Reference Include="Microsoft.ApplicationBlocks.Data, Version=1.0.5150.16603, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Microsoft.ApplicationBlocks.Data.2.0.0\lib\net45\Microsoft.ApplicationBlocks.Data.dll</HintPath>
-    </Reference>
-    <Reference Include="Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Newtonsoft.Json.13.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
-    </Reference>
-    <Reference Include="Newtonsoft.Json.Schema, Version=3.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>..\packages\Newtonsoft.Json.Schema.3.0.14\lib\net45\Newtonsoft.Json.Schema.dll</HintPath>
-    </Reference>
-    <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
-      <HintPath>..\packages\EntityFramework.6.0.0\lib\net45\EntityFramework.dll</HintPath>
-    </Reference>
-    <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
-      <HintPath>..\packages\EntityFramework.6.0.0\lib\net45\EntityFramework.SqlServer.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.AspNet.Identity.Core, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.AspNet.Identity.Core.1.0.0\lib\net45\Microsoft.AspNet.Identity.Core.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.AspNet.Identity.EntityFramework, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.AspNet.Identity.EntityFramework.1.0.0\lib\net45\Microsoft.AspNet.Identity.EntityFramework.dll</HintPath>
-    </Reference>
-    <Reference Include="System.ComponentModel.DataAnnotations" />
-    <Reference Include="System" />
-    <Reference Include="System.Configuration" />
-    <Reference Include="System.Core" />
-    <Reference Include="BouncyCastle.Cryptography, Version=2.0.0.0, Culture=neutral, PublicKeyToken=072edcf4a5328938, processorArchitecture=MSIL">
-      <HintPath>..\packages\BouncyCastle.Cryptography.2.3.0\lib\net461\BouncyCastle.Cryptography.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="System.Net.Http" />
-    <Reference Include="System.Web" />
-    <Reference Include="System.Web.Extensions" />
-    <Reference Include="System.Web.Http, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
-    <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="Microsoft.CSharp" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Xml" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="8.0.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="8.0.0" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+    <PackageReference Include="Newtonsoft.Json.Schema" Version="3.0.15" />
+    <PackageReference Include="BouncyCastle.Cryptography" Version="2.3.0" />
+    <PackageReference Include="System.Configuration.ConfigurationManager" Version="8.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="8.0.0" />
   </ItemGroup>
-  <ItemGroup>
-    <Compile Include="Classes\AssetTypes\AccountReceivable_Asset.cs" />
-    <Compile Include="Classes\AssetTypes\AllFinancerAssets.cs" />
-    <Compile Include="Classes\AssetTypes\API_NewAssets\addPropertyAssetsRequest.cs" />
-    <Compile Include="Classes\AssetTypes\API_NewAssets\BusinessDeatils.cs" />
-    <Compile Include="Classes\AssetTypes\API_NewAssets\ConsumerDetails.cs" />
-    <Compile Include="Classes\AssetTypes\API_NewAssets\InsuranceDetails.cs" />
-    <Compile Include="Classes\AssetTypes\API_NewAssets\Phycisaladdress.cs" />
-    <Compile Include="Classes\AssetTypes\API_NewAssets\PostalAddress.cs" />
-    <Compile Include="Classes\AssetTypes\Aviation_Asset.cs" />
-    <Compile Include="Classes\AssetTypes\BusinessInterruption_Asset.cs" />
-    <Compile Include="Classes\AssetTypes\ElectronicEquipment_Asset.cs" />
-    <Compile Include="Classes\AssetTypes\KeymanInsurance_Asset.cs" />
-    <Compile Include="Classes\AssetTypes\Machinery_Asset.cs" />
-    <Compile Include="Classes\AssetTypes\API_NewAssets\addVehicleAssetsRequest.cs" />
-    <Compile Include="Classes\AssetTypes\PlantEquipment_Asset.cs" />
-    <Compile Include="Classes\AssetTypes\Property_Asset.cs" />
-    <Compile Include="Classes\AssetTypes\ReinstatedCover_Assets.cs" />
-    <Compile Include="Classes\AssetTypes\Stock_Asset.cs" />
-    <Compile Include="Classes\AssetTypes\Uninsured_Assets.cs" />
-    <Compile Include="Classes\AssetTypes\UpdateAssetCoverRequest.cs" />
-    <Compile Include="Classes\AssetTypes\UpdateAssetFinanceValueRequest.cs" />
-    <Compile Include="Classes\AssetTypes\UpdateAssetInsuredValueRequest.cs" />
-    <Compile Include="Classes\AssetTypes\Watercraft_Asset.cs" />
-    <Compile Include="Classes\BasicAuthentication.cs" />
-    <Compile Include="Classes\Common\Addresses.cs" />
-    <Compile Include="Classes\Common\Common.cs" />
-    <Compile Include="Classes\Common\ConvertToDataTable.cs" />
-    <Compile Include="Classes\IdentityModels.cs" />
-    <Compile Include="Classes\MultiTenantModels.cs" />
-    <Compile Include="Classes\TenantContext.cs" />
-    <Compile Include="Classes\Webhook\WebhookModels.cs" />
-    <Compile Include="Classes\Webhook\HmacValidator.cs" />
-    <Compile Include="Classes\ComplianceState.cs" />
-    <Compile Include="Classes\OutboxMessage.cs" />
-    <Compile Include="Classes\AuditLogEntry.cs" />
-    <Compile Include="Classes\Case.cs" />
-    <Compile Include="Services\WebhookEventQueue.cs" />
-    <Compile Include="Services\ComplianceEngine.cs" />
-    <Compile Include="Services\OutboxPublisher.cs" />
-    <Compile Include="Services\AuditLogger.cs" />
-    <Compile Include="Services\CaseManager.cs" />
-    <Compile Include="Services\NotificationService.cs" />
-    <Compile Include="Classes\PagedResult.cs" />
-    <Compile Include="Classes\OAuth2Models.cs" />
-    <Compile Include="Services\OAuth2TokenService.cs" />
-    <Compile Include="Classes\Common\CurrentUser.cs" />
-    <Compile Include="Classes\Common\Dashboards.cs" />
-    <Compile Include="Classes\Partners\Financer.cs" />
-    <Compile Include="Classes\Partners\Insurer.cs" />
-    <Compile Include="Classes\Policy\BulkImportFromFinancer.cs" />
-    <Compile Include="Classes\Policy\BulkImportFromInsurance.cs" />
-    <Compile Include="Classes\Policy\Policy.cs" />
-    <Compile Include="Classes\Policy\PolicyStatusRequest.cs" />
-    <Compile Include="Classes\Policy\Policy_Holder_Business.cs" />
-    <Compile Include="Classes\Policy\Policy_Holder_Consumer.cs" />
-    <Compile Include="Classes\Policy\PolicyNonPaymentRequest.cs" />
-    <Compile Include="Classes\Policy\RemoveAssetRequest.cs" />
-    <Compile Include="Classes\Request_Header.cs" />
-    <Compile Include="Classes\Response.cs" />
-    <Compile Include="Classes\AssetTypes\Vehicle_Asset.cs" />
-    <Compile Include="Interfaces\ijsonValidator.cs" />
-    <Compile Include="Interfaces\iPolicy_Provider.cs" />
-    <Compile Include="Interfaces\iVehicle_Assest_Provider.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Properties\Settings.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTimeSharedInput>True</DesignTimeSharedInput>
-      <DependentUpon>Settings.settings</DependentUpon>
-    </Compile>
-    <Compile Include="Providers\AccountReceivable_Asset_Provider.cs" />
-    <Compile Include="Providers\Billing_Provider.cs" />
-    <Compile Include="Providers\Admin_Provider.cs" />
-    <Compile Include="Providers\Daschboard_Provider.cs" />
-    <Compile Include="Providers\Generic_Asset_Provider.cs" />
-    <Compile Include="Providers\Aviation_Asset_Provider.cs" />
-    <Compile Include="Providers\Bulk_Import_Provider.cs" />
-    <Compile Include="Providers\BusinessInterruption_Asset_Provider.cs" />
-    <Compile Include="Providers\Customer_Provider.cs" />
-    <Compile Include="Providers\ElectronicEquipment_Asset_Provider.cs" />
-    <Compile Include="Providers\Financer_Provider.cs" />
-    <Compile Include="Providers\GetFormFields_Provider.cs" />
-    <Compile Include="Providers\Insurer_Provider.cs" />
-    <Compile Include="Providers\jsonValidator_Provider.cs" />
-    <Compile Include="Providers\KeymanInsurance_Asset_Provider.cs" />
-    <Compile Include="Providers\Machinery_Asset_Provider.cs" />
-    <Compile Include="Providers\Notification_Provider.cs" />
-    <Compile Include="Providers\Partner_Provider.cs" />
-    <Compile Include="Providers\PlantEquipment_Asset_Provider.cs" />
-    <Compile Include="Providers\Policy_Provider.cs" />
-    <Compile Include="Providers\Property_Asset_Provider.cs" />
-    <Compile Include="Providers\Report_Provider.cs" />
-    <Compile Include="Providers\Search_Provider.cs" />
-    <Compile Include="Providers\Security_Provider.cs" />
-    <Compile Include="Providers\Stock_Asset_Provider.cs" />
-    <Compile Include="Providers\User_Provider.cs" />
-    <Compile Include="Providers\Vehicle_Asset_Provider.cs" />
-    <Compile Include="Providers\Watercraft_Provider.cs" />
-    <Compile Include="Utils\CryptorEngine.cs" />
-    <Compile Include="Utils\DataTableHelper.cs" />
-    <Compile Include="Utils\ErrorLogger.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Classes\YellowGoods\" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="App.config">
-      <SubType>Designer</SubType>
-    </None>
-    <None Include="packages.config" />
-    <None Include="Properties\Settings.settings">
-      <Generator>SettingsSingleFileGenerator</Generator>
-      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
-    </None>
-  </ItemGroup>
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
-       Other similar extension points exist, see Microsoft.Common.targets.
-  <Target Name="BeforeBuild">
-  </Target>
-  <Target Name="AfterBuild">
-  </Target>
-  -->
+
 </Project>
