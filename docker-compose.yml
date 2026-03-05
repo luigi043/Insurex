@@ -1,6 +1,7 @@
 version: "3.8"
 
 services:
+  # ─── SQL Server ──────────────────────────────────────────────────────────────
   db:
     image: mcr.microsoft.com/mssql/server:2022-latest
     container_name: insurex-db
@@ -11,7 +12,15 @@ services:
       - "1433:1433"
     volumes:
       - mssql-data:/var/opt/mssql
+    healthcheck:
+      test: ["CMD", "/opt/mssql-tools/bin/sqlcmd", "-S", "localhost", "-U", "sa",
+             "-P", "YourStrong!Passw0rd", "-Q", "SELECT 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 30s
 
+  # ─── .NET 8 API ──────────────────────────────────────────────────────────────
   api:
     build:
       context: .
@@ -20,26 +29,32 @@ services:
     ports:
       - "5000:8080"
     depends_on:
-      - db
+      db:
+        condition: service_healthy
     environment:
-      - ConnectionStrings__DefaultConnection=Server=db;Database=IAPR_Data;User Id=sa;Password=YourStrong!Passw0rd;TrustServerCertificate=True
+      - ConnectionStrings__DefaultConnection=Server=db;Database=IAPR;User Id=sa;Password=YourStrong!Passw0rd;TrustServerCertificate=True
       - Jwt__Key=SuperSecretKeyForDevelopmentOnlyPleaseChangeLater!123
-      - Jwt__Issuer=InsureX
-      - Jwt__Audience=InsureXUsers
+      - Jwt__Issuer=InsureX.Api
+      - Jwt__Audience=InsureX.Frontend
       - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://+:8080
+    restart: unless-stopped
 
+  # ─── React Frontend ───────────────────────────────────────────────────────────
   frontend:
     build:
       context: ./InsureX.Frontend
       dockerfile: Dockerfile
+      # VITE_API_URL is baked in at build time – nginx proxies /api → api:8080
+      # so /api works from the browser without needing an absolute URL
+      args:
+        - VITE_API_URL=/api
     container_name: insurex-frontend
     ports:
       - "80:80"
     depends_on:
       - api
-    environment:
-      - VITE_API_URL=http://localhost:5000/api
-      - BACKEND_API_URL=http://api:8080/api
+    restart: unless-stopped
 
 volumes:
   mssql-data:

@@ -61,8 +61,24 @@ namespace IAPR_Data.Classes
         {
             base.OnModelCreating(builder);
 
-            // Configure global query filters for multi-tenancy if needed
-            // For now, we'll stick to the manual scoping method to maintain functional parity
+            // ── Policy entity ─────────────────────────────────────────────────
+            // Policy.cs now has [NotMapped] on the navigation properties (primary fix).
+            // These fluent API calls are kept as a belt-and-suspenders backup.
+            builder.Entity<IAPR_Data.Classes.Policy.Policy>(entity =>
+            {
+                entity.HasKey(p => p.iPolicy_Id);
+                entity.Ignore(p => p.policy_Holder_Individual);
+                entity.Ignore(p => p.policy_Holder_Business);
+            });
+
+            // ── DTO types – explicitly ignored so EF never maps them ──────────
+            // All of these reference Phycisal_address / Postal_Address which are
+            // pure DTO value objects with no primary key.
+            builder.Ignore<IAPR_Data.Classes.AssetTypes.Vehicle_Asset>();
+            builder.Ignore<IAPR_Data.Classes.AssetTypes.API_Vehicle_Asset>();
+            builder.Ignore<IAPR_Data.Classes.AssetTypes.Property_Asset>();
+            builder.Ignore<IAPR_Data.Classes.Policy.Policy_Holder_Consumer>();
+            builder.Ignore<IAPR_Data.Classes.Policy.Policy_Holder_Business>();
         }
 
         /// <summary>
@@ -71,8 +87,6 @@ namespace IAPR_Data.Classes
         public IQueryable<TEntity> ForTenant<TEntity>(int? tenantId = null)
             where TEntity : class
         {
-            // In .NET 8, tenantId should be resolved via an IHttpContextAccessor or a Scoped Service
-            // For this migration, we expect the ID to be passed or resolved externally
             var dbSet = Set<TEntity>();
 
             if (tenantId == null)
@@ -82,8 +96,6 @@ namespace IAPR_Data.Classes
             if (tenantProp == null)
                 return dbSet;
 
-            // Note: EF Core requires building the expression tree for dynamic filtering
-            // but for simplicity in this migration we'll keep the logic understandable
             return dbSet.Where(e => EF.Property<int?>(e, "TenantId") == tenantId);
         }
 
@@ -97,8 +109,6 @@ namespace IAPR_Data.Classes
                 new SqlParameter("@TenantId", tenantId));
         }
 
-        // Static factory is replaced by Dependency Injection in .NET 8
-        // but can be maintained as a shim for legacy code if necessary.
         public static ApplicationDbContext Create(string connectionString)
         {
             var optionsBuilder = new DbContextOptionsBuilder<ApplicationDbContext>();
@@ -107,10 +117,3 @@ namespace IAPR_Data.Classes
         }
     }
 }
-
-
-
-
-
-
-

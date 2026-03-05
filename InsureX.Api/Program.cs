@@ -57,8 +57,6 @@ builder.Services.AddAuthorization();
 // --- 3. Core Services ---
 builder.Services.AddSingleton<WebhookEventQueue>();
 builder.Services.AddScoped<IWebhookSignatureValidator, WebhookSignatureValidator>();
-builder.Services.AddScoped<ComplianceEngine>();
-// Add other migrated services here (AuditLogger is static, but can be made a service later)
 
 // --- 4. API Infrastructure ---
 builder.Services.AddControllers();
@@ -97,19 +95,34 @@ builder.Services.AddCors(options =>
 
 var app = builder.Build();
 
-// --- 5. Middleware Pipeline ---
+// --- 5. AUTO-MIGRATE DATABASE ON STARTUP ---
+using (var scope = app.Services.CreateScope())
+{
+    var services = scope.ServiceProvider;
+    try
+    {
+        var db = services.GetRequiredService<ApplicationDbContext>();
+        db.Database.Migrate();
+        app.Logger.LogInformation("✅ Database migrations applied successfully.");
+    }
+    catch (Exception ex)
+    {
+        // In dev, log and continue. In prod, this should halt.
+        app.Logger.LogWarning("⚠️ Database migration failed: {Message}. " +
+            "If the DB doesn't exist yet, run: dotnet ef database update", ex.Message);
+    }
+
+    // Initialize legacy SqlHelper & CryptorEngine bridges
+    var config = services.GetRequiredService<IConfiguration>();
+    IAPR_Data.Utils.SqlHelper.Initialize(config);
+    IAPR_Data.Utils.CryptorEngine.Initialize(config);
+}
+
+// --- 6. Middleware Pipeline ---
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
-}
-
-// --- Initialize Legacy Bridges ---
-using (var scope = app.Services.CreateScope())
-{
-    var config = scope.ServiceProvider.GetRequiredService<IConfiguration>();
-    IAPR_Data.Utils.SqlHelper.Initialize(config);
-    IAPR_Data.Utils.CryptorEngine.Initialize(config);
 }
 
 app.UseHttpsRedirection();

@@ -1,20 +1,23 @@
-FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS base
+# Build stage
+FROM node:18-alpine AS build
 WORKDIR /app
-EXPOSE 8080
 
-FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
-WORKDIR /src
-COPY ["InsureX.Web/InsureX.Web.csproj", "InsureX.Web/"]
-COPY ["IAPR_Data/IAPR_Data.csproj", "IAPR_Data/"]
-RUN dotnet restore "InsureX.Web/InsureX.Web.csproj"
+# Accept build-time API URL (injected by docker-compose)
+ARG VITE_API_URL=/api
+ENV VITE_API_URL=$VITE_API_URL
+
+# Copy package files and install deps
+COPY package*.json ./
+RUN npm install
+
+# Copy source and build
 COPY . .
-WORKDIR "/src/InsureX.Web"
-RUN dotnet build "InsureX.Web.csproj" -c Release -o /app/build
+RUN npm run build
 
-FROM build AS publish
-RUN dotnet publish "InsureX.Web.csproj" -c Release -o /app/publish /p:UseAppHost=false
-
-FROM base AS final
-WORKDIR /app
-COPY --from=publish /app/publish .
-ENTRYPOINT ["dotnet", "InsureX.Web.dll"]
+# Production stage – serve with nginx
+FROM nginx:stable-alpine
+# FIX: was "COPY --from:build" (colon is wrong) → must be "COPY --from=build"
+COPY --from=build /app/dist /usr/share/nginx/html
+COPY nginx.conf /etc/nginx/conf.d/default.conf
+EXPOSE 80
+CMD ["nginx", "-g", "daemon off;"]
