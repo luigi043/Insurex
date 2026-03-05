@@ -1,7 +1,7 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import { jwtDecode } from 'jwt-decode';
-import { TokenPayload } from '../api/types/Common';
+import type { TokenPayload } from '../api/types/Common';
 
 interface AuthState {
     token: string | null;

@@ -52,3 +52,10 @@ export const adminClient = {
         return response.data;
     },
 };
+
+export const intelligenceClient = {
+    getInsights: async (): Promise<ApiResponse<any[]>> => {
+        const response = await API.get<ApiResponse<any[]>>('/dashboard/insights');
+        return response.data;
+    }
+};

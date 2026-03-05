@@ -1,16 +1,15 @@
 import React, { useEffect, useState } from 'react';
 import { API } from '../../api/utils/api';
-import { DashboardSummary } from '../../api/types/Dashboard';
-import { ApiResponse } from '../../api/types/Common';
+import type { DashboardSummary } from '../../api/types/Dashboard';
+import type { ApiResponse } from '../../api/types/Common';
 import DashboardChart from '../shared/DashboardChart';
+import InsightsSummary from '../shared/InsightsSummary';
 import { 
   ShieldCheck, 
   AlertCircle, 
   TrendingUp, 
-  DollarSign, 
   Car, 
   Clock, 
-  ChevronRight,
   RefreshCw
 } from 'lucide-react';
 
@@ -149,6 +148,9 @@ const DashboardPage: React.FC = () => {
           </div>
         )}
       </div>
+
+      {/* AI Insights Zone */}
+      <InsightsSummary />
 
       {/* Bottom Actions/Quick view */}
       <div className="bg-blue-900 rounded-[2.5rem] p-8 text-white relative overflow-hidden shadow-2xl">

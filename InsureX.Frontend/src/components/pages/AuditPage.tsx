@@ -4,7 +4,7 @@ import type { AuditEntry } from '../../api/types/Audit';
 import { DataTable, StatusBadge, Pagination } from '../shared';
 import { 
     History, Search, Filter, Shield, 
-    User, Fingerprint, ExternalLink, Calendar
+    User, Fingerprint, ExternalLink, Calendar, Download
 } from 'lucide-react';
 
 const AuditPage: React.FC = () => {
@@ -127,6 +127,12 @@ const AuditPage: React.FC = () => {
                         <p className="text-lg font-black text-gray-900">{totalCount.toLocaleString()}</p>
                     </div>
                 </div>
+                <button 
+                    onClick={() => window.open(`${import.meta.env.VITE_API_BASE_URL}/reports/audit/export`, '_blank')}
+                    className="flex items-center gap-2 px-6 py-3 bg-white border border-gray-100 text-gray-700 rounded-2xl text-sm font-black uppercase hover:bg-gray-50 transition-all active:scale-95 shadow-sm"
+                >
+                    <Download className="w-4 h-4" /> Export Ledger
+                </button>
             </header>
 
             {/* Filter Bar */}

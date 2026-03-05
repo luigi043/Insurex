@@ -12,7 +12,7 @@ import {
   Cell,
   Legend,
 } from 'recharts';
-import { ChartSeries } from '../../api/types/Dashboard';
+import type { ChartSeries } from '../../api/types/Dashboard';
 
 interface DashboardChartProps {
   series: ChartSeries;
@@ -42,8 +42,8 @@ const DashboardChart: React.FC<DashboardChartProps> = ({ series, type = 'bar' })
               paddingAngle={5}
               dataKey="value"
             >
-              {data.map((entry, index) => (
-                <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} cornerRadius={4} />
+              {data.map((_, index) => (
+                <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
               ))}
             </Pie>
             <Tooltip 

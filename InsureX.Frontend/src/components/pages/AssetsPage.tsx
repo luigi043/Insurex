@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { assetClient } from '../../api/clients';
-import { Asset } from '../../api/types/Asset';
+import type { Asset } from '../../api/types/Asset';
 import { DataTable, StatusBadge, Pagination } from '../shared';
 import { Car, Search, Filter, Download } from 'lucide-react';
 
@@ -77,7 +77,10 @@ const AssetsPage: React.FC = () => {
           <p className="text-gray-500 mt-1 font-medium italic">Tracking {totalCount} registered financial assets across the ledger.</p>
         </div>
         <div className="flex gap-3">
-          <button className="flex items-center gap-2 px-4 py-2 border border-gray-200 rounded-xl text-sm font-bold text-gray-700 bg-white hover:bg-gray-50 transition-all">
+          <button 
+            onClick={() => window.open(`${import.meta.env.VITE_API_BASE_URL}/reports/assets/export`, '_blank')}
+            className="flex items-center gap-2 px-4 py-2 border border-gray-200 rounded-xl text-sm font-bold text-gray-700 bg-white hover:bg-gray-50 transition-all shadow-sm"
+          >
             <Download className="w-4 h-4" /> Export CSV
           </button>
           <button className="flex items-center gap-2 px-6 py-2 bg-blue-600 rounded-xl text-sm font-bold text-white shadow-lg shadow-blue-200 hover:bg-blue-700 transition-all active:scale-95">
