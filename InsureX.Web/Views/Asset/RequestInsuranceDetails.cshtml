@@ -1,9 +1,43 @@
 @{ ViewData["Title"] = "Request Insurance Details"; }
+
 <div class="container-fluid">
     <h1 class="h3 mb-4 text-gray-800">Request Insurance Details</h1>
     @if (TempData["Error"] != null) { <div class="alert alert-danger">@TempData["Error"]</div> }
     @if (TempData["Success"] != null) { <div class="alert alert-success">@TempData["Success"]</div> }
+
     <div class="card shadow mb-4">
-        <div class="card-body"><p>Insurance details request has been processed.</p></div>
+        <div class="card-header py-3"><h6 class="m-0 font-weight-bold text-primary">Request Details from Insurer</h6></div>
+        <div class="card-body">
+            <form asp-action="RequestInsuranceDetails" method="post">
+                @Html.AntiForgeryToken()
+                <div class="form-row">
+                    <div class="form-group col-md-6">
+                        <label>Policy Number</label>
+                        <input type="text" name="PolicyNumber" class="form-control" placeholder="Enter policy number..." required />
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label>Asset ID</label>
+                        <input type="number" name="AssetId" class="form-control" placeholder="Enter asset ID..." />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Additional Notes</label>
+                    <textarea name="Notes" class="form-control" rows="3" placeholder="Describe what insurance details you need..."></textarea>
+                </div>
+                <button type="submit" class="btn btn-primary"><i class="fas fa-paper-plane"></i> Send Request</button>
+            </form>
+        </div>
+    </div>
+
+    <div class="card shadow mb-4">
+        <div class="card-header py-3"><h6 class="m-0 font-weight-bold text-info">How it works</h6></div>
+        <div class="card-body">
+            <ol>
+                <li>Enter the policy number and/or asset ID for which you need insurance details</li>
+                <li>Add any specific notes about the information you require</li>
+                <li>The insurer will receive a notification and respond with the details</li>
+                <li>You will be notified once the insurer has provided the information</li>
+            </ol>
+        </div>
     </div>
 </div>

@@ -36,5 +36,17 @@ services:
     environment:
       - VITE_API_URL=http://localhost:5000/api
 
+  web:
+    build:
+      context: .
+      dockerfile: InsureX.Web/Dockerfile
+    container_name: insurex-web
+    ports:
+      - "5001:8080"
+    depends_on:
+      - db
+    environment:
+      - ConnectionStrings__DefaultConnection=Server=db;Database=IAPR_Data;User Id=sa;Password=YourStrong!Passw0rd;TrustServerCertificate=True
+
 volumes:
   mssql-data:
