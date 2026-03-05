@@ -1,0 +1,23 @@
+@{ ViewData["Title"] = "Find Asset"; }
+<div class="container-fluid">
+    <h1 class="h3 mb-4 text-gray-800">Find Asset</h1>
+    <div class="card shadow mb-4">
+        <div class="card-header py-3"><h6 class="m-0 font-weight-bold text-primary">Search</h6></div>
+        <div class="card-body">
+            <form asp-action="FindAsset" method="get">
+                <div class="input-group mb-3">
+                    <input type="text" name="searchTerm" value="@ViewBag.SearchTerm" class="form-control" placeholder="Enter asset description, policy number, or customer..." />
+                    <div class="input-group-append">
+                        <button class="btn btn-primary" type="submit"><i class="fas fa-search"></i> Search</button>
+                    </div>
+                </div>
+            </form>
+            <div class="table-responsive">
+                <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                    <thead><tr><th>Asset ID</th><th>Type</th><th>Description</th><th>Customer</th><th>Finance Value</th><th>Status</th><th>Actions</th></tr></thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

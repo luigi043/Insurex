@@ -1,0 +1,54 @@
+@{ ViewData["Title"] = "Add Asset to Policy"; }
+
+<div class="container-fluid">
+    <h1 class="h3 mb-4 text-gray-800">Add Asset to Policy</h1>
+    @if (TempData["Error"] != null) { <div class="alert alert-danger">@TempData["Error"]</div> }
+    @if (TempData["Success"] != null) { <div class="alert alert-success">@TempData["Success"]</div> }
+
+    <div class="card shadow mb-4">
+        <div class="card-header py-3"><h6 class="m-0 font-weight-bold text-primary">Find Policy</h6></div>
+        <div class="card-body">
+            <form asp-action="AddAssetToPolicy" method="post">
+                @Html.AntiForgeryToken()
+                <div class="form-row">
+                    <div class="form-group col-md-6">
+                        <label>Policy Number</label>
+                        <input type="text" name="PolicyNumber" class="form-control" required />
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label>Asset Type</label>
+                        <select name="AssetTypeId" id="assetTypeSelect" class="form-control selectpicker" data-live-search="true">
+                            <option value="">-- Select Asset Type --</option>
+                        </select>
+                    </div>
+                </div>
+                <div id="assetTypeFields"></div>
+                <div class="form-row">
+                    <div class="form-group col-md-6">
+                        <label>Finance Value</label>
+                        <input type="text" name="FinanceValue" class="form-control" data-type="currency" />
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label>Insured Value</label>
+                        <input type="text" name="InsuredValue" class="form-control" data-type="currency" />
+                    </div>
+                </div>
+                <button type="submit" class="btn btn-primary"><i class="fas fa-plus"></i> Add Asset</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+<script>
+    $('#assetTypeSelect').change(function () {
+        var assetType = $(this).val();
+        if (assetType) {
+            $.get('@Url.Action("AssetTypePartial", "Asset")?assetType=' + assetType, function (html) {
+                $('#assetTypeFields').html(html);
+                formatCurrencyTextBox();
+            });
+        } else { $('#assetTypeFields').html(''); }
+    });
+</script>
+}

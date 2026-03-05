@@ -1,0 +1,19 @@
+@{ ViewData["Title"] = "Add User"; }
+<div class="container-fluid">
+    <h1 class="h3 mb-4 text-gray-800">Add User</h1>
+    @if (TempData["Error"] != null) { <div class="alert alert-danger">@TempData["Error"]</div> }
+    @if (TempData["Success"] != null) { <div class="alert alert-success">@TempData["Success"]</div> }
+    <div class="card shadow mb-4">
+        <div class="card-body">
+            <form asp-action="AddUser" method="post">
+                @Html.AntiForgeryToken()
+                <div class="form-row">
+                    <div class="form-group col-md-4"><label>First Name</label><input type="text" name="FirstName" class="form-control" required /></div>
+                    <div class="form-group col-md-4"><label>Last Name</label><input type="text" name="LastName" class="form-control" required /></div>
+                    <div class="form-group col-md-4"><label>Email</label><input type="email" name="Email" class="form-control" required /></div>
+                </div>
+                <button type="submit" class="btn btn-primary"><i class="fas fa-user-plus"></i> Add User</button>
+            </form>
+        </div>
+    </div>
+</div>

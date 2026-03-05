@@ -1,0 +1,15 @@
+@{ ViewData["Title"] = "Re-instated Cover"; }
+<div class="container-fluid">
+    <h1 class="h3 mb-4 text-gray-800">Re-instated Cover</h1>
+    <div class="card shadow mb-4">
+        <div class="card-header py-3 d-flex justify-content-between align-items-center">
+            <h6 class="m-0 font-weight-bold text-primary">Re-instated Items</h6>
+            <a href="@Url.Action("Export", new { reportType = "ReinstatedCover", format = "csv" })" class="btn btn-sm btn-primary"><i class="fas fa-download"></i> Export</a>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-bordered" id="dataTable"><thead><tr><th>Asset ID</th><th>Type</th><th>Customer</th><th>Finance Value</th><th>Reinstated Date</th></tr></thead><tbody></tbody></table>
+            </div>
+        </div>
+    </div>
+</div>

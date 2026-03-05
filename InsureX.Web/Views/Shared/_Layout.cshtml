@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <title>InsureX</title>
+
+    <!-- Fonts -->
+    <link href="~/lib/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css" />
+    <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet" />
+
+    <!-- Theme CSS -->
+    <link href="~/css/theme.css" rel="stylesheet" />
+
+    <!-- DataTables -->
+    <link href="~/lib/datatables/dataTables.bootstrap4.min.css" rel="stylesheet" />
+
+    <!-- Select picker -->
+    <link rel="stylesheet" href="~/lib/select/bootstrap-select.min.css" />
+
+    <!-- Toastr -->
+    <link media="screen" rel="stylesheet" type="text/css" href="~/lib/toast/toastr.css" />
+
+    <!-- jQuery (loaded early for plugins) -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script type="text/javascript" src="~/lib/toast/toastr.js"></script>
+    <script type="text/javascript" src="~/js/AjaxLoader.js"></script>
+
+    <!-- FusionCharts -->
+    <script src="https://cdn.fusioncharts.com/fusioncharts/latest/fusioncharts.js"></script>
+    <script src="https://cdn.fusioncharts.com/fusioncharts/latest/themes/fusioncharts.theme.fusion.js"></script>
+    <script src="https://cdn.fusioncharts.com/fusioncharts/latest/themes/fusioncharts.theme.gammel.js"></script>
+    <script src="https://cdn.fusioncharts.com/fusioncharts/latest/themes/fusioncharts.theme.ocean.js"></script>
+
+    @RenderSection("Styles", required: false)
+</head>
+<body id="page-top">
+    <div id="wrapper">
+        <!-- Sidebar -->
+        <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
+            <span class="sidebar-brand d-flex align-items-center justify-content-center side-Logo">
+                <div class="side-Logo">
+                    <img src="~/images/InsureX.png" />
+                </div>
+            </span>
+
+            <hr class="sidebar-divider my-0" />
+
+            @if (User.IsInRole("Admin"))
+            {
+                @await Html.PartialAsync("_SidebarAdmin")
+            }
+            else if (User.IsInRole("BankUser"))
+            {
+                @await Html.PartialAsync("_SidebarFinancer")
+            }
+            else if (User.IsInRole("InsurerUser"))
+            {
+                @await Html.PartialAsync("_SidebarInsurer")
+            }
+        </ul>
+        <!-- End Sidebar -->
+
+        <div id="content-wrapper" class="d-flex flex-column">
+            <div id="content">
+                <!-- Topbar -->
+                <nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
+                    <div class="form-inline">
+                        <button id="sidebarToggleTop" class="btn btn-link d-md-none rounded-circle mr-3">
+                            <i class="fa fa-bars"></i>
+                        </button>
+                    </div>
+
+                    <!-- Topbar Search -->
+                    <div class="d-none d-sm-inline-block form-inline mr-auto ml-md-3 my-2 my-md-0 mw-100 navbar-search">
+                        <form asp-controller="Search" asp-action="Index" method="get">
+                            <div class="input-group">
+                                <input type="text" name="q" class="form-control bg-light border-0 small"
+                                       placeholder="Search for..." aria-label="Search" />
+                                <div class="input-group-append">
+                                    <button class="btn btn-primary" type="submit">
+                                        <i class="fas fa-search fa-sm"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+
+                    <!-- Topbar Navbar -->
+                    <ul class="navbar-nav ml-auto">
+                        <div class="topbar-divider d-none d-sm-block"></div>
+
+                        <!-- User Information -->
+                        <li class="nav-item dropdown no-arrow">
+                            <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
+                               data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <span class="mr-2 d-none d-lg-inline text-gray-600 small">
+                                    @(User.FindFirst("vcName")?.Value ?? User.Identity?.Name)
+                                </span>
+                                <img class="img-profile rounded-circle" src="~/images/undraw_profile.svg" />
+                            </a>
+                            <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="userDropdown">
+                                <a class="dropdown-item" asp-controller="Account" asp-action="ChangePassword">
+                                    <i class="fas fa-key fa-sm fa-fw mr-2 text-gray-400"></i> Change Password
+                                </a>
+                                <div class="dropdown-divider"></div>
+                                <a class="dropdown-item" href="#" data-toggle="modal" data-target="#logoutModal">
+                                    <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i> Logout
+                                </a>
+                            </div>
+                        </li>
+                    </ul>
+                </nav>
+                <!-- End Topbar -->
+
+                <!-- Main Content -->
+                @RenderBody()
+                <hr />
+            </div>
+
+            <!-- Footer -->
+            <footer class="sticky-footer bg-white">
+                <div class="container my-auto">
+                    <div class="copyright text-center my-auto">
+                        <span>InsureX. A Lendority Product</span>
+                    </div>
+                    <div class="copyright text-center my-auto">
+                        <span>Copyright &copy; <span id="year"></span></span>
+                    </div>
+                </div>
+            </footer>
+        </div>
+    </div>
+
+    <!-- Scroll to Top -->
+    <a class="scroll-to-top rounded" href="#page-top">
+        <i class="fas fa-angle-up"></i>
+    </a>
+
+    <!-- Logout Modal -->
+    <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="logoutModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="logoutModalLabel">Ready to Leave?</h5>
+                    <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">Select "Logout" below if you are ready to end your current session.</div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
+                    <a class="btn btn-primary" asp-controller="Account" asp-action="Logout">Logout</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap core JavaScript -->
+    <script src="~/lib/jquery/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script src="~/lib/jquery-easing/jquery.easing.min.js"></script>
+    <script src="~/css/../lib/../js/../lib/datatables/jquery.dataTables.min.js"></script>
+
+    <!-- Theme JS -->
+    <script src="~/js/theme.js"></script>
+
+    <!-- DataTables -->
+    <script src="~/lib/datatables/jquery.dataTables.min.js"></script>
+    <script src="~/lib/datatables/dataTables.bootstrap4.min.js"></script>
+    <script src="~/js/datatables.js"></script>
+
+    <!-- Bootstrap Select -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.18/js/bootstrap-select.min.js"></script>
+
+    <!-- Shared helper functions -->
+    <script>
+        // Set footer year
+        document.getElementById('year').textContent = new Date().getFullYear();
+
+        function applyDataTable() { $('#dataTable').DataTable(); }
+        function DropDownSearch() { $(".selectpicker").selectpicker(); }
+
+        function formatCurrencyTextBox() {
+            $("input[data-type='currency']").on({
+                keyup: function () { formatCurrency($(this)); },
+                blur: function () { formatCurrency($(this), "blur"); }
+            });
+        }
+
+        function formatNumber(n) {
+            return n.replace(/\D/g, "").replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+        }
+
+        function formatCurrency(input, blur) {
+            var input_val = input.val();
+            if (input_val === "") return;
+            var original_len = input_val.length;
+            var caret_pos = input.prop("selectionStart");
+            if (input_val.indexOf(".") >= 0) {
+                var decimal_pos = input_val.indexOf(".");
+                var left_side = formatNumber(input_val.substring(0, decimal_pos));
+                var right_side = formatNumber(input_val.substring(decimal_pos));
+                if (blur === "blur") right_side += "00";
+                right_side = right_side.substring(0, 2);
+                input_val = left_side + "." + right_side;
+            } else {
+                input_val = formatNumber(input_val);
+                if (blur === "blur") input_val += ".00";
+            }
+            input.val(input_val);
+            var updated_len = input_val.length;
+            caret_pos = updated_len - original_len + caret_pos;
+            input[0].setSelectionRange(caret_pos, caret_pos);
+        }
+
+        function toastSuccess(msg, title) {
+            toastr.options = { closeButton: false, progressBar: true, positionClass: "toast-bottom-right", preventDuplicates: true, timeOut: "5000" };
+            toastr.success(msg, title);
+            return false;
+        }
+
+        function toastError(msg, title) {
+            toastr.options = { closeButton: false, progressBar: true, positionClass: "toast-bottom-right", preventDuplicates: true, timeOut: "5000" };
+            toastr.error(msg, title);
+            return false;
+        }
+
+        function toastWarning(msg, title) {
+            toastr.options = { closeButton: false, progressBar: true, positionClass: "toast-bottom-left", preventDuplicates: true, timeOut: "5000" };
+            toastr.warning(msg, title);
+            return false;
+        }
+
+        $(function () {
+            formatCurrencyTextBox();
+            $('#dataTable').DataTable();
+            $('.selectpicker').selectpicker();
+        });
+    </script>
+
+    @RenderSection("Scripts", required: false)
+</body>
+</html>

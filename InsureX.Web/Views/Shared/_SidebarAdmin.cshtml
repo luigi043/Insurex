@@ -1,0 +1,72 @@
+<!-- Admin Sidebar Navigation -->
+<li class="nav-item active">
+    <a class="nav-link" asp-controller="Home" asp-action="Index">
+        <i class="fas fa-fw fa-tachometer-alt"></i>
+        <span>Home</span>
+    </a>
+</li>
+
+<li class="nav-item">
+    <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapsePolicy" aria-expanded="true" aria-controls="collapsePolicy">
+        <i class="fas fa-fw fa-edit"></i>
+        <span>Policy / Asset</span>
+    </a>
+    <div id="collapsePolicy" class="collapse" data-parent="#accordionSidebar">
+        <div class="bg-white py-2 collapse-inner rounded">
+            <a class="collapse-item" asp-controller="Policy" asp-action="AddNewPolicy">New policy &amp; asset</a>
+            <a class="collapse-item" asp-controller="Policy" asp-action="AddAssetToPolicy">Add asset to policy</a>
+            <a class="collapse-item" asp-controller="Policy" asp-action="PolicyTransactions">Policy transactions</a>
+        </div>
+    </div>
+</li>
+
+<hr class="sidebar-divider" />
+
+<li class="nav-item">
+    <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseAdmin" aria-expanded="true" aria-controls="collapseAdmin">
+        <i class="fas fa-fw fa-cog"></i>
+        <span>Admin</span>
+    </a>
+    <div id="collapseAdmin" class="collapse" data-parent="#accordionSidebar">
+        <div class="bg-white py-2 collapse-inner rounded">
+            <a class="collapse-item" asp-controller="Admin" asp-action="ManagePartners">Manage partners</a>
+            <a class="collapse-item" asp-controller="Admin" asp-action="BulkImport">Import assets</a>
+            <a class="collapse-item" asp-controller="Admin" asp-action="ImportPolicies">Import policies</a>
+        </div>
+    </div>
+</li>
+
+<hr class="sidebar-divider" />
+
+<li class="nav-item">
+    <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseBilling" aria-expanded="true" aria-controls="collapseBilling">
+        <i class="fas fa-fw fa-clipboard"></i>
+        <span>Billing</span>
+    </a>
+    <div id="collapseBilling" class="collapse" data-parent="#accordionSidebar">
+        <div class="bg-white py-2 collapse-inner rounded">
+            <a class="collapse-item" asp-controller="Billing" asp-action="ViewPartnerInvoice">Partner invoices</a>
+            <a class="collapse-item" asp-controller="Billing" asp-action="NewCharge">Add new charge</a>
+            <a class="collapse-item" asp-controller="Billing" asp-action="UpdateCharge">Update charge fee</a>
+        </div>
+    </div>
+</li>
+
+<hr class="sidebar-divider" />
+
+<li class="nav-item">
+    <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseReports" aria-expanded="true" aria-controls="collapseReports">
+        <i class="fas fa-fw fa-folder"></i>
+        <span>Reports</span>
+    </a>
+    <div id="collapseReports" class="collapse" data-parent="#accordionSidebar">
+        <div class="bg-white py-2 collapse-inner rounded">
+            <a class="collapse-item" asp-controller="Reporting" asp-action="UninsuredAssets">Uninsured assets</a>
+            <a class="collapse-item" asp-controller="Reporting" asp-action="ReinstatedCover">Re-instated cover</a>
+            <a class="collapse-item" asp-controller="Reporting" asp-action="AllAssets">Lender assets list</a>
+            <a class="collapse-item" asp-controller="Reporting" asp-action="MonthlyReport">Monthly reports</a>
+        </div>
+    </div>
+</li>
+
+<hr class="sidebar-divider" />

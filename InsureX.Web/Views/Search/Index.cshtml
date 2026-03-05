@@ -1,0 +1,35 @@
+@model InsureX.Web.Models.SearchResultViewModel
+@{ ViewData["Title"] = "Search"; }
+<div class="container-fluid">
+    <h1 class="h3 mb-4 text-gray-800">Search</h1>
+    <div class="card shadow mb-4">
+        <div class="card-body">
+            <form asp-action="Index" method="get">
+                <div class="input-group mb-3">
+                    <input type="text" name="q" value="@Model.Query" class="form-control" placeholder="Search for assets, policies, customers..." />
+                    <div class="input-group-append">
+                        <button class="btn btn-primary" type="submit"><i class="fas fa-search"></i> Search</button>
+                    </div>
+                </div>
+            </form>
+            @if (Model.Results.Any())
+            {
+                <div class="table-responsive">
+                    <table class="table table-bordered" id="dataTable">
+                        <thead><tr><th>ID</th><th>Type</th><th>Description</th><th>Status</th></tr></thead>
+                        <tbody>
+                            @foreach (var item in Model.Results)
+                            {
+                                <tr><td>@item.Id</td><td>@item.Type</td><td>@item.Description</td><td>@item.Status</td></tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            }
+            else if (!string.IsNullOrEmpty(Model.Query))
+            {
+                <p class="text-muted">No results found for "<strong>@Model.Query</strong>"</p>
+            }
+        </div>
+    </div>
+</div>

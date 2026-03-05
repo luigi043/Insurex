@@ -1,0 +1,188 @@
+@model InsureX.Web.Models.DashboardViewModel
+@{ ViewData["Title"] = "Dashboard"; }
+
+<div class="container-fluid" style="background-color: #eff1f9;">
+    <!-- All Assets Section -->
+    <div class="row chartBlock">
+        <div class="form-group col-md-6">
+            <div class="row text-center">
+                <div class="col-xl-12 col-md-6 mb-4">
+                    <div class="h6 mb-0 font-weight-bold text-primary text-center" style="padding-top: 15px;">All Assets</div>
+                </div>
+            </div>
+            <div class="row text-center">
+                <div class="col-xl-6 col-md-6 mb-4">
+                    <div class="card-body bg-gradient-Insurex text-light">
+                        <div class="text-xs font-weight-bold mb-1">Total Assets</div>
+                        <div class="h5 mb-0 font-weight-bold text-light">@Model.AllAssetCount</div>
+                    </div>
+                </div>
+                <div class="col-xl-6 col-md-6 mb-4">
+                    <div class="card-body bg-gradient-Insurex text-light">
+                        <div class="text-xs font-weight-bold mb-1">Total Finance Value</div>
+                        <div class="h5 mb-0 font-weight-bold text-light">@Model.AllAssetTotal.ToString("C")</div>
+                    </div>
+                </div>
+            </div>
+            <div class="row text-center">
+                <div class="col-xl-6 col-md-6 mb-4">
+                    <div class="card-body bg-gradient-Insurex text-light">
+                        <div class="text-xs font-weight-bold mb-1">Insured Assets</div>
+                        <div class="h5 mb-0 font-weight-bold text-light">@Model.InsuredAssetCount</div>
+                    </div>
+                </div>
+                <div class="col-xl-6 col-md-6 mb-4">
+                    <div class="card-body bg-gradient-Insurex text-light">
+                        <div class="text-xs font-weight-bold mb-1">Insured Financed Value</div>
+                        <div class="h5 mb-0 font-weight-bold text-light">@Model.InsuredAssetTotal.ToString("C")</div>
+                    </div>
+                </div>
+            </div>
+            <div class="row text-center">
+                <div class="col-xl-6 col-md-6 mb-4">
+                    <div class="card-body bg-gradient-Insurex-Shortfall text-light">
+                        <div class="text-xs font-weight-bold mb-1">Uninsured Assets</div>
+                        <div class="h5 mb-0 font-weight-bold text-light">@Model.UninsuredAssetCount</div>
+                    </div>
+                </div>
+                <div class="col-xl-6 col-md-6 mb-4">
+                    <div class="card-body bg-gradient-Insurex-Shortfall text-light">
+                        <div class="text-xs font-weight-bold mb-1">Uninsured Financed Value</div>
+                        <div class="h5 mb-0 font-weight-bold text-light">@Model.UninsuredAssetTotal.ToString("C")</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="form-group col-md-6">
+            <div id="chartInsuranceStatus"></div>
+        </div>
+    </div>
+
+    <!-- Uninsured Financed Value Section -->
+    <div class="row chartBlock">
+        <div class="form-group col-md-6">
+            <div class="row text-center">
+                <div class="col-xl-12 mb-4">
+                    <div class="h6 mb-0 font-weight-bold text-primary text-center" style="padding-top: 15px;">Uninsured Financed Value</div>
+                </div>
+            </div>
+            <div class="row text-center">
+                <div class="col-xl-7 col-md-6 mb-4">
+                    <div class="card-body bg-gradient-Insurex text-light">
+                        <div class="text-xs font-weight-bold mb-1">Unpaid Premiums</div>
+                        <div class="h5 mb-0 font-weight-bold text-light">@Model.PremiumUnpaidAssetTotal.ToString("C")</div>
+                    </div>
+                </div>
+                <div class="col-xl-5 col-md-6 mb-4">
+                    <div class="card-body bg-gradient-Insurex text-light">
+                        <div class="text-xs font-weight-bold mb-1">Percentage</div>
+                        <div class="h5 mb-0 font-weight-bold text-light">@Model.PremiumUnpaidAssetTotalPercent.ToString("F1")%</div>
+                    </div>
+                </div>
+            </div>
+            <div class="row text-center">
+                <div class="col-xl-7 col-md-6 mb-4">
+                    <div class="card-body bg-gradient-Insurex text-light">
+                        <div class="text-xs font-weight-bold mb-1">No Insurance Details</div>
+                        <div class="h5 mb-0 font-weight-bold text-light">@Model.NoInsuranceAssetTotal.ToString("C")</div>
+                    </div>
+                </div>
+                <div class="col-xl-5 col-md-6 mb-4">
+                    <div class="card-body bg-gradient-Insurex text-light">
+                        <div class="text-xs font-weight-bold mb-1">Percentage</div>
+                        <div class="h5 mb-0 font-weight-bold text-light">@Model.NoInsuranceAssetTotalPercent.ToString("F1")%</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="form-group col-md-6">
+            <div id="chartUninsuredAssetsCount"></div>
+        </div>
+    </div>
+
+    <!-- Insured Financed Value Section -->
+    <div class="row chartBlock">
+        <div class="form-group col-md-6">
+            <div class="row text-center">
+                <div class="col-xl-12 mb-4">
+                    <div class="h6 mb-0 font-weight-bold text-primary text-center" style="padding-top: 15px;">Insured Financed Value</div>
+                </div>
+            </div>
+            <div class="row text-center">
+                <div class="col-xl-7 col-md-6 mb-4">
+                    <div class="card-body bg-gradient-Insurex text-light">
+                        <div class="text-xs font-weight-bold mb-1">Adequately Insured Value</div>
+                        <div class="h5 mb-0 font-weight-bold text-light">@Model.AdequatelyInsuredTotal.ToString("C")</div>
+                    </div>
+                </div>
+                <div class="col-xl-5 col-md-6 mb-4">
+                    <div class="card-body bg-gradient-Insurex text-light">
+                        <div class="text-xs font-weight-bold mb-1">Percentage</div>
+                        <div class="h5 mb-0 font-weight-bold text-light">@Model.AdequatelyInsuredTotalPercent.ToString("F1")%</div>
+                    </div>
+                </div>
+            </div>
+            <div class="row text-center">
+                <div class="col-xl-7 col-md-6 mb-4">
+                    <div class="card-body bg-gradient-Insurex-Shortfall text-light">
+                        <div class="text-xs font-weight-bold mb-1">Under Insured Value</div>
+                        <div class="h5 mb-0 font-weight-bold text-light">@Model.UnderInsuredTotal.ToString("C")</div>
+                    </div>
+                </div>
+                <div class="col-xl-5 col-md-6 mb-4">
+                    <div class="card-body bg-gradient-Insurex-Shortfall text-light">
+                        <div class="text-xs font-weight-bold mb-1">Percentage</div>
+                        <div class="h5 mb-0 font-weight-bold text-light">@Model.UnderInsuredTotalPercent.ToString("F1")%</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="form-group col-md-6">
+            <div id="chartInsuredAssets"></div>
+        </div>
+    </div>
+
+    <!-- Chart containers for AJAX-loaded FusionCharts -->
+    <div class="row chartBlock">
+        <div class="form-group col-md-12"><div id="chartUninsuredByFinancer"></div></div>
+    </div>
+    <div class="row chartBlock">
+        <div class="form-group col-md-12"><div id="chartUninsuredStatistics"></div></div>
+    </div>
+    <div class="row chartBlock">
+        <div class="form-group col-md-12"><div id="chartNonPaymentReInstated"></div></div>
+    </div>
+    <div class="row chartBlock">
+        <div class="form-group col-md-12"><div id="chartUninsuredByInsurer"></div></div>
+    </div>
+    <div class="row chartBlock">
+        <div class="form-group col-md-12"><div id="chartCommunications"></div></div>
+    </div>
+
+    <a href="@Url.Action("Export", "Reporting", new { reportType = "Dashboard", format = "pdf" })" class="btn btn-primary">
+        <i class="fas fa-download"></i> Download Dashboard
+    </a>
+</div>
+
+@section Scripts {
+<script>
+    $(function () {
+        // Load chart data via AJAX
+        $.getJSON('@Url.Action("ChartData", "Home")?chartType=insuranceStatus', function (data) {
+            if (typeof FusionCharts !== 'undefined') {
+                new FusionCharts({
+                    type: 'doughnut2d', renderAt: 'chartInsuranceStatus', width: '100%', height: '400',
+                    dataFormat: 'json',
+                    dataSource: {
+                        chart: { caption: "Insurance Status", theme: "fusion" },
+                        data: [
+                            { label: "Insured", value: "@Model.InsuredAssetCount" },
+                            { label: "Uninsured", value: "@Model.UninsuredAssetCount" }
+                        ]
+                    }
+                }).render();
+            }
+        });
+    });
+</script>
+}

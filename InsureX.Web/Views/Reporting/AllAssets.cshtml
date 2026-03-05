@@ -1,0 +1,15 @@
+@{ ViewData["Title"] = "All Assets"; }
+<div class="container-fluid">
+    <h1 class="h3 mb-4 text-gray-800">All Assets</h1>
+    <div class="card shadow mb-4">
+        <div class="card-header py-3 d-flex justify-content-between align-items-center">
+            <h6 class="m-0 font-weight-bold text-primary">Assets List</h6>
+            <a href="@Url.Action("Export", new { reportType = "AllAssets", format = "csv" })" class="btn btn-sm btn-primary"><i class="fas fa-download"></i> Export</a>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-bordered" id="dataTable"><thead><tr><th>Asset ID</th><th>Type</th><th>Customer</th><th>Finance Value</th><th>Insured Value</th><th>Status</th></tr></thead><tbody></tbody></table>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,92 @@
+@{ ViewData["Title"] = "Add New Policy & Asset"; }
+
+<div class="container-fluid">
+    <h1 class="h3 mb-4 text-gray-800">New Policy & Asset</h1>
+    @if (TempData["Error"] != null) { <div class="alert alert-danger">@TempData["Error"]</div> }
+    @if (TempData["Success"] != null) { <div class="alert alert-success">@TempData["Success"]</div> }
+
+    <div class="card shadow mb-4">
+        <div class="card-header py-3"><h6 class="m-0 font-weight-bold text-primary">Policy Details</h6></div>
+        <div class="card-body">
+            <form asp-action="AddNewPolicy" method="post">
+                @Html.AntiForgeryToken()
+                <div class="form-row">
+                    <div class="form-group col-md-6">
+                        <label>Policy Number</label>
+                        <input type="text" name="PolicyNumber" class="form-control" required />
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label>Insurer</label>
+                        <select name="InsurerId" class="form-control selectpicker" data-live-search="true">
+                            <option value="">-- Select Insurer --</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group col-md-4">
+                        <label>Inception Date</label>
+                        <input type="date" name="InceptionDate" class="form-control" />
+                    </div>
+                    <div class="form-group col-md-4">
+                        <label>Expiry Date</label>
+                        <input type="date" name="ExpiryDate" class="form-control" />
+                    </div>
+                    <div class="form-group col-md-4">
+                        <label>Premium</label>
+                        <input type="text" name="Premium" class="form-control" data-type="currency" />
+                    </div>
+                </div>
+
+                <hr />
+                <h6 class="font-weight-bold text-primary">Asset Details</h6>
+                <div class="form-row">
+                    <div class="form-group col-md-6">
+                        <label>Asset Type</label>
+                        <select name="AssetTypeId" id="assetTypeSelect" class="form-control selectpicker" data-live-search="true">
+                            <option value="">-- Select Asset Type --</option>
+                        </select>
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label>Customer</label>
+                        <select name="CustomerId" class="form-control selectpicker" data-live-search="true">
+                            <option value="">-- Select Customer --</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Dynamic asset type fields loaded via jQuery AJAX -->
+                <div id="assetTypeFields"></div>
+
+                <div class="form-row">
+                    <div class="form-group col-md-6">
+                        <label>Finance Value</label>
+                        <input type="text" name="FinanceValue" class="form-control" data-type="currency" />
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label>Insured Value</label>
+                        <input type="text" name="InsuredValue" class="form-control" data-type="currency" />
+                    </div>
+                </div>
+
+                <button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> Save Policy & Asset</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+<script>
+    $('#assetTypeSelect').change(function () {
+        var assetType = $(this).val();
+        if (assetType) {
+            $.get('@Url.Action("AssetTypePartial", "Asset")?assetType=' + assetType, function (html) {
+                $('#assetTypeFields').html(html);
+                formatCurrencyTextBox();
+                DropDownSearch();
+            });
+        } else {
+            $('#assetTypeFields').html('');
+        }
+    });
+</script>
+}

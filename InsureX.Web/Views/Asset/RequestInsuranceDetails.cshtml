@@ -1,0 +1,9 @@
+@{ ViewData["Title"] = "Request Insurance Details"; }
+<div class="container-fluid">
+    <h1 class="h3 mb-4 text-gray-800">Request Insurance Details</h1>
+    @if (TempData["Error"] != null) { <div class="alert alert-danger">@TempData["Error"]</div> }
+    @if (TempData["Success"] != null) { <div class="alert alert-success">@TempData["Success"]</div> }
+    <div class="card shadow mb-4">
+        <div class="card-body"><p>Insurance details request has been processed.</p></div>
+    </div>
+</div>

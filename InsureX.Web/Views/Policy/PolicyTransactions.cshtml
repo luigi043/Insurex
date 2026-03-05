@@ -1,0 +1,23 @@
+@{ ViewData["Title"] = "Policy Transactions"; }
+
+<div class="container-fluid">
+    <h1 class="h3 mb-4 text-gray-800">Policy Transactions</h1>
+    <div class="card shadow mb-4">
+        <div class="card-header py-3"><h6 class="m-0 font-weight-bold text-primary">Transaction History</h6></div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                    <thead>
+                        <tr>
+                            <th>Policy #</th><th>Customer</th><th>Asset Type</th><th>Insurer</th>
+                            <th>Finance Value</th><th>Insured Value</th><th>Status</th><th>Date</th><th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Data populated from ViewBag.Transactions -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
