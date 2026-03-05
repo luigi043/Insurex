@@ -9,6 +9,7 @@ const NavigationBar: React.FC = () => {
 
   const navItems = [
     { name: 'Dashboard', path: '/dashboard', icon: '📊' },
+    { name: 'Intelligence', path: '/intelligence', icon: '🧠' },
     { name: 'Assets', path: '/assets', icon: '🚗' },
     { name: 'Policies', path: '/policies', icon: '📋' },
     { name: 'Billing', path: '/billing', icon: '💳' },
@@ -18,7 +19,7 @@ const NavigationBar: React.FC = () => {
     { name: 'Reports', path: '/reports', icon: '📥' },
     { name: 'Users', path: '/users', icon: '👥' },
     { name: 'Organizations', path: '/organizations', icon: '🏢' },
-  ];
+];
 
   return (
     <aside className="w-64 bg-white border-r border-gray-200 flex flex-col h-full shadow-lg">

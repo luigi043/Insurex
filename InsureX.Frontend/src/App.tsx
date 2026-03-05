@@ -3,6 +3,7 @@ import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import MainLayout from './components/layouts/MainLayout';
 import AddUserPage from './components/pages/AddUserPage';
 import RegisterTenantPage from './components/pages/RegisterTenantPage';
+import IntelligencePage from './components/pages/IntelligencePage';
 
 import DashboardPage from './components/pages/DashboardPage';
 import AssetsPage from './components/pages/AssetsPage';
@@ -38,6 +39,7 @@ const App: React.FC = () => {
           <Route path="policies/new" element={<AddPolicyPage />} />
           <Route path="compliance" element={<CompliancePage />} />
           <Route path="cases" element={<CasesPage />} />
+          <Route path="intelligence" element={<IntelligencePage />} />
           <Route path="audit" element={<AuditPage />} />
           <Route path="users" element={<UsersPage />} />
           <Route path="users/new" element={<AddUserPage />} />

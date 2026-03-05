@@ -64,6 +64,10 @@ export const assetClient = {
         const response = await API.post('/asset', asset);
         return response.data;
     },
+    importAssets: async (assets: any[]) => {
+        const response = await API.post('/asset/import', assets);
+        return response.data;
+    },
 };
 
 // --- Policy ---
@@ -176,6 +180,18 @@ export const adminClient = {
 
 // --- Intelligence / Insights ---
 export const intelligenceClient = {
+    getRiskScore: async () => {
+        const response = await API.get('/intelligence/risk-score');
+        return response.data;
+    },
+    getTrends: async () => {
+        const response = await API.get('/intelligence/trends');
+        return response.data;
+    },
+    getTenantHealth: async () => {
+        const response = await API.get('/intelligence/tenant-health');
+        return response.data;
+    },
     getInsights: async (): Promise<ApiResponse<any[]>> => {
         const response = await API.get<ApiResponse<any[]>>('/dashboard/insights');
         return response.data;

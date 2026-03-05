@@ -111,6 +111,19 @@ public class AssetController : ControllerBase
         catch (Exception ex) { return StatusCode(500, new { message = ex.Message }); }
     }
 
+    // POST /api/asset/import
+    [HttpPost("import")]
+    public IActionResult ImportAssets([FromBody] List<IAPR_Data.Classes.Policy.BulkImportFromFinancer> assets)
+    {
+        try
+        {
+            var prov = new P.Bulk_Import_Provider();
+            prov.Save_Bulk_Import_From_Financer(assets);
+            return Ok(new { message = $"{assets.Count} assets queued for import" });
+        }
+        catch (Exception ex) { return StatusCode(500, new { message = ex.Message }); }
+    }
+
     #region Helpers
 
     private int GetClaim(string name)

@@ -42,9 +42,20 @@ Based on the provided documents (`Asset Protection Register - product write-up`,
 
 - [x] Build structured RESTful JSON APIs for all modules with standard pagination envelopes.
 - [x] Implement OAuth2 Client Credentials for secure system-to-system integrations (Banks and Insurers).
-- [/] Migrate the legacy WebForms UI (`IAPR_Web`) to ASP.NET Core MVC (Razor + jQuery partials) or a modern SPA framework.
+- [x] Migrate the legacy WebForms UI (`IAPR_Web`) to ASP.NET Core MVC (Razor + jQuery partials) or a modern SPA framework (React).
 
----
+### Phase 9: Administrative Controls
+
+- [x] Implement User Management CRUD (Create, Edit, Role assignment).
+- [x] Implement Tenant/Entity Management (Financers, Insurers).
+- [x] Add multi-tenant context awareness to administrative endpoints.
+
+### Phase 10: Advanced Intelligence & Bulk Operations
+
+- [ ] Implement Bulk Asset Import service (processing CSV/Excel via `Bulk_Import_Provider`).
+- [ ] Build Intelligence API for risk scoring and compliance trends.
+- [ ] Create Intelligence Dashboard in React with interactive data visualizations.
+- [ ] Implement OAuth2 Client Credentials for secure partner integrations.
 
 ## Completed Tasks
 
