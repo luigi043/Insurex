@@ -1,3 +1,4 @@
+import axios from 'axios';
 import { API } from '../utils/api';
 import type { Asset, AssetFilterParams, AssetDetail } from '../types/Asset';
 import type { ComplianceCase, CaseFilterParams } from '../types/Case';
@@ -145,3 +146,26 @@ export const intelligenceClient = {
     }
 };
 
+// --- Reports (CSV export) ---
+export const reportClient = {
+    exportAuditLog: async () => {
+        const baseUrl = (axios.defaults.baseURL || '').replace(/\/+$/, '');
+        const url = `${baseUrl}/api/report/audit/export`;
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `AuditLog_Export.csv`;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+    },
+    exportAssets: async () => {
+        const baseUrl = (axios.defaults.baseURL || '').replace(/\/+$/, '');
+        const url = `${baseUrl}/api/report/assets/export`;
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `Assets_Portfolio_Export.csv`;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+    },
+};

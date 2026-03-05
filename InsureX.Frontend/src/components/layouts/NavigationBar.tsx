@@ -10,9 +10,12 @@ const NavigationBar: React.FC = () => {
   const navItems = [
     { name: 'Dashboard', path: '/dashboard', icon: '📊' },
     { name: 'Assets', path: '/assets', icon: '🚗' },
+    { name: 'Policies', path: '/policies', icon: '📋' },
+    { name: 'Billing', path: '/billing', icon: '💳' },
     { name: 'Compliance', path: '/compliance', icon: '🛡️' },
     { name: 'Cases', path: '/cases', icon: '📁' },
     { name: 'Audit Log', path: '/audit', icon: '📜' },
+    { name: 'Reports', path: '/reports', icon: '📥' },
     { name: 'Users', path: '/users', icon: '👥' },
     { name: 'Organizations', path: '/organizations', icon: '🏢' },
   ];
