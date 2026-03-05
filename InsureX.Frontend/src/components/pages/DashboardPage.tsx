@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import { API } from '../../api/utils/api';
+import { dashboardClient } from '../../api/clients';
 import type { DashboardSummary } from '../../api/types/Dashboard';
-import type { ApiResponse } from '../../api/types/Common';
 import DashboardChart from '../shared/DashboardChart';
 import InsightsSummary from '../shared/InsightsSummary';
 import { 
@@ -21,11 +20,31 @@ const DashboardPage: React.FC = () => {
   const fetchSummary = async () => {
     setRefreshing(true);
     try {
-      const response = await API.get<ApiResponse<DashboardSummary>>('/dashboard/summary');
-      const chartsResponse = await API.get<ApiResponse<any>>('/dashboard/charts');
+      const dashData = await dashboardClient.getDashboard();
+      const chartData = await dashboardClient.getChartInsuranceStatus();
+      const uninsuredChart = await dashboardClient.getChartUninsuredByFinancer();
       
-      const data = response.data.data;
-      data.charts = chartsResponse.data.data;
+      const data: DashboardSummary = {
+        totalAssets: dashData.allAssetCount || 0,
+        totalValue: dashData.allAssetTotal || 0,
+        uninsuredAssets: (dashData.premiumUnpaidCount || 0) + (dashData.noInsuranceCount || 0),
+        uninsuredValue: (dashData.premiumUnpaidTotal || 0) + (dashData.noInsuranceTotal || 0),
+        uninsuredPercentage: dashData.allAssetCount > 0 
+          ? (((dashData.premiumUnpaidCount || 0) + (dashData.noInsuranceCount || 0)) / dashData.allAssetCount * 100) 
+          : 0,
+        adequatelyInsuredAssets: dashData.insuredAssetCount || 0,
+        adequatelyInsuredValue: dashData.adequatelyInsuredTotal || 0,
+        underInsuredAssets: 0,
+        underInsuredValue: dashData.underInsuredTotal || 0,
+        premiumUnpaidAssets: dashData.premiumUnpaidCount || 0,
+        premiumUnpaidValue: dashData.premiumUnpaidTotal || 0,
+        noInsuranceDetailsAssets: dashData.noInsuranceCount || 0,
+        noInsuranceDetailsValue: dashData.noInsuranceTotal || 0,
+        charts: [
+          { title: 'Insurance Status', xAxisName: 'Status', yAxisName: 'Count', data: chartData.data || [] },
+          { title: 'Uninsured by Financer', xAxisName: 'Financer', yAxisName: 'Value', data: uninsuredChart.data || [] }
+        ]
+      };
       
       setSummary(data);
     } catch (error) {
